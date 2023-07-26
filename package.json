@@ -1,0 +1,22 @@
+{
+  "name": "range-sdk",
+  "version": "0.0.1",
+  "description": "SDK for easy custom alerts",
+  "main": "dist/sdk/index.js",
+  "license": "PROPRIETARY",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\""
+  },
+  "devDependencies": {
+    "@types/node": "18",
+    "tsc-watch": "^6.0.4",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "dotenv": "^16.3.1"
+  }
+}
