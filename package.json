@@ -11,6 +11,7 @@
     "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\""
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.1",
     "@types/node": "18",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
