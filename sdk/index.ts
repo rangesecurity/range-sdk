@@ -10,15 +10,15 @@ import { toBuffer } from './utils/toBuffer'
 
 interface Options {
   token: string
-  onBlock: {
+  onBlock?: {
     callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeEvent[]>
     filter?: { networks: IRangeNetwork[] }
   },
-  onTransaction: {
+  onTransaction?: {
     callback: (transaction: IRangeTransaction, network: IRangeNetwork) => Promise<IRangeEvent[]>
-    filter?: { networks: IRangeNetwork[] }
+    filter?: { networks: IRangeNetwork[], success?: boolean }
   },
-  onMessage: {
+  onMessage?: {
     callback: (message: IRangeMessage, network: IRangeNetwork) => Promise<IRangeEvent[]>
     filter?: { networks?: IRangeNetwork[], types?: string[] }
   }
@@ -26,7 +26,7 @@ interface Options {
 
 let opts: Options
 
-async function init (options: Options) {
+async function init(options: Options) {
   // tbd: Later we fetch the config from the scheduler
   // instead of defining it in .env. This will allow
   // the scheduler to filter events beforehand and it will
@@ -41,25 +41,33 @@ async function init (options: Options) {
 async function processTask(msg: ConsumeMessage, channel: Channel) {
   try {
     const taskObj = JSON.parse(String(msg.content))
+    console.log({ taskObj });
+
     if (opts.onBlock) {
       if (opts.onBlock.filter?.networks && !opts.onBlock.filter?.networks.includes(taskObj.network)) {
         return
       }
+
       const events = await opts.onBlock.callback(taskObj.block, taskObj.network)
-      channel.sendToQueue(
-        msg.properties.replyTo,
-        toBuffer({
-          id: taskObj.id,
-          events,
-        }),
-        {
-          correlationId: taskObj.id,
-        }
-      )
-      channel.ack(msg)
+      console.log({ events });
+
+      if (events.length > 0) {
+        channel.sendToQueue(
+          msg.properties.replyTo,
+          toBuffer({
+            id: taskObj.id,
+            events,
+          }),
+          {
+            correlationId: taskObj.id,
+          }
+        )
+      }
     }
   } catch (e) {
     console.error(e)
+  } finally {
+    channel.ack(msg)
   }
 }
 

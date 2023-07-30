@@ -4,7 +4,7 @@ import { env } from '../env'
 export class WorkPackageQueue {
   private channel: Channel | null = null
 
-  constructor(readonly ampqHost: string) {}
+  constructor(readonly ampqHost: string) { }
 
   async connect(): Promise<{ channel: Channel }> {
     const conn = await amqpConnect(this.ampqHost)
@@ -13,6 +13,8 @@ export class WorkPackageQueue {
     this.channel.prefetch(1, true) // Per consumer limit
 
     await this.channel.assertQueue(env.BLOCK_QUEUE)
+    await this.channel.assertQueue(env.EVENT_QUEUE);
+
     return { channel: this.channel }
   }
 

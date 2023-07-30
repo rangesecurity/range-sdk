@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "SDK for easy custom alerts",
   "main": "dist/sdk/index.js",
-  "license": "PROPRIETARY",
+  "license": "UNLICENSED",
   "private": false,
   "scripts": {
     "build": "tsc",
@@ -12,9 +12,11 @@
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
-    "@types/node": "18",
+    "@types/node": "^20.4.5",
     "tsc-watch": "^6.0.4",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "@types/mocha": "^10.0.1",
+    "mocha": "^10.2.0"
   },
   "dependencies": {
     "amqplib": "^0.10.3",
