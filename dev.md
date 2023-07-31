@@ -19,6 +19,6 @@ We want third parties run their own custom alert rules using our sdk. Here is th
 ## Suggestions & Questions
 
 - Instead of creating a special queue for each client
-- What is we give access of our kafka block streaming service to the client
+- What if we give access of our kafka block streaming service to the client
 - that way they can listen for incoming blocks or request for specific blocks
 - that way, we won't be needing the task queue for clients, only response queue
