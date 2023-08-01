@@ -79,20 +79,27 @@ async function main() {
 							height: "1740038",
 							addresses: ["osmo1s6jghp8g388v78dwz0k6nt09yftggwpxlzwfrj"],
 						},
+						{
+							hash: "CB2DAD664569B9D48BD592C11722032273FB6D3EDDBF0B319D67B805B03ED2FD",
+							type: "cosmos.bank.v1beta1.MsgSend",
+							value: {
+								amount: [{ denom: "uosmo", amount: "380000000" }],
+								to_address: "osmo129uhlqcsvmehxgzcsdxksnsyz94dvea907e575",
+								from_address: "osmo1rdcknhy6g90ueuwd7kzepuzv06dkgm8wh25ljc",
+							},
+							height: "1740038",
+							addresses: ["osmo129uhlqcsvmehxgzcsdxksnsyz94dvea907e575", "osmo1rdcknhy6g90ueuwd7kzepuzv06dkgm8wh25ljc"]
+						},
 					],
 				},
 			],
 		},
 	};
 
-	channel.sendToQueue(
-		env.BLOCK_QUEUE,
-		Buffer.from(JSON.stringify(payload)),
-		{
-			correlationId: payload.id,
-			replyTo: env.EVENT_QUEUE,
-		}
-	);
+	channel.sendToQueue(env.BLOCK_QUEUE, Buffer.from(JSON.stringify(payload)), {
+		correlationId: payload.id,
+		replyTo: env.EVENT_QUEUE,
+	});
 }
 
 main();

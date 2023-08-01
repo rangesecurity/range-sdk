@@ -55,7 +55,9 @@ class RangeSDK {
 
             const events = allEvents.flat();
 
-            channel.sendToQueue(msg.properties.replyTo, toBuffer(events));
+            if (events.length > 0) {
+                channel.sendToQueue(msg.properties.replyTo, toBuffer(events));
+            }
 
         } catch (e) {
             console.error(e)

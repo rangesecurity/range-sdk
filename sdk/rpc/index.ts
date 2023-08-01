@@ -58,5 +58,3 @@ class CosmosClient {
 		return res
 	}
 }
-
-export const cosmosClient = new CosmosClient('')

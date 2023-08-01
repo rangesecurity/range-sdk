@@ -18,9 +18,9 @@ export const NetworkValidator = z.union(
 
 export type Network = z.infer<typeof NetworkValidator>
 
-export const networkArray = Object.values(networkIds) as string[]
+export const networkArray = Object.values(networkIds) as Network[]
 
-export const validateNetwork = (network: string) => {
+export const validateNetwork = (network: Network) => {
     if (!networkArray.includes(network)) {
         throw new Error(
             `The network ${network} is not supported. Supporter networks are: ${Object.values(

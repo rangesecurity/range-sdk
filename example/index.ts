@@ -34,6 +34,7 @@ async function onBlock(
     return [{
       type: "blockWithMoreThanOneTx",
       message: "Block with multiple txs detected: " + block.transactions.length,
+      network
     }]
   }
 
@@ -48,6 +49,7 @@ async function onTransaction(
     return transaction.messages.map((m) => ({
       type: "successTransaction",
       message: "Success transaction of type: " + m.type,
+      network
     }));
   }
 
@@ -55,6 +57,7 @@ async function onTransaction(
     return transaction.messages.map((m) => ({
       type: "failedTransaction",
       message: "Failed transaction of type: " + m.type,
+      network
     }));
   }
 
@@ -68,5 +71,6 @@ async function onMessage(
   return [{
     type: "contractMessageExecution",
     message: "Contract message execution of type: " + message.type,
+    network
   }]
 }
