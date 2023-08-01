@@ -47,11 +47,13 @@ class RangeSDK {
         try {
             const taskObj = JSON.parse(String(msg.content))
 
-            const events = await Promise.all([
+            const allEvents = await Promise.all([
                 this.processBlock(taskObj),
                 this.processTx(taskObj),
                 this.processMessage(taskObj),
             ])
+
+            const events = allEvents.flat();
 
             channel.sendToQueue(msg.properties.replyTo, toBuffer(events));
 

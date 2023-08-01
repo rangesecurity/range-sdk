@@ -5,12 +5,6 @@ import { IRangeEvent } from "../sdk/types/IRangeEvent";
 import { IRangeMessage } from "../sdk/types/IRangeMessage";
 import { IRangeTransaction } from "../sdk/types/IRangeTransaction";
 
-// NOTE: A simple program to demonstrate how to use the SDK
-// NOTE: to create a worker that listens to blocks
-// NOTE: and return events when a block has more than 1 txs
-
-// For creating a worker, we need to choose one option from onBlock, onTransaction or onMessage
-
 const range = new RangeSDK({
   token: "xyz",
   onBlock: { callback: onBlock, filter: { networks: ['osmo-test-5'] } },
