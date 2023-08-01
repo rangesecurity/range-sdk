@@ -2,6 +2,20 @@ import amqplib from "amqplib";
 import { env } from "./env";
 
 async function main() {
+	const connection = await amqplib.connect(env.AMQP_HOST);
+	const channel = await connection.createChannel();
+
+	await channel.assertQueue(env.EVENT_QUEUE);
+
+	// Consume messages from the queue
+	channel.consume(env.EVENT_QUEUE, (msg) => {
+		if (msg) {
+			const message = msg.content.toString();
+			console.log("Received:", message);
+			channel.ack(msg);
+		}
+	});
+
 	const payload = {
 		id: "sample-block",
 		network: "osmo-test-5",
@@ -38,11 +52,12 @@ async function main() {
 							addresses: ["osmo1s6jghp8g388v78dwz0k6nt09yftggwpxlzwfrj"],
 						},
 					],
-				}, {
+				},
+				{
 					hash: "CB2DAD664569B9D48BD592C11722032273FB6D3EDDBF0B319D67B805B03ED2FD",
 					logs: [],
 					height: "1740038",
-					success: true,
+					success: false,
 					messages: [
 						{
 							hash: "CB2DAD664569B9D48BD592C11722032273FB6D3EDDBF0B319D67B805B03ED2FD",
@@ -70,15 +85,14 @@ async function main() {
 		},
 	};
 
-	const conn = await amqplib.connect(env.AMQP_HOST);
-	const channel = await conn.createChannel();
-	const result = channel.sendToQueue(env.BLOCK_QUEUE, Buffer.from(JSON.stringify(payload)), {
-		correlationId: payload.id,
-		replyTo: env.EVENT_QUEUE
-	});
-	console.log(result);
-
-	return;
+	channel.sendToQueue(
+		env.BLOCK_QUEUE,
+		Buffer.from(JSON.stringify(payload)),
+		{
+			correlationId: payload.id,
+			replyTo: env.EVENT_QUEUE,
+		}
+	);
 }
 
 main();

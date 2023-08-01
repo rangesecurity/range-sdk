@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\""
+    "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\"",
+    "example": "tsc-watch --onSuccess \"node dist/example/index.js\"",
+    "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\""
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
