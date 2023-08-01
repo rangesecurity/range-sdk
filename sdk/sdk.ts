@@ -126,7 +126,7 @@ class RangeSDK {
 
         const res = await Promise.all(
             allMessages.map(async (m: any) => {
-                const events = await this.opts.onMessage!.callback(task.block, task.network)
+                const events = await this.opts.onMessage!.callback(m, task.network)
                 return events;
             })
         )
