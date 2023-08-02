@@ -7,9 +7,13 @@ import { Channel, ConsumeMessage } from 'amqplib'
 import { IRangeMessage } from './types/IRangeMessage'
 import { IRangeTransaction } from './types/IRangeTransaction'
 import { toBuffer } from './utils/toBuffer'
+import { Network } from './network'
+import { CosmosClient } from './cosmos/CosmosClient'
+import { assert } from 'console'
 
 interface Options {
     token: string
+    endpoints?: Partial<Record<Network, string>>,
     onBlock?: {
         callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeEvent[]>
         filter?: { networks: IRangeNetwork[] }
@@ -27,6 +31,7 @@ interface Options {
 class RangeSDK {
     opts: Options
     queue: WorkPackageQueue
+    private cosmosClients: Partial<Record<Network, CosmosClient>>
 
     constructor(options: Options) {
         // tbd: Later we fetch the config from the scheduler
@@ -36,6 +41,16 @@ class RangeSDK {
 
         this.opts = options
         this.queue = new WorkPackageQueue(env.AMQP_HOST)
+        this.cosmosClients = {}
+
+        if (this.opts.endpoints) {
+            for (const key of Object.keys(this.opts.endpoints)) {
+                const networkKey = key as Network;
+                const endpoint = this.opts.endpoints[networkKey];
+                assert(endpoint, `Endpoint for network ${networkKey} is not defined`)
+                this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
+            }
+        }
     }
 
     async init() {
@@ -138,6 +153,12 @@ class RangeSDK {
         const events = res.flat();
 
         return events;
+    }
+
+    getCosmosClient(network: Network): CosmosClient {
+        const client = this.cosmosClients[network]
+        assert(client, `Cosmos client for network ${network} not found`)
+        return client!
     }
 }
 

@@ -1,1 +1,3 @@
-export type IRangeNetwork = 'osmosis-1' | 'osmo-test-5' | 'cosmoshub-4' | 'celestia-mocha'
+import { Network } from "../network";
+
+export type IRangeNetwork = Network;

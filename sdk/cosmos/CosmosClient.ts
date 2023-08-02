@@ -11,8 +11,9 @@ import {
 	QuerySupplyOfResponse,
 } from 'osmojs/types/codegen/cosmos/bank/v1beta1/query'
 import { QueryValidatorResponse } from 'osmojs/types/codegen/cosmos/staking/v1beta1/query'
+import { QueryClientImpl } from 'cosmjs-types/cosmwasm/wasm/v1/query'
 
-class CosmosClient {
+export class CosmosClient {
 	constructor(readonly rpcEndpoint: string) {
 		assert(rpcEndpoint, 'rpcEndpoint cannot be empty')
 	}
@@ -41,13 +42,14 @@ class CosmosClient {
 		return res
 	}
 
-	private async getRpcClient(): Promise<ProtobufRpcClient> {
-		const tmClient = await Tendermint34Client.connect(this.rpcEndpoint)
-		const client = new QueryClient(tmClient)
-		return createProtobufRpcClient(client)
+	async contractInfo(address: string) {
+		const rpc = await this.getRpcClient()
+		const queryService = new QueryClientImpl(rpc)
+		const contract = await queryService.ContractInfo({ address })
+		return contract
 	}
 
-	async fetchQuery(address: string, queryData: object) {
+	async fetchContractQuery(address: string, queryData: object) {
 		const rpc = await this.getRpcClient()
 		const ContractQueryImpl = cosmwasm.wasm.v1.QueryClientImpl
 		const contractQuery = new ContractQueryImpl(rpc)
@@ -56,5 +58,11 @@ class CosmosClient {
 			queryData: Buffer.from(JSON.stringify(queryData)),
 		})
 		return res
+	}
+
+	private async getRpcClient(): Promise<ProtobufRpcClient> {
+		const tmClient = await Tendermint34Client.connect(this.rpcEndpoint)
+		const client = new QueryClient(tmClient)
+		return createProtobufRpcClient(client)
 	}
 }
