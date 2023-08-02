@@ -14,17 +14,21 @@ import { assert } from 'console'
 interface Options {
     token: string
     endpoints?: Partial<Record<Network, string>>,
+    networks: IRangeNetwork[],
     onBlock?: {
         callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: { networks: IRangeNetwork[] }
+        filter?: {}
     },
     onTransaction?: {
         callback: (transaction: IRangeTransaction, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: { networks: IRangeNetwork[], success?: boolean }
+        filter?: { success?: boolean }
     },
     onMessage?: {
         callback: (message: IRangeMessage, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: { networks: IRangeNetwork[], types?: string[], success?: boolean }
+        filter?: {
+            types?: string[], success?: boolean,
+            involved_account_addresses?: string[]
+        }
     }
 }
 
@@ -32,6 +36,7 @@ class RangeSDK {
     opts: Options
     queue: WorkPackageQueue
     private cosmosClients: Partial<Record<Network, CosmosClient>>
+    private involved_account_addresses?: Set<string>
 
     constructor(options: Options) {
         // tbd: Later we fetch the config from the scheduler
@@ -51,6 +56,10 @@ class RangeSDK {
                 this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
             }
         }
+
+        if (this.opts.onMessage?.filter?.involved_account_addresses && this.opts.onMessage?.filter?.involved_account_addresses.length > 0) {
+            this.involved_account_addresses = new Set(this.opts.onMessage?.filter?.involved_account_addresses);
+        }
     }
 
     async init() {
@@ -60,12 +69,14 @@ class RangeSDK {
 
     async processTask(msg: ConsumeMessage, channel: Channel) {
         try {
-            const taskObj = JSON.parse(String(msg.content))
+            const taskObj: { block: any, network: Network } = JSON.parse(String(msg.content)) // Can we use zod here? or it will be an overhead
+
+            console.assert(this.opts.networks.includes(taskObj.network))
 
             const allEvents = await Promise.all([
-                this.processBlock(taskObj),
-                this.processTx(taskObj),
-                this.processMessage(taskObj),
+                this.processBlock(taskObj.block, taskObj.network),
+                this.processTx(taskObj.block, taskObj.network),
+                this.processMessage(taskObj.block, taskObj.network),
             ])
 
             const events = allEvents.flat();
@@ -81,31 +92,21 @@ class RangeSDK {
         }
     }
 
-    async processBlock(task: any): Promise<IRangeEvent[]> {
+    async processBlock(block: any, network: Network): Promise<IRangeEvent[]> {
         if (!this.opts.onBlock) {
             return []
         }
-        if (this.opts.onBlock.filter?.networks) {
-            if (!this.opts.onBlock.filter?.networks.includes(task.network)) {
-                return []
-            }
-        }
 
-        const events = await this.opts.onBlock.callback(task.block, task.network)
+        const events = await this.opts.onBlock.callback(block, network)
         return events;
     }
 
-    async processTx(task: any): Promise<IRangeEvent[]> {
+    async processTx(block: any, network: Network): Promise<IRangeEvent[]> {
         if (!this.opts.onTransaction) {
             return []
         }
-        if (this.opts.onTransaction.filter?.networks) {
-            if (!this.opts.onTransaction.filter?.networks.includes(task.network)) {
-                return []
-            }
-        }
 
-        let filteredTxs = task.block.transactions;
+        let filteredTxs = block.transactions;
 
 
         if (this.opts.onTransaction.filter?.success !== undefined) {
@@ -114,24 +115,19 @@ class RangeSDK {
 
 
         const allEvents = await Promise.all(filteredTxs.map(async (tx: any) => {
-            const events = await this.opts.onTransaction!.callback(tx, task.network)
+            const events = await this.opts.onTransaction!.callback(tx, network)
             return events;
         }))
 
         return allEvents.flat();
     }
 
-    async processMessage(task: any): Promise<IRangeEvent[]> {
+    async processMessage(block: any, network: Network): Promise<IRangeEvent[]> {
         if (!this.opts.onMessage) {
             return []
         }
-        if (this.opts.onMessage.filter?.networks) {
-            if (!this.opts.onMessage.filter?.networks.includes(task.network)) {
-                return []
-            }
-        }
 
-        let allTransactions = task.block.transactions;
+        let allTransactions = block.transactions;
 
         if (this.opts.onMessage.filter?.success !== undefined) {
             allTransactions = allTransactions.filter((tx: any) => tx.success === this.opts.onMessage!.filter?.success)
@@ -143,9 +139,19 @@ class RangeSDK {
             allMessages = allMessages.filter((m: any) => this.opts.onMessage!.filter?.types?.includes(m.type))
         }
 
+        if (this.involved_account_addresses) {
+            allMessages = allMessages.filter((m: any) => {
+                return m.involved_account_addresses.some(
+                    (addr: string) => {
+                        return this.involved_account_addresses?.has(addr)
+                    }
+                )
+            });
+        }
+
         const res = await Promise.all(
             allMessages.map(async (m: any) => {
-                const events = await this.opts.onMessage!.callback(m, task.network)
+                const events = await this.opts.onMessage!.callback(m, network)
                 return events;
             })
         )

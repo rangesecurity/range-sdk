@@ -5,10 +5,10 @@ const range = new RangeSDK({
   onMessage: {
     callback: onMessage,
     filter: {
-      networks: networkArray,
       success: true,
     }
-  }
+  },
+  networks: networkArray,
 });
 range.init();
 

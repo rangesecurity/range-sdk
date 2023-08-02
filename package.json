@@ -3,10 +3,11 @@
   "version": "0.0.1",
   "description": "SDK for easy custom alerts",
   "main": "dist/sdk/index.js",
+  "types": "dist/sdk/index.d.ts",
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --esModuleInterop --resolveJsonModule --declaration",
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\"",
     "example": "tsc-watch --onSuccess \"node dist/example/index.js\"",

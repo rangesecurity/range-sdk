@@ -7,10 +7,10 @@
     "rootDir": ".",
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["node_modules/@types"],
+    "typeRoots": ["node_modules/@types", "types"],
     "types": ["node"],
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

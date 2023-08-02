@@ -5,12 +5,12 @@ const range = new RangeSDK({
     onMessage: {
         callback: onMessage,
         filter: {
-            networks: ['osmosis-1'],
         }
     },
     endpoints: {
         'osmosis-1': 'https://rpc.osmosis.zone:443'
     },
+    networks: ['osmosis-1'],
 });
 range.init();
 

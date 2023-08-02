@@ -10,16 +10,16 @@ const range = new RangeSDK({
   onBlock: { callback: onBlock, filter: { networks: ['osmo-test-5'] } },
   onTransaction: {
     callback: onTransaction,
-    filter: { networks: ["osmo-test-5"] },
+    filter: {},
   },
   onMessage: {
     callback: onMessage,
     filter: {
-      networks: ["osmo-test-5"],
       types: ["cosmwasm.wasm.v1.MsgExecuteContract"],
       success: true,
     },
   },
+  networks: ["osmo-test-5"],
 });
 range.init();
 

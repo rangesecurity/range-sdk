@@ -9,10 +9,10 @@ const range = new RangeSDK({
   onMessage: {
     callback: onMessage,
     filter: {
-      networks: networkArray,
       types: Object.values(messageTypes)
     }
-  }
+  },
+  networks: networkArray,
 });
 range.init();
 
