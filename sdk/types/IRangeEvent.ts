@@ -1,7 +1,13 @@
-import { Network } from "../network"
-
 export interface IRangeEvent {
-  type: string
-  message: string
-  network: Network
+  // id: string
+  ruleType: string
+  details: { message: string },
+  network: string,
+  // timestamp: Date,
+  // createdAt: Date,
+  // txHash: string,
+  // blockNumber: string,
+  // addressesInvolved: string[],
+  // resolved: boolean,
+  // workspaceId: string,
 }

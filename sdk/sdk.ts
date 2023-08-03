@@ -11,32 +11,36 @@ import { Network } from './network'
 import { CosmosClient } from './cosmos/CosmosClient'
 import { assert } from 'console'
 
-interface Options {
-    token: string
-    endpoints?: Partial<Record<Network, string>>,
-    networks: IRangeNetwork[],
-    onBlock?: {
-        callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: {}
-    },
-    onTransaction?: {
-        callback: (transaction: IRangeTransaction, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: { success?: boolean }
-    },
-    onMessage?: {
-        callback: (message: IRangeMessage, network: IRangeNetwork) => Promise<IRangeEvent[]>
-        filter?: {
-            types?: string[], success?: boolean,
-            involved_account_addresses?: string[]
-        }
+export interface OnBlock {
+    callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeEvent[]>
+    filter?: {}
+}
+export interface OnTransaction {
+    callback: (transaction: IRangeTransaction, network: IRangeNetwork) => Promise<IRangeEvent[]>
+    filter?: { success?: boolean }
+}
+export interface OnMessage {
+    callback: (message: IRangeMessage, network: IRangeNetwork) => Promise<IRangeEvent[]>
+    filter?: {
+        success?: boolean,
+        types?: string[],
+        involved_account_addresses?: string[]
     }
 }
 
+export interface Options {
+    token: string
+    networks: IRangeNetwork[],
+    endpoints?: Partial<Record<Network, string>>,
+    onBlocks?: OnBlock[],
+    onTransactions?: OnTransaction[],
+    onMessages?: OnMessage[]
+}
+
 class RangeSDK {
-    opts: Options
-    queue: WorkPackageQueue
+    private opts: Options
+    private queue: WorkPackageQueue
     private cosmosClients: Partial<Record<Network, CosmosClient>>
-    private involved_account_addresses?: Set<string>
 
     constructor(options: Options) {
         // tbd: Later we fetch the config from the scheduler
@@ -56,10 +60,6 @@ class RangeSDK {
                 this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
             }
         }
-
-        if (this.opts.onMessage?.filter?.involved_account_addresses && this.opts.onMessage?.filter?.involved_account_addresses.length > 0) {
-            this.involved_account_addresses = new Set(this.opts.onMessage?.filter?.involved_account_addresses);
-        }
     }
 
     async init() {
@@ -67,98 +67,109 @@ class RangeSDK {
         this.queue.consume((msg, channel) => this.processTask(msg, channel));
     }
 
-    async processTask(msg: ConsumeMessage, channel: Channel) {
+    private async processTask(msg: ConsumeMessage, channel: Channel) {
         try {
-            const taskObj: { block: any, network: Network } = JSON.parse(String(msg.content)) // Can we use zod here? or it will be an overhead
+            const taskObj: { block: any, network: Network } = JSON.parse(String(msg.content)) // TODO: Can we use zod here? or it will be an overhead
 
             console.assert(this.opts.networks.includes(taskObj.network))
 
             const allEvents = await Promise.all([
-                this.processBlock(taskObj.block, taskObj.network),
-                this.processTx(taskObj.block, taskObj.network),
-                this.processMessage(taskObj.block, taskObj.network),
+                this.processBlocks(taskObj.block, taskObj.network),
+                this.processTxs(taskObj.block, taskObj.network),
+                this.processMessages(taskObj.block, taskObj.network),
             ])
 
             const events = allEvents.flat();
 
             if (events.length > 0) {
-                channel.sendToQueue(msg.properties.replyTo, toBuffer(events));
+                channel.sendToQueue(msg.properties.replyTo, toBuffer({ success: true, events }));
             }
 
-        } catch (e) {
-            console.error(e)
-        } finally {
             channel.ack(msg)
+        } catch (e) {
+            channel.sendToQueue(msg.properties.replyTo, toBuffer({ success: false, }));
+            console.error(e)
+            channel.nack(msg);
         }
     }
 
-    async processBlock(block: any, network: Network): Promise<IRangeEvent[]> {
-        if (!this.opts.onBlock) {
+    private async processBlocks(block: any, network: Network): Promise<IRangeEvent[]> {
+        if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
             return []
         }
 
-        const events = await this.opts.onBlock.callback(block, network)
-        return events;
-    }
-
-    async processTx(block: any, network: Network): Promise<IRangeEvent[]> {
-        if (!this.opts.onTransaction) {
-            return []
-        }
-
-        let filteredTxs = block.transactions;
-
-
-        if (this.opts.onTransaction.filter?.success !== undefined) {
-            filteredTxs = filteredTxs.filter((tx: any) => tx.success === this.opts.onTransaction!.filter?.success)
-        }
-
-
-        const allEvents = await Promise.all(filteredTxs.map(async (tx: any) => {
-            const events = await this.opts.onTransaction!.callback(tx, network)
-            return events;
-        }))
-
-        return allEvents.flat();
-    }
-
-    async processMessage(block: any, network: Network): Promise<IRangeEvent[]> {
-        if (!this.opts.onMessage) {
-            return []
-        }
-
-        let allTransactions = block.transactions;
-
-        if (this.opts.onMessage.filter?.success !== undefined) {
-            allTransactions = allTransactions.filter((tx: any) => tx.success === this.opts.onMessage!.filter?.success)
-        }
-
-        let allMessages = allTransactions.flatMap((tx: any) => tx.messages)
-
-        if (this.opts.onMessage.filter?.types) {
-            allMessages = allMessages.filter((m: any) => this.opts.onMessage!.filter?.types?.includes(m.type))
-        }
-
-        if (this.involved_account_addresses) {
-            allMessages = allMessages.filter((m: any) => {
-                return m.involved_account_addresses.some(
-                    (addr: string) => {
-                        return this.involved_account_addresses?.has(addr)
-                    }
-                )
-            });
-        }
-
-        const res = await Promise.all(
-            allMessages.map(async (m: any) => {
-                const events = await this.opts.onMessage!.callback(m, network)
+        const allEvents = await Promise.all(
+            this.opts.onBlocks.map(async (onBlock) => {
+                const events = await onBlock.callback(block, network)
                 return events;
             })
         )
 
-        const events = res.flat();
+        return allEvents.flat();
+    }
 
-        return events;
+    private async processTxs(block: any, network: Network): Promise<IRangeEvent[]> {
+        if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
+            return []
+        }
+
+
+        const allEvents = await Promise.all(
+            this.opts.onTransactions.map(async (onTx) => {
+                let filteredTxs = block.transactions;
+
+                if (onTx.filter?.success !== undefined) {
+                    filteredTxs = filteredTxs.filter((tx: any) => tx.success === onTx!.filter?.success)
+                }
+
+                const events = await Promise.all(filteredTxs.map(async (tx: any) => {
+                    const events = await onTx.callback(tx, network)
+                    return events;
+                }))
+
+                return events.flat();
+            })
+        );
+
+        return allEvents.flat();
+    }
+
+    private async processMessages(block: any, network: Network): Promise<IRangeEvent[]> {
+        if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
+            return []
+        }
+
+        const allEvents = await Promise.all(
+            this.opts.onMessages.map(async (onMessage) => {
+                let filteredTxs = block.transactions;
+                if (onMessage.filter?.success !== undefined) {
+                    filteredTxs = filteredTxs.filter((tx: any) => tx.success === onMessage.filter?.success)
+                }
+
+                let allMessages = filteredTxs.flatMap((tx: any) => tx.messages)
+                if (onMessage.filter?.types) {
+                    allMessages = allMessages.filter((m: any) => onMessage.filter?.types?.includes(m.type))
+                }
+
+                if (onMessage.filter?.involved_account_addresses) {
+                    allMessages = allMessages.filter((m: any) => m.involved_account_addresses.some(
+                        (addr: string) => onMessage.filter?.involved_account_addresses?.includes(addr)
+                    ));
+                }
+
+
+                const allEvents = await Promise.all(
+                    allMessages.map(async (m: any) => {
+                        const events = await onMessage.callback(m, network)
+                        return events;
+                    })
+                )
+
+                return allEvents.flat();
+            })
+        )
+
+        return allEvents.flat();
     }
 
     getCosmosClient(network: Network): CosmosClient {
