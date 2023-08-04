@@ -1,9 +1,10 @@
+import { IRangeNetwork } from "../IRangeNetwork"
 import { IRangeTransaction } from "./IRangeTransaction"
 
 export interface IRangeBlock {
   hash: string,
   height: number
   transactions: IRangeTransaction[]
-  networks: string,
+  network: IRangeNetwork,
   timestamp: string,
 }

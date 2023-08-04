@@ -11,3 +11,13 @@ export interface IRangeEvent {
   // resolved: boolean,
   // workspaceId: string,
 }
+
+export interface IRangeError {
+  details: {
+    error: string,
+  },
+  network: string,
+  blockNumber: number,
+}
+
+export type IRangeResult = IRangeEvent | IRangeError

@@ -115,11 +115,13 @@ const onBlockBalanceChange: OnBlock = {
     }
 }
 
+// Defining the RangeSDK instance
 const range = new RangeSDK({
     token: "xyz",
     onMessages: [onMessageSuccess, onMessageFailed, onMessageTransfer, onMessageIBCTransfer],
     onBlocks: [onBlockBalanceChange],
-    networks: networkArray,
+    networks: ["osmosis-1"],
 });
 
+// Running the RangeSDK instance
 range.init();
