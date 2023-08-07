@@ -88,7 +88,7 @@ const onBlockBalanceChange: OnBlock = {
         });
 
         if (isInvolved) {
-            const cosmosClient = range.getCosmosClient('osmosis-1')
+            const cosmosClient = range.getCosmosClient(network)
             const res = await cosmosClient.balance(address, denom)
             const currentBalance = res.balance?.amount
 
@@ -121,6 +121,7 @@ const range = new RangeSDK({
     onMessages: [onMessageSuccess, onMessageFailed, onMessageTransfer, onMessageIBCTransfer],
     onBlocks: [onBlockBalanceChange],
     networks: ["osmosis-1"],
+    endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
 });
 
 // Running the RangeSDK instance

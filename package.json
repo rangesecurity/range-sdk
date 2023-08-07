@@ -10,7 +10,7 @@
     "build": "tsc --esModuleInterop --resolveJsonModule --declaration",
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\"",
-    "example": "tsc-watch --onSuccess \"node dist/example/index.js\"",
+    "example": "tsc-watch --onSuccess \"node dist/examples/alertProcessors.js\"",
     "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\""
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "amqplib": "^0.10.3",
     "dotenv": "^16.3.1",
     "fs": "^0.0.1-security",
+    "kafkajs": "^2.2.4",
     "osmojs": "^15.2.1",
     "zod": "^3.21.4"
   }

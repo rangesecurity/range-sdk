@@ -1,22 +1,15 @@
-import { env } from './env'
-import { WorkPackageQueue } from './models/WorkPackageQueue'
 import { IRangeNetwork } from './types/IRangeNetwork'
 import { IRangeBlock } from './types/chain/IRangeBlock'
 import { IRangeResult } from './types/IRangeEvent'
-import { Channel, ConsumeMessage } from 'amqplib'
 import { IRangeMessage } from './types/chain/IRangeMessage'
 import { IRangeTransaction } from './types/chain/IRangeTransaction'
-import { toBuffer } from './utils/toBuffer'
 import { Network } from './network'
 import { CosmosClient } from './cosmos/CosmosClient'
 import { assert } from 'console'
 import fs from 'fs'
-
-function delay(ms: number): Promise<void> {
-	return new Promise((resolve) => {
-		setTimeout(resolve, ms);
-	});
-}
+import { KafkaClient } from './connections/KafkaClient'
+import { env } from './env'
+import { WorkPackageQueue } from './connections/WorkPackageQueue'
 
 export interface OnBlock {
 	callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeResult[]>
@@ -48,23 +41,22 @@ export interface Options {
 
 const DEFAULT_NETWORK_CONFIG_PATH = './networkConfig.json';
 
-class RangeSDK {
+class RangeSDK extends KafkaClient<IRangeBlock>{
 	private opts: Options
-	private queue: WorkPackageQueue
-	private cosmosClients: Partial<Record<Network, CosmosClient>>
+	private replyQueue: WorkPackageQueue
+	private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>
 
 	networkConfig: Record<string, number | null>
 
 	constructor(options: Options) {
+		super(env.KAFKA_TOPICS)
 		// tbd: Later we fetch the config from the scheduler
 		// instead of defining it in .env. This will allow
 		// the scheduler to filter events beforehand and it will
 		// serve as auth layer. await axios.post(..., { token, options })
 
 		this.opts = options
-		this.queue = new WorkPackageQueue(env.AMQP_HOST)
-		this.cosmosClients = {}
-
+		this.replyQueue = new WorkPackageQueue(env.AMQP_HOST)
 
 		if (this.opts.networkConfigFile) {
 			// Load the file and assign to this.networkConfig
@@ -101,6 +93,7 @@ class RangeSDK {
 			}
 		}
 
+		this.cosmosClients = {};
 		if (this.opts.endpoints) {
 			for (const key of Object.keys(this.opts.endpoints)) {
 				const networkKey = key as Network;
@@ -111,104 +104,22 @@ class RangeSDK {
 		}
 	}
 
-	async init() {
-		// await this.queue.connect()
-		// this.queue.consume((msg, channel) => this.processTask(msg, channel));
-
-		this.processTask2();
-	}
-
-	async requestBlock(network: Network, height: number | null): Promise<IRangeBlock | null> {
-		// dummy statement
-		return {
-			height: height || 1,
-			hash: '4ED2DD910CCAA8F81F10BDA2DC5C550A11A2AF57B4DFF5029CA2D856A775C2C7',
-			timestamp: '2023-05-18T02:34:22.893Z',
-			network,
-			transactions: [
-				{
-					hash: 'E1039C785DE54D3C9DF40B9B4B697C5B7E30A431B3EE857D1F8334CB7ED369A2',
-					success: false,
-					messages: [
-						{
-							type: 'osmosis.lockup.MsgLockTokens',
-							value: {
-								coins: [
-									{ denom: 'gamm/pool/662', amount: '150616694306352086' },
-								],
-								owner: 'osmo1u6zt3tdezaa5qdwurd25ulthj7rl4q7zwwen9p',
-								duration: '1209600s',
-							},
-							involved_account_addresses: ['osmo1u6zt3tdezaa5qdwurd25ulthj7rl4q7zwwen9p'],
-							height: height || 1,
-							hash: 'E1039C785DE54D3C9DF40B9B4B697C5B7E30A431B3EE857D1F8334CB7ED369A2',
-							success: false,
-						},
-					],
-					height: height || 1,
-					logs: [],
-				},
-			],
-		}
-
-		// TODO: add logic to fetch block from kafka topic
-		return null;
-	}
-
-	private async processTask2() {
-		while (true) {
-			await delay(1000);
-			await Promise.all(
-				this.opts.networks.map(async (network) => {
-					const block = await this.requestBlock(network, this.networkConfig[network] ? this.networkConfig[network]! + 1 : null);
-					if (!block) {
-						// update status as pending
-						return;
-					}
-
-					// update status as processing
-					const allEvents = await Promise.all([
-						this.processBlocks(block),
-						this.processTxs(block),
-						this.processMessages(block),
-					])
-					const events = allEvents.flat();
-
-					console.log(events);
-
-
-					// update status as done
-					this.networkConfig[network] = block.height;
-
-				})
-			)
-
-			console.log(this.networkConfig);
-			fs.writeFileSync(this.opts.networkConfigFile || DEFAULT_NETWORK_CONFIG_PATH, JSON.stringify(this.networkConfig, null, 2), 'utf-8');
-		}
-	}
-
-	private async processTask(msg: ConsumeMessage, channel: Channel) {
+	async processMessage(block: IRangeBlock) {
 		try {
-			const taskObj: { block: any, network: Network } = JSON.parse(String(msg.content)) // TODO: Can we use zod here? or it will be an overhead
-			console.assert(this.opts.networks.includes(taskObj.network))
 			const allEvents = await Promise.all([
-				this.processBlocks(taskObj.block),
-				this.processTxs(taskObj.block),
-				this.processMessages(taskObj.block),
+				this.processBlocks(block),
+				this.processTxs(block),
+				this.processTxMessages(block),
 			])
 
 			const events = allEvents.flat();
 
 			if (events.length > 0) {
-				channel.sendToQueue(msg.properties.replyTo, toBuffer({ success: true, events }));
+				this.replyQueue.reply(events);
 			}
 
-			channel.ack(msg)
 		} catch (e) {
-			channel.sendToQueue(msg.properties.replyTo, toBuffer({ success: false, }));
 			console.error(e)
-			channel.nack(msg);
 		}
 	}
 
@@ -270,7 +181,7 @@ class RangeSDK {
 		return allEvents.flat();
 	}
 
-	private async processMessages(block: any): Promise<IRangeResult[]> {
+	private async processTxMessages(block: any): Promise<IRangeResult[]> {
 		if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
 			return []
 		}
