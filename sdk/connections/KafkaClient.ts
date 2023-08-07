@@ -2,7 +2,6 @@ import { Kafka, Consumer, SASLOptions } from 'kafkajs';
 import * as tls from 'node:tls'
 import { readFileSync } from 'node:fs';
 import { env } from '../env';
-import { IRangeNetwork } from '../types/IRangeNetwork';
 
 interface KafkaSecure {
     ssl: tls.ConnectionOptions,
@@ -11,9 +10,13 @@ interface KafkaSecure {
 
 const logger = console; // update this in future
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 export abstract class KafkaClient<T> {
     private kafka: Kafka;
     private consumer: Consumer;
+
+    private restarts: Record<string, number>
 
     constructor(private topics: string[]) {
         // Parse the comma-separated list of Kafka brokers from environment variable
@@ -31,19 +34,21 @@ export abstract class KafkaClient<T> {
 
         // Create a new consumer instance for this Kafka connection
         this.consumer = this.kafka.consumer({ groupId: `processor-node` })
+
+        this.restarts = {}
     }
 
-    public async init() {
+    public async listen() {
         // Connect the consumer to Kafka brokers
         await this.consumer.connect();
 
         // Subscribe the consumer to the specified topic and start consuming from the beginning
-        await this.consumer.subscribe({ topics: this.topics, fromBeginning: true })
-
+        await this.consumer.subscribe({ topics: this.topics });
 
         // Start consuming messages from the subscribed topic
         await this.consumer.run({
-            eachMessage: async ({ message }) => {
+            autoCommit: false,
+            eachMessage: async ({ message, topic, partition }) => {
                 // Convert the raw message value (buffer) to a string
                 const rawMessage = message?.value?.toString()
 
@@ -57,14 +62,32 @@ export abstract class KafkaClient<T> {
                 const parseMessage: T = JSON.parse(rawMessage)
 
                 // Process the parsed message using the processMessage function - you need to implement this function when extending
-                this.processMessage(parseMessage)
+                const result = await this.processMessage(parseMessage)
+
+                if (result) {
+                    this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
+                    this.restarts[topic] = 0
+                } else {
+                    await delay(1000)
+                    if (this.restarts[topic] === undefined) {
+                        this.restarts[topic] = 0
+                    }
+                    this.restarts[topic] += 1
+
+                    if (this.restarts[topic] >= 2) {
+                        logger.error(`Topic ${topic} has been restarted too many times. Stopping listening to topic: ${topic}`)
+                        throw new Error("Topic has been restarted too many times.")
+                    }
+
+                    await this.consumer.seek({ topic, partition, offset: message.offset });
+                }
             },
         })
 
         logger.info(`Blocks kafka consumer has started for topics: ${this.topics}`)
     }
 
-    protected abstract processMessage(message: T): void
+    protected abstract processMessage(message: T): Promise<boolean>
 
     public async close() {
         await this.consumer.disconnect();

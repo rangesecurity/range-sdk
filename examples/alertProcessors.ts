@@ -83,7 +83,7 @@ const onBlockBalanceChange: OnBlock = {
     ): Promise<IRangeEvent[]> => {
         const isInvolved = block.transactions.some((tx) => {
             return tx.messages.some((m) => {
-                return m.involved_account_addresses.includes(address);
+                return m.addresses.includes(address);
             })
         });
 
@@ -126,3 +126,5 @@ const range = new RangeSDK({
 
 // Running the RangeSDK instance
 range.init();
+
+range.close
