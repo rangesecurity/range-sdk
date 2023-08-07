@@ -17,7 +17,7 @@ interface Env {
     }
   },
 
-  KAFKA_TOPICS: string[]
+  KAFKA_TOPICS: Record<IRangeNetwork, string>
 
   AMQP_HOST: string
   TASK_REPLY_QUEUE: string
@@ -48,7 +48,12 @@ export const env: Env = {
     }
   },
 
-  KAFKA_TOPICS: getEnvVar('KAFKA_TOPIC').split(","),
+  KAFKA_TOPICS: {
+    "osmosis-1": getEnvVar('KAFKA_TOPIC_OSMOSIS_1'),
+    "osmo-test-5": getEnvVar('KAFKA_TOPIC_OSMO_TEST_5'),
+    "cosmoshub-4": getEnvVar('KAFKA_TOPIC_COSMOSHUB_4'),
+    "mocha-3": getEnvVar('KAFKA_TOPIC_MOCHA_3'),
+  },
 
   AMQP_HOST: getEnvVar('AMQP_HOST'),
   TASK_REPLY_QUEUE: getEnvVar('TASK_REPLY_QUEUE'),

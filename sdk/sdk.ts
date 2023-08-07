@@ -32,6 +32,7 @@ export interface Options {
 	token: string
 	networks: IRangeNetwork[],
 	endpoints?: Partial<Record<Network, string>>,
+
 	onBlocks?: OnBlock[],
 	onTransactions?: OnTransaction[],
 	onMessages?: OnMessage[]
@@ -49,11 +50,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 	networkConfig: Record<string, number | null>
 
 	constructor(options: Options) {
-		super(env.KAFKA_TOPICS)
-		// tbd: Later we fetch the config from the scheduler
-		// instead of defining it in .env. This will allow
-		// the scheduler to filter events beforehand and it will
-		// serve as auth layer. await axios.post(..., { token, options })
+		super(options.networks.map(n => env.KAFKA_TOPICS[n]))
 
 		this.opts = options
 		this.replyQueue = new WorkPackageQueue(env.AMQP_HOST)
