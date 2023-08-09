@@ -62,6 +62,13 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 	async init(): Promise<void> {
 		this.replyQueue.connect();
 		this.listen();
+
+		process.on('SIGINT', async () => {
+			console.log('Received SIGINT. Performing cleanup...');
+			// Perform your cleanup actions here
+			await this.close();
+			process.exit(0);
+		});
 	}
 
 	async processMessage(block: IRangeBlock): Promise<boolean> {
@@ -78,7 +85,6 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		}
 
 		const hasError = events.some(e => (e.details as any).error !== undefined)
-		console.log({ hasError });
 
 		if (hasError) {
 			console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
@@ -89,32 +95,26 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 	}
 
 	private async processBlocks(block: IRangeBlock): Promise<IRangeResult[]> {
-		return [{
-			network: block.network,
-			blockNumber: block.height,
-			details: { error: "Just a random error" }
-		}]
+		if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
+			return []
+		}
 
-		// if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
-		// 	return []
-		// }
+		const allEvents = await Promise.all(
+			this.opts.onBlocks.map(async (onBlock) => {
+				try {
+					const events = await onBlock.callback(block, block.network)
+					return events;
+				} catch (error) {
+					return [{
+						network: block.network,
+						blockNumber: block.height,
+						details: { error: String(error) }
+					}]
+				}
+			})
+		)
 
-		// const allEvents = await Promise.all(
-		// 	this.opts.onBlocks.map(async (onBlock) => {
-		// 		try {
-		// 			const events = await onBlock.callback(block, block.network)
-		// 			return events;
-		// 		} catch (error) {
-		// 			return [{
-		// 				network: block.network,
-		// 				blockNumber: block.height,
-		// 				details: { error: String(error) }
-		// 			}]
-		// 		}
-		// 	})
-		// )
-
-		// return allEvents.flat();
+		return allEvents.flat();
 	}
 
 	private async processTxs(block: any): Promise<IRangeResult[]> {

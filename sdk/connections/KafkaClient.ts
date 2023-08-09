@@ -12,13 +12,18 @@ const logger = console; // update this in future
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
+interface Options {
+    maxRestarts: number
+    waitTime: number
+}
+
 export abstract class KafkaClient<T> {
     private kafka: Kafka;
     private consumer: Consumer;
 
     private restarts: Record<string, number>
 
-    constructor(private topics: string[]) {
+    constructor(private topics: string[], private options: Options = { maxRestarts: 5, waitTime: 1000 }) {
         // Parse the comma-separated list of Kafka brokers from environment variable
         const brokers: string[] = env.KAFKA.HOSTS.split(",")
 
@@ -36,6 +41,7 @@ export abstract class KafkaClient<T> {
         this.consumer = this.kafka.consumer({ groupId: `processor-node` })
 
         this.restarts = {}
+        topics.map(topic => this.restarts[topic] = 0)
     }
 
     public async listen() {
@@ -43,7 +49,10 @@ export abstract class KafkaClient<T> {
         await this.consumer.connect();
 
         // Subscribe the consumer to the specified topic and start consuming from the beginning
-        await this.consumer.subscribe({ topics: this.topics });
+        await this.consumer.subscribe({
+            topics: this.topics,
+            fromBeginning: false
+        });
 
         // Start consuming messages from the subscribed topic
         await this.consumer.run({
@@ -68,15 +77,14 @@ export abstract class KafkaClient<T> {
                     this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
                     this.restarts[topic] = 0
                 } else {
-                    await delay(1000)
-                    if (this.restarts[topic] === undefined) {
-                        this.restarts[topic] = 0
-                    }
+                    await delay(this.options.waitTime)
                     this.restarts[topic] += 1
 
-                    if (this.restarts[topic] >= 2) {
-                        logger.error(`Topic ${topic} has been restarted too many times. Stopping listening to topic: ${topic}`)
-                        throw new Error("Topic has been restarted too many times.")
+                    if (this.restarts[topic] >= this.options.maxRestarts) {
+                        this.consumer.pause([
+                            { topic, partitions: [partition] }
+                        ])
+                        throw new Error("Topic has been restarted too many times.") && process.exit(0)
                     }
 
                     await this.consumer.seek({ topic, partition, offset: message.offset });
