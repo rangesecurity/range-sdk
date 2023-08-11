@@ -1,6 +1,6 @@
 export const block = {
     hash: "7DBAC837D89155ABFC734E62A65D26AA47CDEB39A5822D829EC8AEF7AEC2BE4E",
-    height: "1740038",
+    height: "1740053",
     network: "osmosis-1",
     timestamp: "2023-07-18T18:38:24.244Z",
     transactions: [

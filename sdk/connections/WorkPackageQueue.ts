@@ -1,5 +1,6 @@
 import { Channel, connect as amqpConnect, ConsumeMessage } from 'amqplib'
 import { env } from '../env'
+import { IRangeResult } from '../types/IRangeEvent'
 
 export class WorkPackageQueue {
   private channel: Channel | null = null
@@ -13,7 +14,7 @@ export class WorkPackageQueue {
     await this.channel.assertQueue(env.TASK_REPLY_QUEUE)
   }
 
-  async reply(events: any[]) {
+  async reply(events: IRangeResult[]) {
     this.channel?.sendToQueue(env.TASK_REPLY_QUEUE, Buffer.from(JSON.stringify({
       events
     })), { persistent: true })

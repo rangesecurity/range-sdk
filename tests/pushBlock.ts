@@ -16,7 +16,7 @@ async function main() {
 	await producer.send({
 		topic: test_env.KAFKA_TOPIC,
 		messages: [
-			{ value: JSON.stringify(block), key: block.height },
+			{ value: JSON.stringify(block) },
 		],
 	})
 

@@ -74,7 +74,7 @@ export abstract class KafkaClient<T> {
                 const result = await this.processMessage(parseMessage)
 
                 if (result) {
-                    this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
+                    await this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
                     this.restarts[topic] = 0
                 } else {
                     await delay(this.options.waitTime)

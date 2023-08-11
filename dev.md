@@ -2,7 +2,9 @@
 
 ## Plan
 
-We want third parties run their own custom alert rules using our sdk. Here is the flow for the same:
+We want third parties to run their custom alert rules using our sdk. We are also going to use the sdk for writing our own runners. At some point in time, we are gonna make `range-sdk` and our alert processors public.
+
+Here is the flow for a third party user:
 
 - Signup for the sdk and get your unique `range-sdk-code`
 - Write the code for your worker in TS similar to our template:
@@ -14,4 +16,5 @@ We want third parties run their own custom alert rules using our sdk. Here is th
 - From `range-team` side:
   - provide wrapped kafka access to authorized users
   - provide wrapped endpoint access to authorized users
+  - provide endpoint for accessing certain blocks
   - process generated errors or events(storing them in appdb and sending notifications to defined destinations)

@@ -204,6 +204,10 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		assert(client, `Cosmos client for network ${network} not found`)
 		return client!
 	}
+
+	getBlock(network: Network, height: number): Promise<IRangeBlock | null> {
+		return Promise.resolve(null);
+	}
 }
 
 export { RangeSDK } 
