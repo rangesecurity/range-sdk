@@ -2,6 +2,7 @@ import { Kafka, Consumer, SASLOptions } from 'kafkajs';
 import * as tls from 'node:tls'
 import { readFileSync } from 'node:fs';
 import { env } from '../env';
+import { IRangeResult } from '../types/IRangeEvent';
 
 interface KafkaSecure {
     ssl: tls.ConnectionOptions,
@@ -44,7 +45,7 @@ export abstract class KafkaClient<T> {
         topics.map(topic => this.restarts[topic] = 0)
     }
 
-    public async listen() {
+    protected async listen() {
         // Connect the consumer to Kafka brokers
         await this.consumer.connect();
 
@@ -95,7 +96,7 @@ export abstract class KafkaClient<T> {
         logger.info(`Blocks kafka consumer has started for topics: ${this.topics}`)
     }
 
-    protected abstract processMessage(message: T): Promise<boolean>
+    protected abstract processMessage(message: T): Promise<{ error: boolean, events: IRangeResult[] }>;
 
     public async close() {
         await this.consumer.disconnect();

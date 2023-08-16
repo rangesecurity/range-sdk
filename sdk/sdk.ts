@@ -71,7 +71,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		});
 	}
 
-	async processMessage(block: IRangeBlock): Promise<boolean> {
+	protected async processMessage(block: IRangeBlock) {
 		const allEvents = await Promise.all([
 			this.processBlocks(block),
 			this.processTxs(block),
@@ -88,10 +88,10 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 
 		if (hasError) {
 			console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
-			return false;
+			return { error: true, events };
 		}
 		console.log("[", block.network, "]:", block.height, "events: ", events.length);
-		return true;
+		return { error: false, events };
 	}
 
 	private async processBlocks(block: IRangeBlock): Promise<IRangeResult[]> {

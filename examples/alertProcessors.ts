@@ -1,4 +1,4 @@
-import { RangeSDK, IRangeNetwork, IRangeEvent, networkArray, IRangeMessage, OnMessage, OnBlock, IRangeBlock } from "../sdk";
+import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock } from "../sdk";
 
 const onMessageSuccess: OnMessage = {
     callback: async (
@@ -126,5 +126,3 @@ const range = new RangeSDK({
 
 // Running the RangeSDK instance
 range.init();
-
-range.close
