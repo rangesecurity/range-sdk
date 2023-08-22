@@ -14,9 +14,17 @@ export class WorkPackageQueue {
     await this.channel.assertQueue(env.TASK_REPLY_QUEUE)
   }
 
+  async close() {
+    await this.channel?.close()
+  }
+
   async reply(events: IRangeResult[]) {
     this.channel?.sendToQueue(env.TASK_REPLY_QUEUE, Buffer.from(JSON.stringify({
       events
     })), { persistent: true })
+  }
+
+  async listen(onMessage: (msg: ConsumeMessage | null) => Promise<void>) {
+    this.channel?.consume(env.TASK_QUEUE, onMessage)
   }
 }

@@ -1,4 +1,4 @@
-import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock } from "../sdk";
+import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock } from "../src";
 
 const onMessageSuccess: OnMessage = {
     callback: async (

@@ -6,20 +6,19 @@ import { IRangeTransaction } from './types/chain/IRangeTransaction'
 import { Network } from './network'
 import { CosmosClient } from './cosmos/CosmosClient'
 import { assert } from 'console'
-import { KafkaClient } from './connections/KafkaClient'
 import { env } from './env'
 import { WorkPackageQueue } from './connections/WorkPackageQueue'
 
 export interface OnBlock {
-	callback: (block: IRangeBlock, network: IRangeNetwork) => Promise<IRangeResult[]>
+	callback: (block: IRangeBlock, network: IRangeNetwork, taskPackage: any) => Promise<IRangeResult[]>
 	filter?: {}
 }
 export interface OnTransaction {
-	callback: (transaction: IRangeTransaction, network: IRangeNetwork) => Promise<IRangeResult[]>
+	callback: (transaction: IRangeTransaction, network: IRangeNetwork, timestamp: string, taskPackage: any) => Promise<IRangeResult[]>
 	filter?: { success?: boolean }
 }
 export interface OnMessage {
-	callback: (message: IRangeMessage, network: IRangeNetwork) => Promise<IRangeResult[]>
+	callback: (message: IRangeMessage, network: IRangeNetwork, timestamp: string, taskPackage: any) => Promise<IRangeResult[]>
 	filter?: {
 		success?: boolean,
 		types?: string[],
@@ -37,17 +36,15 @@ export interface Options {
 	onMessages?: OnMessage[]
 }
 
-class RangeSDK extends KafkaClient<IRangeBlock>{
+class RangeSDK {
 	private opts: Options
-	private replyQueue: WorkPackageQueue
+	private workQueue: WorkPackageQueue
 	private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>
 
 	constructor(options: Options) {
-		super(options.networks.map(n => env.KAFKA_TOPICS[n]))
-
 		this.opts = options
 		this.cosmosClients = {};
-		this.replyQueue = new WorkPackageQueue(env.AMQP_HOST)
+		this.workQueue = new WorkPackageQueue(env.AMQP_HOST)
 
 		if (this.opts.endpoints) {
 			for (const key of Object.keys(this.opts.endpoints)) {
@@ -60,41 +57,43 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 	}
 
 	async init(): Promise<void> {
-		this.replyQueue.connect();
-		this.listen();
+		this.workQueue.connect();
+		this.workQueue.listen((x) => this.processMessage(x));
 
 		process.on('SIGINT', async () => {
 			console.log('Received SIGINT. Performing cleanup...');
 			// Perform your cleanup actions here
-			await this.close();
+			await this.workQueue.close();
 			process.exit(0);
 		});
 	}
 
-	protected async processMessage(block: IRangeBlock) {
+	protected async processMessage(taskPackage: any) {
+		const block = taskPackage.block;
+
 		const allEvents = await Promise.all([
-			this.processBlocks(block),
-			this.processTxs(block),
-			this.processTxMessages(block),
+			this.processBlocks(block, taskPackage),
+			this.processTxs(block, taskPackage),
+			this.processTxMessages(block, taskPackage),
 		])
 
 		const events = allEvents.flat();
 
 		if (events.length > 0) {
-			this.replyQueue.reply(events);
+			this.workQueue.reply(events);
 		}
 
 		const hasError = events.some(e => (e.details as any).error !== undefined)
 
 		if (hasError) {
 			console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
-			return { error: true, events };
+			events;
 		}
 		console.log("[", block.network, "]:", block.height, "events: ", events.length);
-		return { error: false, events };
+		events
 	}
 
-	private async processBlocks(block: IRangeBlock): Promise<IRangeResult[]> {
+	private async processBlocks(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
 		if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
 			return []
 		}
@@ -102,7 +101,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		const allEvents = await Promise.all(
 			this.opts.onBlocks.map(async (onBlock) => {
 				try {
-					const events = await onBlock.callback(block, block.network)
+					const events = await onBlock.callback(block, block.network, taskPackage)
 					return events;
 				} catch (error) {
 					return [{
@@ -117,7 +116,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		return allEvents.flat();
 	}
 
-	private async processTxs(block: any): Promise<IRangeResult[]> {
+	private async processTxs(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
 		if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
 			return []
 		}
@@ -133,7 +132,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 
 				const events = await Promise.all(filteredTxs.map(async (tx: any) => {
 					try {
-						const events = await onTx.callback(tx, block.network)
+						const events = await onTx.callback(tx, block.network, block.timestamp, taskPackage)
 						return events;
 					} catch (error) {
 						return [{
@@ -152,7 +151,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 		return allEvents.flat();
 	}
 
-	private async processTxMessages(block: any): Promise<IRangeResult[]> {
+	private async processTxMessages(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
 		if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
 			return []
 		}
@@ -179,7 +178,7 @@ class RangeSDK extends KafkaClient<IRangeBlock>{
 				const allEvents = await Promise.all(
 					allMessages.map(async (m: any) => {
 						try {
-							const events = await onMessage.callback(m, block.network)
+							const events = await onMessage.callback(m, block.network, block.timestamp, taskPackage)
 							return events;
 						} catch (error) {
 							return [{
