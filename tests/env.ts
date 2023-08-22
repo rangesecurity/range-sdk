@@ -1,6 +1,6 @@
 require('dotenv').config()
 
 export const test_env = {
-  KAFKA_TOPIC: 'osmosis_1_blocks_002',
-  KAFKA_BROKER: 'localhost:9092',
+  AMQP_HOST: process.env.AMQP_HOST || '',
+  TASK_QUEUE: process.env.TASK_QUEUE || '',
 }

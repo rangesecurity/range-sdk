@@ -57,7 +57,7 @@ class RangeSDK {
 	}
 
 	async init(): Promise<void> {
-		this.workQueue.connect();
+		await this.workQueue.connect();
 		this.workQueue.listen((x) => this.processMessage(x));
 
 		process.on('SIGINT', async () => {
@@ -69,7 +69,11 @@ class RangeSDK {
 	}
 
 	protected async processMessage(taskPackage: any) {
+		console.log(taskPackage);
+
 		const block = taskPackage.block;
+
+
 
 		const allEvents = await Promise.all([
 			this.processBlocks(block, taskPackage),

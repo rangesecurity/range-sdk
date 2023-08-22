@@ -1,25 +1,21 @@
-import { Kafka, Partitioners } from 'kafkajs';
 import { test_env } from './env';
 import { block } from './testBlock';
+import { connect as amqpConnect } from 'amqplib'
 
 async function main() {
-	const kafka = new Kafka({
-		clientId: "test-pusher",
-		brokers: [test_env.KAFKA_BROKER],
-	})
+	const conn = await amqpConnect(test_env.AMQP_HOST)
+	const channel = await conn.createChannel()
+	await channel.assertQueue(test_env.TASK_QUEUE)
 
-	const producer = kafka.producer({
-		createPartitioner: Partitioners.LegacyPartitioner
-	})
-	await producer.connect()
+	await channel.sendToQueue(
+		test_env.TASK_QUEUE,
+		Buffer.from(JSON.stringify({
+			block
+		}))
+	)
 
-	await producer.send({
-		topic: test_env.KAFKA_TOPIC,
-		messages: [
-			{ value: JSON.stringify(block) },
-		],
-	})
-
-	await producer.disconnect()
+	await channel.close();
+	console.log("Done");
+	process.exit(0)
 }
 main();
