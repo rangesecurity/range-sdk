@@ -2,8 +2,8 @@
   "name": "range-sdk",
   "version": "0.0.1",
   "description": "SDK for easy custom alerts",
-  "main": "dist/sdk/index.js",
-  "types": "dist/sdk/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
