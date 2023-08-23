@@ -3,7 +3,9 @@ import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock
 const onMessageSuccess: OnMessage = {
     callback: async (
         m: IRangeMessage,
-        network: IRangeNetwork
+        network: IRangeNetwork,
+        timestamp: string,
+        taskPackage: any
     ): Promise<IRangeEvent[]> => {
         return [{
             ruleType: "successMessage",

@@ -87,14 +87,14 @@ class RangeSDK {
 			this.workQueue.reply(events);
 		}
 
-		const hasError = events.some(e => (e.details as any).error !== undefined)
+		// const hasError = events.some(e => (e.details as any).error !== undefined)
 
-		if (hasError) {
-			console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
-			events;
-		}
-		console.log("[", block.network, "]:", block.height, "events: ", events.length);
-		events
+		// if (hasError) {
+		// 	console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
+		// 	events;
+		// }
+		// console.log("[", block.network, "]:", block.height, "events: ", events.length);
+		// events
 	}
 
 	private async processBlocks(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
