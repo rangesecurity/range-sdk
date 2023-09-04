@@ -1,36 +1,34 @@
-import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock } from "../src";
+import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule } from "../src";
 
 const onMessageSuccess: OnMessage = {
     callback: async (
         m: IRangeMessage,
-        network: IRangeNetwork,
-        timestamp: string,
-        taskPackage: any
-    ): Promise<IRangeEvent[]> => {
-        return [{
+        rule,
+        block: IRangeBlock,
+    ): Promise<IRangeEvent> => {
+        return {
             ruleType: "successMessage",
             details: {
                 message: "Success message of type: " + m.type,
             },
-            network
-        }];
+        };
     },
     filter: {
         success: true,
-    }
+    },
 }
 
 const onMessageFailed: OnMessage = {
     callback: async (
         m: IRangeMessage,
-        network: IRangeNetwork
+        rule,
+        block: IRangeBlock,
     ): Promise<IRangeEvent[]> => {
         return [{
             ruleType: "failedMessage",
             details: {
                 message: "Failed message of type: " + m.type,
             },
-            network
         }];
     },
     filter: {
@@ -41,14 +39,14 @@ const onMessageFailed: OnMessage = {
 const onMessageTransfer: OnMessage = {
     callback: async (
         m: IRangeMessage,
-        network: IRangeNetwork
+        rule,
+        block: IRangeBlock,
     ): Promise<IRangeEvent[]> => {
         return [{
             ruleType: "transfer",
             details: {
                 message: "Transfer message of type: " + m.type,
             },
-            network
         }];
     },
     filter: {
@@ -59,14 +57,14 @@ const onMessageTransfer: OnMessage = {
 const onMessageIBCTransfer: OnMessage = {
     callback: async (
         m: IRangeMessage,
-        network: IRangeNetwork
+        rule,
+        block: IRangeBlock,
     ): Promise<IRangeEvent[]> => {
         return [{
             ruleType: "IBCTransfer",
             details: {
                 message: "IBC Transfer message of type: " + m.type,
             },
-            network
         }];
     },
     filter: {
@@ -81,7 +79,7 @@ let lastBalance: string | null = null;
 const onBlockBalanceChange: OnBlock = {
     callback: async (
         block: IRangeBlock,
-        network: IRangeNetwork
+        rule: IRangeAlertRule,
     ): Promise<IRangeEvent[]> => {
         const isInvolved = block.transactions.some((tx) => {
             return tx.messages.some((m) => {
@@ -90,7 +88,7 @@ const onBlockBalanceChange: OnBlock = {
         });
 
         if (isInvolved) {
-            const cosmosClient = range.getCosmosClient(network)
+            const cosmosClient = range.getCosmosClient(block.network)
             const res = await cosmosClient.balance(address, denom)
             const currentBalance = res.balance?.amount
 
@@ -103,7 +101,6 @@ const onBlockBalanceChange: OnBlock = {
                             details: {
                                 message: `Balance changed to ${currentBalance}`,
                             },
-                            network
                         }];
                     }
                 }
@@ -125,6 +122,8 @@ const range = new RangeSDK({
     networks: ["osmosis-1"],
     endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
 });
+
+// range.createRule("myRule")
 
 // Running the RangeSDK instance
 range.init();

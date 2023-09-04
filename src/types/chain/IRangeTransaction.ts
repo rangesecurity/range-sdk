@@ -19,5 +19,5 @@ export interface IRangeTransaction {
   messages: IRangeMessage[]
   success: boolean
   hash: string
-  logs: { events: ITransactionEvent }[]
+  logs: { events: ITransactionEvent[] }[]
 }

@@ -8,17 +8,19 @@ import { CosmosClient } from './cosmos/CosmosClient'
 import { assert } from 'console'
 import { env } from './env'
 import { WorkPackageQueue } from './connections/WorkPackageQueue'
+import { IRangeAlertRule } from './types/IRangeAlertRule'
+import { ConsumeMessage } from 'amqplib'
 
 export interface OnBlock {
-	callback: (block: IRangeBlock, network: IRangeNetwork, taskPackage: any) => Promise<IRangeResult[]>
-	filter?: {}
+	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult>
+	filter?: {},
 }
 export interface OnTransaction {
-	callback: (transaction: IRangeTransaction, network: IRangeNetwork, timestamp: string, taskPackage: any) => Promise<IRangeResult[]>
+	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult>
 	filter?: { success?: boolean }
 }
 export interface OnMessage {
-	callback: (message: IRangeMessage, network: IRangeNetwork, timestamp: string, taskPackage: any) => Promise<IRangeResult[]>
+	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult>
 	filter?: {
 		success?: boolean,
 		types?: string[],
@@ -30,11 +32,19 @@ export interface Options {
 	token: string
 	networks: IRangeNetwork[],
 	endpoints?: Partial<Record<Network, string>>,
-
 	onBlocks?: OnBlock[],
 	onTransactions?: OnTransaction[],
 	onMessages?: OnMessage[]
 }
+
+export interface ITaskPackage {
+	blockNumber: string,
+	network: string,
+	ruleGroupId: string
+}
+
+const getRules = async (ruleGroupId: string): Promise<IRangeAlertRule[]> => { return [] }
+const getBlock = async (blockNumber: string, network: string): Promise<IRangeBlock | null> => { return null }
 
 class RangeSDK {
 	private opts: Options
@@ -58,7 +68,7 @@ class RangeSDK {
 
 	async init(): Promise<void> {
 		await this.workQueue.connect();
-		this.workQueue.listen((x) => this.processMessage(x));
+		this.workQueue.listen((x: any) => this.processMessage(x));
 
 		process.on('SIGINT', async () => {
 			console.log('Received SIGINT. Performing cleanup...');
@@ -68,23 +78,22 @@ class RangeSDK {
 		});
 	}
 
-	protected async processMessage(taskPackage: any) {
-		console.log(taskPackage);
+	protected async processMessage(message: ConsumeMessage): Promise<void> {
+		const taskPackage = JSON.parse(message.content.toString()) as ITaskPackage;
 
-		const block = taskPackage.block;
-
-
+		const block = await getBlock(taskPackage.blockNumber, taskPackage.network);
+		const rules = await getRules(taskPackage.ruleGroupId);
 
 		const allEvents = await Promise.all([
-			this.processBlocks(block, taskPackage),
-			this.processTxs(block, taskPackage),
-			this.processTxMessages(block, taskPackage),
+			this.processBlockTask(block!, rules),
+			this.processTxTask(block!, rules),
+			this.processTxMessageTask(block!, rules)
 		])
 
 		const events = allEvents.flat();
 
 		if (events.length > 0) {
-			this.workQueue.reply(events);
+			this.workQueue.reply(events); // storing into database
 		}
 
 		// const hasError = events.some(e => (e.details as any).error !== undefined)
@@ -97,30 +106,24 @@ class RangeSDK {
 		// events
 	}
 
-	private async processBlocks(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
+	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
 		if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
 			return []
 		}
 
 		const allEvents = await Promise.all(
 			this.opts.onBlocks.map(async (onBlock) => {
-				try {
-					const events = await onBlock.callback(block, block.network, taskPackage)
-					return events;
-				} catch (error) {
-					return [{
-						network: block.network,
-						blockNumber: block.height,
-						details: { error: String(error) }
-					}]
-				}
+				const events = await Promise.all(rules.map(rule => {
+					return onBlock.callback(block, rule)
+				}))
+				return events;
 			})
 		)
 
 		return allEvents.flat();
 	}
 
-	private async processTxs(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
+	private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
 		if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
 			return []
 		}
@@ -135,17 +138,10 @@ class RangeSDK {
 				}
 
 				const events = await Promise.all(filteredTxs.map(async (tx: any) => {
-					try {
-						const events = await onTx.callback(tx, block.network, block.timestamp, taskPackage)
-						return events;
-					} catch (error) {
-						return [{
-							network: block.network,
-							blockNumber: block.height,
-							details: { error: String(error) }
-						}]
-					}
-
+					const events = await Promise.all(rules.map(rule => {
+						return onTx.callback(tx, rule, block)
+					}))
+					return events;
 				}))
 
 				return events.flat();
@@ -155,7 +151,7 @@ class RangeSDK {
 		return allEvents.flat();
 	}
 
-	private async processTxMessages(block: IRangeBlock, taskPackage: any): Promise<IRangeResult[]> {
+	private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
 		if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
 			return []
 		}
@@ -181,16 +177,10 @@ class RangeSDK {
 
 				const allEvents = await Promise.all(
 					allMessages.map(async (m: any) => {
-						try {
-							const events = await onMessage.callback(m, block.network, block.timestamp, taskPackage)
-							return events;
-						} catch (error) {
-							return [{
-								network: block.network,
-								blockNumber: block.height,
-								details: { error: String(error) }
-							}]
-						}
+						const events = await Promise.all(rules.map(rule => {
+							return onMessage.callback(m, rule, block)
+						}))
+						return events;
 					})
 				)
 

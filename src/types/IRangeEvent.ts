@@ -7,7 +7,7 @@ export interface IRangeEvent {
   // addressesInvolved: string
   ruleType: string
   details: { message: string },
-  network: string,
+  // network: string,
 }
 
 export interface IRangeError {
