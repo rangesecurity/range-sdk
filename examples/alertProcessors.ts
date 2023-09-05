@@ -1,11 +1,11 @@
-import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule } from "../src";
+import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule, IRangeResult, MaybeIRangeResult } from "../src";
 
 const onMessageSuccess: OnMessage = {
     callback: async (
         m: IRangeMessage,
         rule,
         block: IRangeBlock,
-    ): Promise<IRangeEvent> => {
+    ): Promise<MaybeIRangeResult> => {
         return {
             ruleType: "successMessage",
             details: {
@@ -23,13 +23,13 @@ const onMessageFailed: OnMessage = {
         m: IRangeMessage,
         rule,
         block: IRangeBlock,
-    ): Promise<IRangeEvent[]> => {
-        return [{
+    ): Promise<MaybeIRangeResult> => {
+        return {
             ruleType: "failedMessage",
             details: {
                 message: "Failed message of type: " + m.type,
             },
-        }];
+        };
     },
     filter: {
         success: false,
@@ -41,13 +41,13 @@ const onMessageTransfer: OnMessage = {
         m: IRangeMessage,
         rule,
         block: IRangeBlock,
-    ): Promise<IRangeEvent[]> => {
-        return [{
+    ): Promise<MaybeIRangeResult> => {
+        return {
             ruleType: "transfer",
             details: {
                 message: "Transfer message of type: " + m.type,
             },
-        }];
+        };
     },
     filter: {
         types: ["cosmos-sdk/MsgSend"],
@@ -59,13 +59,13 @@ const onMessageIBCTransfer: OnMessage = {
         m: IRangeMessage,
         rule,
         block: IRangeBlock,
-    ): Promise<IRangeEvent[]> => {
-        return [{
+    ): Promise<MaybeIRangeResult> => {
+        return {
             ruleType: "IBCTransfer",
             details: {
                 message: "IBC Transfer message of type: " + m.type,
             },
-        }];
+        };
     },
     filter: {
         types: ["cosmos-sdk/MsgTransfer"],
@@ -80,7 +80,7 @@ const onBlockBalanceChange: OnBlock = {
     callback: async (
         block: IRangeBlock,
         rule: IRangeAlertRule,
-    ): Promise<IRangeEvent[]> => {
+    ): Promise<MaybeIRangeResult> => {
         const isInvolved = block.transactions.some((tx) => {
             return tx.messages.some((m) => {
                 return m.addresses.includes(address);
@@ -96,19 +96,19 @@ const onBlockBalanceChange: OnBlock = {
                 if (lastBalance !== null) {
                     if (lastBalance !== currentBalance) {
                         lastBalance = currentBalance
-                        return [{
+                        return {
                             ruleType: "balanceChange",
                             details: {
                                 message: `Balance changed to ${currentBalance}`,
                             },
-                        }];
+                        };
                     }
                 }
                 lastBalance = currentBalance
             }
         }
 
-        return []
+        return null;
     },
     filter: {
     }

@@ -18,4 +18,6 @@ export interface IRangeError {
   blockNumber: number,
 }
 
-export type IRangeResult = IRangeEvent | IRangeError | any
+export type IRangeResult = IRangeEvent | IRangeError
+
+export type MaybeIRangeResult = IRangeResult | null;

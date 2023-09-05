@@ -1,6 +1,6 @@
 import { IRangeNetwork } from './types/IRangeNetwork'
 import { IRangeBlock } from './types/chain/IRangeBlock'
-import { IRangeResult } from './types/IRangeEvent'
+import { IRangeResult, MaybeIRangeResult } from './types/IRangeEvent'
 import { IRangeMessage } from './types/chain/IRangeMessage'
 import { IRangeTransaction } from './types/chain/IRangeTransaction'
 import { Network } from './network'
@@ -10,17 +10,18 @@ import { env } from './env'
 import { WorkPackageQueue } from './connections/WorkPackageQueue'
 import { IRangeAlertRule } from './types/IRangeAlertRule'
 import { ConsumeMessage } from 'amqplib'
+import { ITaskPackage } from './types/IRangeTaskPackage'
 
 export interface OnBlock {
-	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult>
+	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<MaybeIRangeResult>
 	filter?: {},
 }
 export interface OnTransaction {
-	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult>
+	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<MaybeIRangeResult>
 	filter?: { success?: boolean }
 }
 export interface OnMessage {
-	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult>
+	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<MaybeIRangeResult>
 	filter?: {
 		success?: boolean,
 		types?: string[],
@@ -35,12 +36,6 @@ export interface Options {
 	onBlocks?: OnBlock[],
 	onTransactions?: OnTransaction[],
 	onMessages?: OnMessage[]
-}
-
-export interface ITaskPackage {
-	blockNumber: string,
-	network: string,
-	ruleGroupId: string
 }
 
 const getRules = async (ruleGroupId: string): Promise<IRangeAlertRule[]> => { return [] }
@@ -120,7 +115,8 @@ class RangeSDK {
 			})
 		)
 
-		return allEvents.flat();
+		const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
+		return processedEvents;
 	}
 
 	private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
@@ -148,7 +144,8 @@ class RangeSDK {
 			})
 		);
 
-		return allEvents.flat();
+		const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
+		return processedEvents;
 	}
 
 	private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
@@ -188,7 +185,8 @@ class RangeSDK {
 			})
 		)
 
-		return allEvents.flat();
+		const processedEvents = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
+		return processedEvents;
 	}
 
 	getCosmosClient(network: Network): CosmosClient {
