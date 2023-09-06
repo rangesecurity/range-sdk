@@ -11,6 +11,8 @@ import { WorkPackageQueue } from './connections/WorkPackageQueue'
 import { IRangeAlertRule } from './types/IRangeAlertRule'
 import { ConsumeMessage } from 'amqplib'
 import { ITaskPackage } from './types/IRangeTaskPackage'
+import { fetchBlock } from './services/fetchBlock'
+import { fetchAlertRules } from './services/fetchAlertRules'
 
 export interface OnBlock {
 	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<MaybeIRangeResult>
@@ -37,9 +39,6 @@ export interface Options {
 	onTransactions?: OnTransaction[],
 	onMessages?: OnMessage[]
 }
-
-const getRules = async (ruleGroupId: string): Promise<IRangeAlertRule[]> => { return [] }
-const getBlock = async (blockNumber: string, network: string): Promise<IRangeBlock | null> => { return null }
 
 class RangeSDK {
 	private opts: Options
@@ -73,11 +72,16 @@ class RangeSDK {
 		});
 	}
 
-	protected async processMessage(message: ConsumeMessage): Promise<void> {
-		const taskPackage = JSON.parse(message.content.toString()) as ITaskPackage;
+	protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
+		console.log("Received package:", taskPackage);
 
-		const block = await getBlock(taskPackage.blockNumber, taskPackage.network);
-		const rules = await getRules(taskPackage.ruleGroupId);
+		const block = await fetchBlock(taskPackage.blockNumber, taskPackage.network);
+		if (!block) {
+			console.log("Block not found");
+			return;
+		}
+
+		const rules = await fetchAlertRules(taskPackage.ruleGroupId);
 
 		const allEvents = await Promise.all([
 			this.processBlockTask(block!, rules),

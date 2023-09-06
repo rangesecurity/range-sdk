@@ -10,7 +10,9 @@ async function main() {
 	await channel.sendToQueue(
 		test_env.TASK_QUEUE,
 		Buffer.from(JSON.stringify({
-			block
+			blockNumber: 1,
+			network: 'osmosis-1',
+			ruleGroupId: '1',
 		}))
 	)
 
