@@ -15,7 +15,7 @@ import { fetchBlock } from './services/fetchBlock'
 import { fetchAlertRules } from './services/fetchAlertRules'
 
 export interface OnBlock {
-	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<MaybeIRangeResult>
+	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult[]>
 	filter?: {},
 }
 export interface OnTransaction {
@@ -35,9 +35,7 @@ export interface Options {
 	token: string
 	networks: IRangeNetwork[],
 	endpoints?: Partial<Record<Network, string>>,
-	onBlocks?: OnBlock[],
-	onTransactions?: OnTransaction[],
-	onMessages?: OnMessage[]
+	onBlock: OnBlock,
 }
 
 class RangeSDK {
@@ -83,16 +81,13 @@ class RangeSDK {
 
 		const rules = await fetchAlertRules(taskPackage.ruleGroupId);
 
-		const allEvents = await Promise.all([
-			this.processBlockTask(block!, rules),
-			this.processTxTask(block!, rules),
-			this.processTxMessageTask(block!, rules)
-		])
+		const allEvents = await this.processBlockTask(block!, rules);
+		// this.processTxTask(block!, rules),
+		// this.processTxMessageTask(block!, rules)
 
-		const events = allEvents.flat();
 
-		if (events.length > 0) {
-			this.workQueue.reply(events); // storing into database
+		if (allEvents.length > 0) {
+			this.workQueue.reply(allEvents); // storing into database
 		}
 
 		// const hasError = events.some(e => (e.details as any).error !== undefined)
@@ -106,92 +101,91 @@ class RangeSDK {
 	}
 
 	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-		if (!this.opts.onBlocks || this.opts.onBlocks.length === 0) {
-			return []
-		}
-
-		const allEvents = await Promise.all(
-			this.opts.onBlocks.map(async (onBlock) => {
-				const events = await Promise.all(rules.map(rule => {
-					return onBlock.callback(block, rule)
-				}))
-				return events;
-			})
-		)
-
-		const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-		return processedEvents;
+		const events = await Promise.all(rules.map((rule) => {
+			try {
+				return this.opts.onBlock.callback(block, rule)
+			} catch (error) {
+				return [{
+					details: {
+						error: String(error),
+					},
+					network: block.network,
+					blockNumber: block.height,
+				}]
+			}
+		}))
+		return events.flat().flat();
 	}
 
-	private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-		if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
-			return []
-		}
+	// private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
+	// 	if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
+	// 		return []
+	// 	}
 
 
-		const allEvents = await Promise.all(
-			this.opts.onTransactions.map(async (onTx) => {
-				let filteredTxs = block.transactions;
+	// 	const allEvents = await Promise.all(
+	// 		this.opts.onTransactions.map(async (onTx) => {
+	// 			let filteredTxs = block.transactions;
 
-				if (onTx.filter?.success !== undefined) {
-					filteredTxs = filteredTxs.filter((tx: any) => tx.success === onTx.filter?.success)
-				}
+	// 			if (onTx.filter?.success !== undefined) {
+	// 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onTx.filter?.success)
+	// 			}
 
-				const events = await Promise.all(filteredTxs.map(async (tx: any) => {
-					const events = await Promise.all(rules.map(rule => {
-						return onTx.callback(tx, rule, block)
-					}))
-					return events;
-				}))
+	// 			const events = await Promise.all(filteredTxs.map(async (tx: any) => {
+	// 				const events = await Promise.all(rules.map(rule => {
+	// 					return onTx.callback(tx, rule, block)
+	// 				}))
+	// 				return events;
+	// 			}))
 
-				return events.flat();
-			})
-		);
+	// 			return events.flat();
+	// 		})
+	// 	);
 
-		const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-		return processedEvents;
-	}
+	// 	const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
+	// 	return processedEvents;
+	// }
 
-	private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-		if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
-			return []
-		}
+	// private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
+	// 	if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
+	// 		return []
+	// 	}
 
-		const allEvents = await Promise.all(
-			this.opts.onMessages.map(async (onMessage) => {
-				let filteredTxs = block.transactions;
-				if (onMessage.filter?.success !== undefined) {
-					filteredTxs = filteredTxs.filter((tx: any) => tx.success === onMessage.filter?.success)
-				}
+	// 	const allEvents = await Promise.all(
+	// 		this.opts.onMessages.map(async (onMessage) => {
+	// 			let filteredTxs = block.transactions;
+	// 			if (onMessage.filter?.success !== undefined) {
+	// 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onMessage.filter?.success)
+	// 			}
 
-				let allMessages = filteredTxs.flatMap((tx: any) => tx.messages)
-				if (onMessage.filter?.types) {
-					allMessages = allMessages.filter((m: any) => onMessage.filter?.types?.includes(m.type))
-				}
+	// 			let allMessages = filteredTxs.flatMap((tx: any) => tx.messages)
+	// 			if (onMessage.filter?.types) {
+	// 				allMessages = allMessages.filter((m: any) => onMessage.filter?.types?.includes(m.type))
+	// 			}
 
-				if (onMessage.filter?.addresses) {
-					allMessages = allMessages.filter((m: any) => m.involved_account_addresses.some(
-						(addr: string) => onMessage.filter?.addresses?.includes(addr)
-					));
-				}
+	// 			if (onMessage.filter?.addresses) {
+	// 				allMessages = allMessages.filter((m: any) => m.involved_account_addresses.some(
+	// 					(addr: string) => onMessage.filter?.addresses?.includes(addr)
+	// 				));
+	// 			}
 
 
-				const allEvents = await Promise.all(
-					allMessages.map(async (m: any) => {
-						const events = await Promise.all(rules.map(rule => {
-							return onMessage.callback(m, rule, block)
-						}))
-						return events;
-					})
-				)
+	// 			const allEvents = await Promise.all(
+	// 				allMessages.map(async (m: any) => {
+	// 					const events = await Promise.all(rules.map(rule => {
+	// 						return onMessage.callback(m, rule, block)
+	// 					}))
+	// 					return events;
+	// 				})
+	// 			)
 
-				return allEvents.flat();
-			})
-		)
+	// 			return allEvents.flat();
+	// 		})
+	// 	)
 
-		const processedEvents = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-		return processedEvents;
-	}
+	// 	const processedEvents = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
+	// 	return processedEvents;
+	// }
 
 	getCosmosClient(network: Network): CosmosClient {
 		// TODO: we can add our proxy client here

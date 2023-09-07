@@ -1,124 +1,124 @@
 import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule, IRangeResult, MaybeIRangeResult } from "../src";
 
-const onMessageSuccess: OnMessage = {
+const myOnBlock: OnBlock = {
     callback: async (
-        m: IRangeMessage,
-        rule,
         block: IRangeBlock,
-    ): Promise<MaybeIRangeResult> => {
-        return {
+        rule: IRangeAlertRule,
+    ): Promise<IRangeResult[]> => {
+        const messages = block.transactions.flatMap((tx) => tx.messages);
+        const successMessages = messages.filter((m) => m.success);
+
+        return successMessages.map(m => ({
             ruleType: "successMessage",
             details: {
                 message: "Success message of type: " + m.type,
             },
-        };
+        }))
     },
     filter: {
-        success: true,
     },
 }
 
-const onMessageFailed: OnMessage = {
-    callback: async (
-        m: IRangeMessage,
-        rule,
-        block: IRangeBlock,
-    ): Promise<MaybeIRangeResult> => {
-        return {
-            ruleType: "failedMessage",
-            details: {
-                message: "Failed message of type: " + m.type,
-            },
-        };
-    },
-    filter: {
-        success: false,
-    }
-}
+// const onMessageFailed: OnMessage = {
+//     callback: async (
+//         m: IRangeMessage,
+//         rule,
+//         block: IRangeBlock,
+//     ): Promise<MaybeIRangeResult> => {
+//         return {
+//             ruleType: "failedMessage",
+//             details: {
+//                 message: "Failed message of type: " + m.type,
+//             },
+//         };
+//     },
+//     filter: {
+//         success: false,
+//     }
+// }
 
-const onMessageTransfer: OnMessage = {
-    callback: async (
-        m: IRangeMessage,
-        rule,
-        block: IRangeBlock,
-    ): Promise<MaybeIRangeResult> => {
-        return {
-            ruleType: "transfer",
-            details: {
-                message: "Transfer message of type: " + m.type,
-            },
-        };
-    },
-    filter: {
-        types: ["cosmos-sdk/MsgSend"],
-    }
-}
+// const onMessageTransfer: OnMessage = {
+//     callback: async (
+//         m: IRangeMessage,
+//         rule,
+//         block: IRangeBlock,
+//     ): Promise<MaybeIRangeResult> => {
+//         return {
+//             ruleType: "transfer",
+//             details: {
+//                 message: "Transfer message of type: " + m.type,
+//             },
+//         };
+//     },
+//     filter: {
+//         types: ["cosmos-sdk/MsgSend"],
+//     }
+// }
 
-const onMessageIBCTransfer: OnMessage = {
-    callback: async (
-        m: IRangeMessage,
-        rule,
-        block: IRangeBlock,
-    ): Promise<MaybeIRangeResult> => {
-        return {
-            ruleType: "IBCTransfer",
-            details: {
-                message: "IBC Transfer message of type: " + m.type,
-            },
-        };
-    },
-    filter: {
-        types: ["cosmos-sdk/MsgTransfer"],
-    }
-}
+// const onMessageIBCTransfer: OnMessage = {
+//     callback: async (
+//         m: IRangeMessage,
+//         rule,
+//         block: IRangeBlock,
+//     ): Promise<MaybeIRangeResult> => {
+//         return {
+//             ruleType: "IBCTransfer",
+//             details: {
+//                 message: "IBC Transfer message of type: " + m.type,
+//             },
+//         };
+//     },
+//     filter: {
+//         types: ["cosmos-sdk/MsgTransfer"],
+//     }
+// }
 
-const address = "osmo14lzvt4gdwh2q4ymyjqma0p4j4aykpn929zx75y"
-const denom = "uosmo";
-let lastBalance: string | null = null;
+// const address = "osmo14lzvt4gdwh2q4ymyjqma0p4j4aykpn929zx75y"
+// const denom = "uosmo";
+// let lastBalance: string | null = null;
 
-const onBlockBalanceChange: OnBlock = {
-    callback: async (
-        block: IRangeBlock,
-        rule: IRangeAlertRule,
-    ): Promise<MaybeIRangeResult> => {
-        const isInvolved = block.transactions.some((tx) => {
-            return tx.messages.some((m) => {
-                return m.addresses.includes(address);
-            })
-        });
+// const onBlockBalanceChange: OnBlock = {
+//     callback: async (
+//         block: IRangeBlock,
+//         rule: IRangeAlertRule,
+//     ): Promise<MaybeIRangeResult> => {
+//         const isInvolved = block.transactions.some((tx) => {
+//             return tx.messages.some((m) => {
+//                 return m.addresses.includes(address);
+//             })
+//         });
 
-        if (isInvolved) {
-            const cosmosClient = range.getCosmosClient(block.network)
-            const res = await cosmosClient.balance(address, denom)
-            const currentBalance = res.balance?.amount
+//         if (isInvolved) {
+//             const cosmosClient = range.getCosmosClient(block.network)
+//             const res = await cosmosClient.balance(address, denom)
+//             const currentBalance = res.balance?.amount
 
-            if (currentBalance) {
-                if (lastBalance !== null) {
-                    if (lastBalance !== currentBalance) {
-                        lastBalance = currentBalance
-                        return {
-                            ruleType: "balanceChange",
-                            details: {
-                                message: `Balance changed to ${currentBalance}`,
-                            },
-                        };
-                    }
-                }
-                lastBalance = currentBalance
-            }
-        }
+//             if (currentBalance) {
+//                 if (lastBalance !== null) {
+//                     if (lastBalance !== currentBalance) {
+//                         lastBalance = currentBalance
+//                         return {
+//                             ruleType: "balanceChange",
+//                             details: {
+//                                 message: `Balance changed to ${currentBalance}`,
+//                             },
+//                         };
+//                     }
+//                 }
+//                 lastBalance = currentBalance
+//             }
+//         }
 
-        return null;
-    },
-    filter: {
-    }
-}
+//         return null;
+//     },
+//     filter: {
+//     }
+// }
 
 // Defining the RangeSDK instance
 const range = new RangeSDK({
     token: "xyz",
-    onMessages: [onMessageSuccess, onMessageFailed, onMessageTransfer, onMessageIBCTransfer],
-    onBlocks: [onBlockBalanceChange],
+    onBlock: myOnBlock,
     networks: ["osmosis-1"],
     endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
 });

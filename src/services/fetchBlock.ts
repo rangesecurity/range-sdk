@@ -1,6 +1,28 @@
 import { IRangeBlock } from "../types/chain/IRangeBlock"
+import NodeCache from "node-cache";
+import { knex } from "./knex";
 
-export async function fetchBlock(blockNumber: string, network: string): Promise<IRangeBlock | null> {
+const blockCache = new NodeCache({
+    maxKeys: 10
+});
+
+export async function fetchBlock(height: string, network: string): Promise<IRangeBlock | null> {
+    const cachedBlock = blockCache.get(`${network}-${height}`)
+    if (cachedBlock) {
+        return cachedBlock as IRangeBlock
+    }
+
+    const [block] = await knex('Block').select().where({
+        height,
+        network,
+    })
+
+    if (!block) {
+        return null;
+    }
+
+    blockCache.set(`${network}-${height}`, block.block)
+
     // make api request with auth
-    return null
+    return block.block
 }
