@@ -7,9 +7,7 @@ import { Network } from './network'
 import { CosmosClient } from './cosmos/CosmosClient'
 import { assert } from 'console'
 import { env } from './env'
-import { WorkPackageQueue } from './connections/WorkPackageQueue'
 import { IRangeAlertRule } from './types/IRangeAlertRule'
-import { ConsumeMessage } from 'amqplib'
 import { ITaskPackage } from './types/IRangeTaskPackage'
 import { fetchBlock } from './services/fetchBlock'
 import { fetchAlertRules } from './services/fetchAlertRules'
@@ -41,7 +39,6 @@ export interface Options {
 
 class RangeSDK extends KafkaClient<ITaskPackage>{
 	private opts: Options
-	private replyQueue: WorkPackageQueue
 	private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>
 
 	constructor(options: Options) {
@@ -49,7 +46,6 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 
 		this.opts = options
 		this.cosmosClients = {};
-		this.replyQueue = new WorkPackageQueue(env.AMQP_HOST)
 
 		if (this.opts.endpoints) {
 			for (const key of Object.keys(this.opts.endpoints)) {
@@ -62,60 +58,52 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 	}
 
 	async init(): Promise<void> {
-		await this.replyQueue.connect();
 		this.listen();
 
 		process.on('SIGINT', async () => {
 			console.log('Received SIGINT. Performing cleanup...');
 			// Perform your cleanup actions here
 			await this.close();
-			await this.replyQueue.close();
 			process.exit(0);
 		});
 	}
 
-	protected async processMessage(taskPackage: ITaskPackage): Promise<boolean> {
+	protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
 		console.log("Received package:", taskPackage);
-
-		const block = await fetchBlock(taskPackage.blockNumber, taskPackage.network);
-		if (!block) {
-			throw new Error("Block not found");
-		}
 
 		const rules = await fetchAlertRules(taskPackage.ruleGroupId);
 
-		const allEvents = await this.processBlockTask(block!, rules);
-		// this.processTxTask(block!, rules),
-		// this.processTxMessageTask(block!, rules)
-
+		const allEvents = await this.processBlockTask(taskPackage.block.height, taskPackage.block.network, rules);
 
 		if (allEvents.length > 0) {
-			this.replyQueue.reply(allEvents); // storing into database
+			// call the notifier with { allEvents }
 		}
-
-		// const hasError = events.some(e => (e.details as any).error !== undefined)
-
-		// if (hasError) {
-		// 	console.log("[error][", block.network, "]:", block.height, "events: ", events.length);
-		// 	events;
-		// }
-		// console.log("[", block.network, "]:", block.height, "events: ", events.length);
-		// events
-
-		return true;
 	}
 
-	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-		const events = await Promise.all(rules.map((rule) => {
+	private async processBlockTask(height: string, network: string, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
+		const events = await Promise.all(rules.map(async (rule) => {
 			try {
-				return this.opts.onBlock.callback(block, rule)
+				const block = await fetchBlock(height, network);
+
+				if (!block) {
+					return [{
+						details: {
+							error: "Block not found",
+						},
+						network: network,
+						blockNumber: Number(height),
+					}]
+				}
+
+				const ruleResults = await this.opts.onBlock.callback(block, rule)
+				return ruleResults;
 			} catch (error) {
 				return [{
 					details: {
 						error: String(error),
 					},
-					network: block.network,
-					blockNumber: block.height,
+					network,
+					blockNumber: Number(height),
 				}]
 			}
 		}))

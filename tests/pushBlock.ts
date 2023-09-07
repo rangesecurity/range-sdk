@@ -12,19 +12,23 @@ async function main() {
 	})
 	await producer.connect()
 
+	const task = {
+		block: {
+			height: "1",
+			network: "osmosis-1",
+		},
+		ruleGroupId: "1",
+	}
+
 	await producer.send({
 		topic: test_env.KAFKA_TOPIC,
 		messages: [{
-			value: JSON.stringify({
-				blockNumber: "1",
-				network: "osmosis-1",
-				ruleGroupId: "1",
-			})
+			value: JSON.stringify(task),
 		}],
 	})
 
 	await producer.disconnect()
 
-	console.log("Done")
+	console.log("Successfully published task: ", task)
 }
 main();

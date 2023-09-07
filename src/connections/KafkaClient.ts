@@ -51,7 +51,7 @@ export abstract class KafkaClient<T> {
         // Subscribe the consumer to the specified topic and start consuming from the beginning
         await this.consumer.subscribe({
             topics: this.topics,
-            fromBeginning: false
+            fromBeginning: true,
         });
 
         // Start consuming messages from the subscribed topic
@@ -71,31 +71,31 @@ export abstract class KafkaClient<T> {
                 const parseMessage: T = JSON.parse(rawMessage)
 
                 // Process the parsed message using the processMessage function - you need to implement this function when extending
-                const result = await this.processMessage(parseMessage)
+                await this.processMessage(parseMessage);
 
-                if (result) {
-                    this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
-                    this.restarts[topic] = 0
-                } else {
-                    await delay(this.options.waitTime)
-                    this.restarts[topic] += 1
+                // if (result) {
+                //     this.consumer.commitOffsets([{ topic, partition, offset: message.offset }])
+                //     this.restarts[topic] = 0
+                // } else {
+                //     await delay(this.options.waitTime)
+                //     this.restarts[topic] += 1
 
-                    if (this.restarts[topic] >= this.options.maxRestarts) {
-                        this.consumer.pause([
-                            { topic, partitions: [partition] }
-                        ])
-                        throw new Error("Topic has been restarted too many times.") && process.exit(0)
-                    }
+                //     if (this.restarts[topic] >= this.options.maxRestarts) {
+                //         this.consumer.pause([
+                //             { topic, partitions: [partition] }
+                //         ])
+                //         throw new Error("Topic has been restarted too many times.") && process.exit(0)
+                //     }
 
-                    await this.consumer.seek({ topic, partition, offset: message.offset });
-                }
+                //     await this.consumer.seek({ topic, partition, offset: message.offset });
+                // }
             },
         })
 
         logger.info(`Blocks kafka consumer has started for topics: ${this.topics}`)
     }
 
-    protected abstract processMessage(message: T): Promise<boolean>
+    protected abstract processMessage(message: T): Promise<void>
 
     public async close() {
         await this.consumer.disconnect();

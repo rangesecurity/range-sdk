@@ -3,7 +3,7 @@ import NodeCache from "node-cache";
 import { knex } from "./knex";
 
 const blockCache = new NodeCache({
-    maxKeys: 10
+    stdTTL: 3600,
 });
 
 export async function fetchBlock(height: string, network: string): Promise<IRangeBlock | null> {

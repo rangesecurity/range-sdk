@@ -15,8 +15,6 @@ const myOnBlock: OnBlock = {
             },
         }))
     },
-    filter: {
-    },
 }
 
 // const onMessageFailed: OnMessage = {

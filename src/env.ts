@@ -5,7 +5,6 @@ require('dotenv').config()
 interface Env {
   AMQP_HOST: string
   TASK_REPLY_QUEUE: string
-  TASK_QUEUE: string
 
   APPDB_PG_HOST: string
   APPDB_PG_PORT: number,
@@ -42,7 +41,6 @@ function getEnvVar(key: string, defaultValue?: string): string {
 export const env: Env = {
   AMQP_HOST: getEnvVar('AMQP_HOST'),
   TASK_REPLY_QUEUE: getEnvVar('TASK_REPLY_QUEUE'),
-  TASK_QUEUE: getEnvVar('TASK_QUEUE'),
   APPDB_PG_HOST: getEnvVar('APPDB_PG_HOST'),
   APPDB_PG_PORT: Number(getEnvVar('APPDB_PG_PORT')),
   APPDB_PG_USER: getEnvVar('APPDB_PG_USER'),

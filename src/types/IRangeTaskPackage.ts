@@ -1,5 +1,7 @@
 export interface ITaskPackage {
-    blockNumber: string,
-    network: string,
+    block: {
+        network: string,
+        height: string,
+    },
     ruleGroupId: string
 }
