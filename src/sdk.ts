@@ -13,6 +13,7 @@ import { ConsumeMessage } from 'amqplib'
 import { ITaskPackage } from './types/IRangeTaskPackage'
 import { fetchBlock } from './services/fetchBlock'
 import { fetchAlertRules } from './services/fetchAlertRules'
+import { KafkaClient } from './connections/KafkaClient'
 
 export interface OnBlock {
 	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult[]>
@@ -38,15 +39,17 @@ export interface Options {
 	onBlock: OnBlock,
 }
 
-class RangeSDK {
+class RangeSDK extends KafkaClient<ITaskPackage>{
 	private opts: Options
-	private workQueue: WorkPackageQueue
+	private replyQueue: WorkPackageQueue
 	private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>
 
 	constructor(options: Options) {
+		super(options.networks.map(n => env.KAFKA_TOPIC))
+
 		this.opts = options
 		this.cosmosClients = {};
-		this.workQueue = new WorkPackageQueue(env.AMQP_HOST)
+		this.replyQueue = new WorkPackageQueue(env.AMQP_HOST)
 
 		if (this.opts.endpoints) {
 			for (const key of Object.keys(this.opts.endpoints)) {
@@ -59,24 +62,24 @@ class RangeSDK {
 	}
 
 	async init(): Promise<void> {
-		await this.workQueue.connect();
-		this.workQueue.listen((x: any) => this.processMessage(x));
+		await this.replyQueue.connect();
+		this.listen();
 
 		process.on('SIGINT', async () => {
 			console.log('Received SIGINT. Performing cleanup...');
 			// Perform your cleanup actions here
-			await this.workQueue.close();
+			await this.close();
+			await this.replyQueue.close();
 			process.exit(0);
 		});
 	}
 
-	protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
+	protected async processMessage(taskPackage: ITaskPackage): Promise<boolean> {
 		console.log("Received package:", taskPackage);
 
 		const block = await fetchBlock(taskPackage.blockNumber, taskPackage.network);
 		if (!block) {
-			console.log("Block not found");
-			return;
+			throw new Error("Block not found");
 		}
 
 		const rules = await fetchAlertRules(taskPackage.ruleGroupId);
@@ -87,7 +90,7 @@ class RangeSDK {
 
 
 		if (allEvents.length > 0) {
-			this.workQueue.reply(allEvents); // storing into database
+			this.replyQueue.reply(allEvents); // storing into database
 		}
 
 		// const hasError = events.some(e => (e.details as any).error !== undefined)
@@ -98,6 +101,8 @@ class RangeSDK {
 		// }
 		// console.log("[", block.network, "]:", block.height, "events: ", events.length);
 		// events
+
+		return true;
 	}
 
 	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
