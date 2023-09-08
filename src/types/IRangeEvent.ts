@@ -1,13 +1,13 @@
 export interface IRangeEvent {
-  // workspaceId: string
-  // alertRuleId: string
-  // time: string
-  // txHash: string | null
-  // blockNumber: string
-  // addressesInvolved: string
   ruleType: string
   details: { message: string },
-  // network: string,
+  workspaceId: string
+  alertRuleId: string
+  time: string
+  txHash: string
+  blockNumber: string
+  network: string
+  addressesInvolved: string[]
 }
 
 export interface IRangeError {

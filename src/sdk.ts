@@ -71,30 +71,26 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 	protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
 		console.log("Received package:", taskPackage);
 
-		const rules = await fetchAlertRules(taskPackage.ruleGroupId);
+		const [rules, block] = await Promise.all([
+			fetchAlertRules(taskPackage.ruleGroupId),
+			fetchBlock(taskPackage.block.height, taskPackage.block.network)
+		])
 
-		const allEvents = await this.processBlockTask(taskPackage.block.height, taskPackage.block.network, rules);
+		if (!block) {
+			// Update 
+			return
+		}
+
+		const allEvents = await this.processBlockTask(block, rules);
 
 		if (allEvents.length > 0) {
 			// call the notifier with { allEvents }
 		}
 	}
 
-	private async processBlockTask(height: string, network: string, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
+	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
 		const events = await Promise.all(rules.map(async (rule) => {
 			try {
-				const block = await fetchBlock(height, network);
-
-				if (!block) {
-					return [{
-						details: {
-							error: "Block not found",
-						},
-						network: network,
-						blockNumber: Number(height),
-					}]
-				}
-
 				const ruleResults = await this.opts.onBlock.callback(block, rule)
 				return ruleResults;
 			} catch (error) {
@@ -102,8 +98,8 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 					details: {
 						error: String(error),
 					},
-					network,
-					blockNumber: Number(height),
+					network: block.network,
+					blockNumber: Number(block.height),
 				}]
 			}
 		}))

@@ -56,7 +56,7 @@ export abstract class KafkaClient<T> {
 
         // Start consuming messages from the subscribed topic
         await this.consumer.run({
-            autoCommit: false,
+            autoCommit: true,
             eachMessage: async ({ message, topic, partition }) => {
                 // Convert the raw message value (buffer) to a string
                 const rawMessage = message?.value?.toString()

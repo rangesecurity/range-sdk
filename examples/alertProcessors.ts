@@ -9,10 +9,17 @@ const myOnBlock: OnBlock = {
         const successMessages = messages.filter((m) => m.success);
 
         return successMessages.map(m => ({
-            ruleType: "successMessage",
+            ruleType: rule.ruleType,
             details: {
                 message: "Success message of type: " + m.type,
             },
+            workspaceId: rule.workspaceId,
+            alertRuleId: rule.id,
+            time: block.timestamp,
+            txHash: m.hash,
+            blockNumber: String(block.height),
+            network: block.network,
+            addressesInvolved: m.addresses,
         }))
     },
 }
@@ -120,8 +127,6 @@ const range = new RangeSDK({
     networks: ["osmosis-1"],
     endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
 });
-
-// range.createRule("myRule")
 
 // Running the RangeSDK instance
 range.init();
