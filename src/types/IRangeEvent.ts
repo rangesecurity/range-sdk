@@ -11,13 +11,8 @@ export interface IRangeEvent {
 }
 
 export interface IRangeError {
-  details: {
-    error: string,
-  },
-  network: string,
-  blockNumber: number,
+  ruleId: string;
+  error: string;
 }
 
 export type IRangeResult = IRangeEvent | IRangeError
-
-export type MaybeIRangeResult = IRangeResult | null;

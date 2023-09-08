@@ -26,6 +26,12 @@ interface Env {
       PASSWORD: string
     }
   },
+
+  NOTIFIER_SERVICE: {
+    DOMAIN: string,
+    CREATE_ALERT_EVENT_PATH: string,
+    ACK_TASK_PATH: string,
+  }
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -60,4 +66,10 @@ export const env: Env = {
     //   PASSWORD: getEnvVar('KAFKA_SASL_PASSWORD'),
     // }
   },
+
+  NOTIFIER_SERVICE: {
+    DOMAIN: getEnvVar('NOTIFIER_SERVICE_DOMAIN'),
+    CREATE_ALERT_EVENT_PATH: '/v1.0/block/by-rule-id/alert',
+    ACK_TASK_PATH: '/v1.0/rule-group/block/ack'
+  }
 }

@@ -1,6 +1,6 @@
 import { IRangeNetwork } from './types/IRangeNetwork'
 import { IRangeBlock } from './types/chain/IRangeBlock'
-import { IRangeResult, MaybeIRangeResult } from './types/IRangeEvent'
+import { IRangeError, IRangeResult } from './types/IRangeEvent'
 import { IRangeMessage } from './types/chain/IRangeMessage'
 import { IRangeTransaction } from './types/chain/IRangeTransaction'
 import { Network } from './network'
@@ -12,17 +12,18 @@ import { ITaskPackage } from './types/IRangeTaskPackage'
 import { fetchBlock } from './services/fetchBlock'
 import { fetchAlertRules } from './services/fetchAlertRules'
 import { KafkaClient } from './connections/KafkaClient'
+import axios from 'axios'
 
 export interface OnBlock {
 	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult[]>
 	filter?: {},
 }
 export interface OnTransaction {
-	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<MaybeIRangeResult>
+	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult[]>
 	filter?: { success?: boolean }
 }
 export interface OnMessage {
-	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<MaybeIRangeResult>
+	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult[]>
 	filter?: {
 		success?: boolean,
 		types?: string[],
@@ -78,28 +79,37 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 
 		if (!block) {
 			// Update 
+			// call the acknowledgement API
 			return
 		}
 
-		const allEvents = await this.processBlockTask(block, rules);
+		const errors = await this.processBlockTask(block, rules);
 
-		if (allEvents.length > 0) {
-			// call the notifier with { allEvents }
-		}
+		// call the acknowledgement API
+		await axios.post(`${env.NOTIFIER_SERVICE.DOMAIN}${env.NOTIFIER_SERVICE.ACK_TASK_PATH}`, {
+			block: taskPackage.block,
+			ruleGroupId: taskPackage.ruleGroupId,
+			...(errors?.length ? { errors } : {}),
+		})
 	}
 
-	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
+	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeError[]> {
 		const events = await Promise.all(rules.map(async (rule) => {
 			try {
 				const ruleResults = await this.opts.onBlock.callback(block, rule)
-				return ruleResults;
+				// todo: change when notifier api supports creating multiple AlertEvent
+				// call the notifier API and storing and trigger alerts
+				await Promise.all(
+					ruleResults.map((result) => {
+						axios.post(`${env.NOTIFIER_SERVICE.DOMAIN}${env.NOTIFIER_SERVICE.CREATE_ALERT_EVENT_PATH}`, { ...result })
+					})
+				)
+
+				return [];
 			} catch (error) {
 				return [{
-					details: {
-						error: String(error),
-					},
-					network: block.network,
-					blockNumber: Number(block.height),
+					ruleId: rule.id,
+					error: String(error)
 				}]
 			}
 		}))
