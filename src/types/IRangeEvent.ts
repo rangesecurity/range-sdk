@@ -1,5 +1,4 @@
 export interface IRangeEvent {
-  ruleType: string
   details: { message: string },
   workspaceId: string
   alertRuleId: string

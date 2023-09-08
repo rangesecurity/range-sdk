@@ -9,7 +9,6 @@ const myOnBlock: OnBlock = {
         const successMessages = messages.filter((m) => m.success);
 
         return successMessages.map(m => ({
-            ruleType: rule.ruleType,
             details: {
                 message: "Success message of type: " + m.type,
             },
