@@ -1,27 +1,27 @@
 import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule, IRangeResult } from "../src";
 
 const myOnBlock: OnBlock = {
-    callback: async (
-        block: IRangeBlock,
-        rule: IRangeAlertRule,
-    ): Promise<IRangeResult[]> => {
-        const messages = block.transactions.flatMap((tx) => tx.messages);
-        const successMessages = messages.filter((m) => m.success);
+  callback: async (
+    block: IRangeBlock,
+    rule: IRangeAlertRule
+  ): Promise<IRangeEvent[]> => {
+    const messages = block.transactions.flatMap((tx) => tx.messages);
+    const successMessages = messages.filter((m) => m.success);
 
-        return successMessages.map(m => ({
-            details: {
-                message: "Success message of type: " + m.type,
-            },
-            workspaceId: rule.workspaceId,
-            alertRuleId: rule.id,
-            time: block.timestamp,
-            txHash: m.hash,
-            blockNumber: String(block.height),
-            network: block.network,
-            addressesInvolved: m.addresses,
-        }))
-    },
-}
+    return successMessages.map((m) => ({
+      details: {
+        message: "Success message of type: " + m.type,
+      },
+      workspaceId: rule.workspaceId,
+      alertRuleId: rule.id,
+      time: block.timestamp,
+      txHash: m.hash,
+      blockNumber: String(block.height),
+      network: block.network,
+      addressesInvolved: m.addresses,
+    }));
+  },
+};
 
 // const onMessageFailed: OnMessage = {
 //     callback: async (

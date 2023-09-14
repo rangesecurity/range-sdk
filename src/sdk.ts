@@ -1,6 +1,6 @@
 import { IRangeNetwork } from './types/IRangeNetwork'
 import { IRangeBlock } from './types/chain/IRangeBlock'
-import { IRangeError, IRangeResult } from './types/IRangeEvent'
+import { IRangeError, IRangeResult, IRangeEvent } from "./types/IRangeEvent";
 import { IRangeMessage } from './types/chain/IRangeMessage'
 import { IRangeTransaction } from './types/chain/IRangeTransaction'
 import { Network } from './network'
@@ -12,23 +12,35 @@ import { ITaskPackage } from './types/IRangeTaskPackage'
 import { fetchBlock } from './services/fetchBlock'
 import { fetchAlertRules } from './services/fetchAlertRules'
 import { KafkaClient } from './connections/KafkaClient'
-import axios from 'axios'
+import { taskAck } from './services/taskAck'
+import { createAlertEvents } from './services/alertEvent'
 
 export interface OnBlock {
-	callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<IRangeResult[]>
-	filter?: {},
+  callback: (
+    block: IRangeBlock,
+    rule: IRangeAlertRule
+  ) => Promise<IRangeEvent[]>;
+  filter?: {};
 }
 export interface OnTransaction {
-	callback: (transaction: IRangeTransaction, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult[]>
-	filter?: { success?: boolean }
+  callback: (
+    transaction: IRangeTransaction,
+    rule: IRangeAlertRule,
+    block: IRangeBlock
+  ) => Promise<IRangeEvent[]>;
+  filter?: { success?: boolean };
 }
 export interface OnMessage {
-	callback: (message: IRangeMessage, rule: IRangeAlertRule, block: IRangeBlock) => Promise<IRangeResult[]>
-	filter?: {
-		success?: boolean,
-		types?: string[],
-		addresses?: string[]
-	}
+  callback: (
+    message: IRangeMessage,
+    rule: IRangeAlertRule,
+    block: IRangeBlock
+  ) => Promise<IRangeEvent[]>;
+  filter?: {
+    success?: boolean;
+    types?: string[];
+    addresses?: string[];
+  };
 }
 
 export interface Options {
@@ -73,9 +85,19 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 		console.log("Received package:", taskPackage);
 
 		const [rules, block] = await Promise.all([
-			fetchAlertRules(taskPackage.ruleGroupId),
-			fetchBlock(taskPackage.block.height, taskPackage.block.network)
-		])
+			fetchAlertRules({
+				token: this.opts.token,
+				ruleGroupId: taskPackage.ruleGroupId,
+			}),
+			fetchBlock({
+				token: this.opts.token,
+				height: taskPackage.block.height,
+				network: taskPackage.block.network
+			}).catch(err => {
+				// todo: log error while fetching block
+				return null;
+			}),
+    	]);
 
 		if (!block) {
 			// Update 
@@ -84,12 +106,13 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 		}
 
 		const errors = await this.processBlockTask(block, rules);
-
-		// call the acknowledgement API
-		await axios.post(`${env.NOTIFIER_SERVICE.DOMAIN}${env.NOTIFIER_SERVICE.ACK_TASK_PATH}`, {
+		await taskAck({
+			token: this.opts.token,
 			block: taskPackage.block,
 			ruleGroupId: taskPackage.ruleGroupId,
-			...(errors?.length ? { errors } : {}),
+			...(errors?.length ? {
+				errors
+			}: {})
 		})
 	}
 
@@ -97,13 +120,12 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 		const events = await Promise.all(rules.map(async (rule) => {
 			try {
 				const ruleResults = await this.opts.onBlock.callback(block, rule)
-				// todo: change when notifier api supports creating multiple AlertEvent
-				// call the notifier API and storing and trigger alerts
-				await Promise.all(
-					ruleResults.map((result) => {
-						axios.post(`${env.NOTIFIER_SERVICE.DOMAIN}${env.NOTIFIER_SERVICE.CREATE_ALERT_EVENT_PATH}`, { ...result })
-					})
-				)
+				const alertRes = await createAlertEvents({
+					token: this.opts.token,
+					workspaceId: rule.workspaceId,
+					alertRuleId: rule.id,
+					alerts: ruleResults
+				})
 
 				return [];
 			} catch (error) {
