@@ -3,12 +3,6 @@ import { IRangeNetwork } from "./types/IRangeNetwork";
 require("dotenv").config();
 
 interface Env {
-  APPDB_PG_HOST: string;
-  APPDB_PG_PORT: number;
-  APPDB_PG_USER: string;
-  APPDB_PG_PASSWORD: string;
-  APPDB_PG_DATABASE: string;
-
   KAFKA_TOPIC: string;
   KAFKA: {
     HOSTS: string;
@@ -44,11 +38,6 @@ function getEnvVar(key: string, defaultValue?: string): string {
 }
 
 export const env: Env = {
-  APPDB_PG_HOST: getEnvVar("APPDB_PG_HOST"),
-  APPDB_PG_PORT: Number(getEnvVar("APPDB_PG_PORT")),
-  APPDB_PG_USER: getEnvVar("APPDB_PG_USER"),
-  APPDB_PG_PASSWORD: getEnvVar("APPDB_PG_PASSWORD"),
-  APPDB_PG_DATABASE: getEnvVar("APPDB_PG_DATABASE"),
   KAFKA_TOPIC: getEnvVar("KAFKA_TOPIC"),
   KAFKA: {
     HOSTS: getEnvVar("KAFKA_HOSTS"),
