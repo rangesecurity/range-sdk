@@ -108,6 +108,7 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 				token: this.opts.token,
 				block: taskPackage.block,
 				ruleGroupId: taskPackage.ruleGroupId,
+				runnerId: taskPackage.runnerId,
 			})
 			return
 		}
@@ -117,10 +118,13 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 			token: this.opts.token,
 			block: taskPackage.block,
 			ruleGroupId: taskPackage.ruleGroupId,
-			...(errors?.length ? {
-				errors
-			}: {})
-		})
+			runnerId: taskPackage.runnerId,
+			...(errors?.length
+				? {
+					errors,
+				}
+				: {}),
+		});
 	}
 
 	private async processBlockTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeError[]> {

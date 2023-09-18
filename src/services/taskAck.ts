@@ -8,6 +8,7 @@ export async function taskAck(args: {
     height: string;
   };
   ruleGroupId: string;
+  runnerId: string;
   errors?: {
     ruleId: string;
     error: string;
