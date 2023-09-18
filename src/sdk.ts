@@ -127,7 +127,7 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 		const events = await Promise.all(rules.map(async (rule) => {
 			try {
 				const ruleResults = await this.opts.onBlock.callback(block, rule)
-				const alertRes = await createAlertEvents({
+				await createAlertEvents({
 					token: this.opts.token,
 					workspaceId: rule.workspaceId,
 					alertRuleId: rule.id,
