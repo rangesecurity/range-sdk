@@ -95,13 +95,20 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 				network: taskPackage.block.network
 			}).catch(err => {
 				// todo: log error while fetching block
-				return null;
+				if (err?.response?.status === 404) {
+					return null;
+				}
+				throw err;
 			}),
     	]);
 
 		if (!block) {
-			// Update 
-			// call the acknowledgement API
+			// call the acknowledgement API and mark the package as done if block is not found
+			await taskAck({
+				token: this.opts.token,
+				block: taskPackage.block,
+				ruleGroupId: taskPackage.ruleGroupId,
+			})
 			return
 		}
 
