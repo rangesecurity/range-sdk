@@ -1,5 +1,5 @@
-import axios from "axios";
-import { env } from "../env";
+import axios from 'axios';
+import { env } from '../env';
 
 export async function taskAck(args: {
   token: string;
@@ -27,9 +27,9 @@ export async function taskAck(args: {
     },
     {
       headers: {
-        "X-API-KEY": token,
+        'X-API-KEY': token,
       },
-    }
+    },
   );
 
   return data;

@@ -1,7 +1,7 @@
-import NodeCache from "node-cache";
-import axios from "axios";
-import { IRangeBlock } from "../types/chain/IRangeBlock";
-import { env } from "../env";
+import NodeCache from 'node-cache';
+import axios from 'axios';
+import { IRangeBlock } from '../types/chain/IRangeBlock';
+import { env } from '../env';
 
 const blockCache = new NodeCache({
   stdTTL: 3600,
@@ -30,7 +30,7 @@ export async function fetchBlock(args: {
       height,
     },
     headers: {
-      "X-API-KEY": token,
+      'X-API-KEY': token,
     },
   });
 

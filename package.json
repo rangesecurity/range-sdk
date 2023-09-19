@@ -11,13 +11,21 @@
     "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node dist/src/index.js\"",
     "example": "tsc-watch --onSuccess \"node dist/examples/alertProcessors.js\"",
-    "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\""
+    "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\"",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "mocha": "^10.2.0",
+    "prettier": "^3.0.3",
     "tsc-watch": "^6.0.4",
     "typescript": "^5.1.6"
   },

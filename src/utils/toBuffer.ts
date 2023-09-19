@@ -1,3 +1,3 @@
 export function toBuffer(obj: any) {
-  return Buffer.from(JSON.stringify(obj))
+  return Buffer.from(JSON.stringify(obj));
 }
