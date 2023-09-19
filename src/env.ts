@@ -1,6 +1,6 @@
-import { IRangeNetwork } from "./types/IRangeNetwork";
+import { IRangeNetwork } from './types/IRangeNetwork';
 
-require("dotenv").config();
+require('dotenv').config();
 
 interface Env {
   KAFKA_TOPIC: string;
@@ -38,27 +38,18 @@ function getEnvVar(key: string, defaultValue?: string): string {
 }
 
 export const env: Env = {
-  KAFKA_TOPIC: getEnvVar("KAFKA_TOPIC"),
+  KAFKA_TOPIC: getEnvVar('KAFKA_TOPIC'),
   KAFKA: {
-    HOSTS: getEnvVar("KAFKA_HOSTS"),
-    SECURE: getEnvVar("KAFKA_SECURE", "false") === "false" ? false : true,
-    // SSL: {
-    //   CA_FILE: getEnvVar('KAFKA_SSL_CA_FILE'),
-    //   KEY_FILE: getEnvVar('KAFKA_SSL_KEY_FILE'),
-    //   CERT_FILE: getEnvVar('KAFKA_SSL_CERT_FILE'),
-    // },
-    // SASL: {
-    //   USERNAME: getEnvVar('KAFKA_SASL_USERNAME'),
-    //   PASSWORD: getEnvVar('KAFKA_SASL_PASSWORD'),
-    // }
+    HOSTS: getEnvVar('KAFKA_HOSTS'),
+    SECURE: getEnvVar('KAFKA_SECURE', 'false') === 'false' ? false : true,
   },
 
   MANAGER_SERVICE: {
-    DOMAIN: getEnvVar("NOTIFIER_SERVICE_DOMAIN"),
-    CREATE_ALERT_EVENT_PATH: "/v1.0/rule-group/block/alerts/by-rule-id",
-    ACK_TASK_PATH: "/v1.0/rule-group/block/ack",
+    DOMAIN: getEnvVar('NOTIFIER_SERVICE_DOMAIN'),
+    CREATE_ALERT_EVENT_PATH: '/v1.0/rule-group/block/alerts/by-rule-id',
+    ACK_TASK_PATH: '/v1.0/rule-group/block/ack',
     FETCH_RULES_BY_RULE_GROUP_ID_PATH: (ruleGroupId: string) =>
       `/v1.0/rule-group/${ruleGroupId}/rules`,
-    FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: "/v1.0/rule-group/block",
+    FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: '/v1.0/rule-group/block',
   },
 };

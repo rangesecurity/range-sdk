@@ -1,23 +1,23 @@
-import { IRangeMessage } from './IRangeMessage'
+import { IRangeMessage } from './IRangeMessage';
 
 export interface IKeyValuePair {
-  key: string,
-  value: string,
+  key: string;
+  value: string;
 }
 
 export interface ITransactionEvent {
-  type: string,
-  attributes: IKeyValuePair[],
+  type: string;
+  attributes: IKeyValuePair[];
 }
 
 export interface ITransactionLog {
-  events: ITransactionEvent[],
+  events: ITransactionEvent[];
 }
 
 export interface IRangeTransaction {
-  height: number
-  messages: IRangeMessage[]
-  success: boolean
-  hash: string
-  logs: { events: ITransactionEvent[] }[]
+  height: number;
+  messages: IRangeMessage[];
+  success: boolean;
+  hash: string;
+  logs: { events: ITransactionEvent[] }[];
 }

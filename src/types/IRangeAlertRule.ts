@@ -1,5 +1,5 @@
 export interface IRangeAlertRule {
-    id: string
-    ruleType: string,
-    workspaceId: string,
+  id: string;
+  ruleType: string;
+  workspaceId: string;
 }

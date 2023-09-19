@@ -1,6 +1,6 @@
-import axios from "axios";
-import { IRangeEvent } from "../types/IRangeEvent";
-import { env } from "../env";
+import axios from 'axios';
+import { IRangeEvent } from '../types/IRangeEvent';
+import { env } from '../env';
 
 export async function createAlertEvents(args: {
   token: string;
@@ -19,9 +19,9 @@ export async function createAlertEvents(args: {
     },
     {
       headers: {
-        "X-API-KEY": token,
+        'X-API-KEY': token,
       },
-    }
+    },
   );
 
   return data;

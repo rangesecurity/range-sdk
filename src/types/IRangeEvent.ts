@@ -1,12 +1,12 @@
 export interface IRangeEvent {
-  details: { message: string },
-  workspaceId: string
-  alertRuleId: string
-  time: string
-  txHash: string
-  blockNumber: string
-  network: string
-  addressesInvolved: string[]
+  details: { message: string };
+  workspaceId: string;
+  alertRuleId: string;
+  time: string;
+  txHash: string;
+  blockNumber: string;
+  network: string;
+  addressesInvolved: string[];
 }
 
 export interface IRangeError {
@@ -14,4 +14,4 @@ export interface IRangeError {
   error: string;
 }
 
-export type IRangeResult = IRangeEvent | IRangeError
+export type IRangeResult = IRangeEvent | IRangeError;

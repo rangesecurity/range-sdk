@@ -1,6 +1,6 @@
-import axios from "axios";
-import { IRangeAlertRule } from "../types/IRangeAlertRule";
-import { env } from "../env";
+import axios from 'axios';
+import { IRangeAlertRule } from '../types/IRangeAlertRule';
+import { env } from '../env';
 
 export async function fetchAlertRules(args: {
   token: string;
@@ -17,7 +17,7 @@ export async function fetchAlertRules(args: {
     rules: IRangeAlertRule[];
   }>(url, {
     headers: {
-      "X-API-KEY": token,
+      'X-API-KEY': token,
     },
   });
 
