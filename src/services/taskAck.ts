@@ -14,7 +14,7 @@ export async function taskAck(args: {
     error: string;
   }[];
 }): Promise<{ ackId: string }> {
-  const { token, block, ruleGroupId, errors } = args;
+  const { token, block, ruleGroupId, runnerId, errors } = args;
   const url = `${env.MANAGER_SERVICE.DOMAIN}${env.MANAGER_SERVICE.ACK_TASK_PATH}`;
 
   const { data } = await axios.post<{ ackId: string }>(
@@ -22,6 +22,7 @@ export async function taskAck(args: {
     {
       block: block,
       ruleGroupId: ruleGroupId,
+      runnerId,
       ...(errors?.length ? { errors } : {}),
     },
     {

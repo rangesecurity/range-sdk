@@ -102,8 +102,8 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 			}),
     	]);
 
-		if (!block) {
-			// call the acknowledgement API and mark the package as done if block is not found
+		// call the acknowledgement API and mark the package as done if block is not found or rule group is empty
+		if (!block || rules.length === 0) {
 			await taskAck({
 				token: this.opts.token,
 				block: taskPackage.block,
@@ -131,12 +131,14 @@ class RangeSDK extends KafkaClient<ITaskPackage>{
 		const events = await Promise.all(rules.map(async (rule) => {
 			try {
 				const ruleResults = await this.opts.onBlock.callback(block, rule)
-				await createAlertEvents({
-					token: this.opts.token,
-					workspaceId: rule.workspaceId,
-					alertRuleId: rule.id,
-					alerts: ruleResults
-				})
+				if (ruleResults.length) {
+					await createAlertEvents({
+                    	token: this.opts.token,
+                    	workspaceId: rule.workspaceId,
+                    	alertRuleId: rule.id,
+                    	alerts: ruleResults,
+                  });
+				}
 
 				return [];
 			} catch (error) {

@@ -15,7 +15,7 @@ export async function createAlertEvents(args: {
     {
       workspaceId,
       alertRuleId,
-      alerts: alerts,
+      alerts,
     },
     {
       headers: {
