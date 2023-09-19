@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc --esModuleInterop --resolveJsonModule --declaration",
     "start": "node dist/index.js",
-    "dev": "tsc-watch --onSuccess \"node dist/sdk/index.js\"",
+    "dev": "tsc-watch --onSuccess \"node dist/src/index.js\"",
     "example": "tsc-watch --onSuccess \"node dist/examples/alertProcessors.js\"",
     "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\""
   },

@@ -1,27 +1,38 @@
-import { RangeSDK, IRangeNetwork, IRangeEvent, IRangeMessage, OnMessage, OnBlock, IRangeBlock, IRangeAlertRule, IRangeResult } from "../src";
+import {
+  RangeSDK,
+  IRangeNetwork,
+  IRangeEvent,
+  IRangeMessage,
+  OnMessage,
+  OnBlock,
+  IRangeBlock,
+  IRangeAlertRule,
+  IRangeResult,
+} from "../src";
 
 const myOnBlock: OnBlock = {
-    callback: async (
-        block: IRangeBlock,
-        rule: IRangeAlertRule,
-    ): Promise<IRangeResult[]> => {
-        const messages = block.transactions.flatMap((tx) => tx.messages);
-        const successMessages = messages.filter((m) => m.success);
+  callback: async (
+    block: IRangeBlock,
+    rule: IRangeAlertRule
+  ): Promise<IRangeEvent[]> => {
+    const successMessages = block.transactions
+      .filter((tx) => tx.success)
+      .flatMap((tx) => tx.messages);
 
-        return successMessages.map(m => ({
-            details: {
-                message: "Success message of type: " + m.type,
-            },
-            workspaceId: rule.workspaceId,
-            alertRuleId: rule.id,
-            time: block.timestamp,
-            txHash: m.hash,
-            blockNumber: String(block.height),
-            network: block.network,
-            addressesInvolved: m.addresses,
-        }))
-    },
-}
+    return successMessages.map((m) => ({
+      details: {
+        message: "Success message of type: " + m.type,
+      },
+      workspaceId: rule.workspaceId,
+      alertRuleId: rule.id,
+      time: block.timestamp,
+      txHash: m.hash,
+      blockNumber: String(block.height),
+      network: block.network,
+      addressesInvolved: m.addresses,
+    }));
+  },
+};
 
 // const onMessageFailed: OnMessage = {
 //     callback: async (
@@ -119,12 +130,16 @@ const myOnBlock: OnBlock = {
 //     }
 // }
 
+if (!process.env.RANGE_SDK_TOKEN) {
+  throw new Error("Range SDK Token is required");
+}
+
 // Defining the RangeSDK instance
 const range = new RangeSDK({
-    token: "xyz",
-    onBlock: myOnBlock,
-    networks: ["osmosis-1"],
-    endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
+  token: process.env.RANGE_SDK_TOKEN,
+  onBlock: myOnBlock,
+  networks: ["osmosis-1"],
+  endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
 });
 
 // Running the RangeSDK instance
