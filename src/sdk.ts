@@ -1,19 +1,20 @@
 import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
-import { IRangeError, IRangeResult, IRangeEvent } from './types/IRangeEvent';
+import { IRangeError, IRangeEvent } from './types/IRangeEvent';
 import { IRangeMessage } from './types/chain/IRangeMessage';
 import { IRangeTransaction } from './types/chain/IRangeTransaction';
 import { Network } from './network';
 import { CosmosClient } from './cosmos/CosmosClient';
 import { assert } from 'console';
-import { env } from './env';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
 import { ITaskPackage } from './types/IRangeTaskPackage';
 import { fetchBlock } from './services/fetchBlock';
 import { fetchAlertRules } from './services/fetchAlertRules';
-import { KafkaClient } from './connections/KafkaClient';
 import { taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
+import { getKafkaClient } from './connections/KafkaClient';
+import { KafkaConsumerClient } from './connections/KafkaConsumer';
+import { env } from './env';
 
 export interface OnBlock {
   callback: (
@@ -50,13 +51,13 @@ export interface Options {
   onBlock: OnBlock;
 }
 
-class RangeSDK extends KafkaClient<ITaskPackage> {
+class RangeSDK {
   private opts: Options;
+  private runnerId: string;
   private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>;
+  private blockRuleGroupTaskClient: KafkaConsumerClient;
 
   constructor(options: Options) {
-    super(options.networks.map((n) => env.KAFKA_TOPIC));
-
     this.opts = options;
     this.cosmosClients = {};
 
@@ -68,15 +69,40 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
         this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
       }
     }
+
+    const [runnerId] = this.opts.token.split('.');
+    this.runnerId = runnerId;
+
+    const kafka = getKafkaClient();
+    this.blockRuleGroupTaskClient = new KafkaConsumerClient(kafka, runnerId);
   }
 
   async init(): Promise<void> {
-    this.listen();
+    const blockRuleGroupTaskQueue =
+      await this.blockRuleGroupTaskClient.subscribeAndConsume(env.KAFKA_TOPIC);
+
+    await blockRuleGroupTaskQueue.run({
+      autoCommit: true,
+      eachMessage: async ({ message, topic, partition }) => {
+        const rawMessage = message?.value?.toString();
+        if (!rawMessage) {
+          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          return;
+        }
+
+        const parseMessage: ITaskPackage = JSON.parse(rawMessage);
+        await this.processMessage(parseMessage);
+      },
+    });
+    console.info(
+      `Blocks kafka consumer has started for topic: ${env.KAFKA_TOPIC}`,
+    );
 
     process.on('SIGINT', async () => {
       console.log('Received SIGINT. Performing cleanup...');
       // Perform your cleanup actions here
-      await this.close();
+      await this.blockRuleGroupTaskClient.gracefulShutdown();
+
       process.exit(0);
     });
   }
@@ -157,74 +183,6 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
     );
     return events.flat().flat();
   }
-
-  // private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-  // 	if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
-  // 		return []
-  // 	}
-
-  // 	const allEvents = await Promise.all(
-  // 		this.opts.onTransactions.map(async (onTx) => {
-  // 			let filteredTxs = block.transactions;
-
-  // 			if (onTx.filter?.success !== undefined) {
-  // 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onTx.filter?.success)
-  // 			}
-
-  // 			const events = await Promise.all(filteredTxs.map(async (tx: any) => {
-  // 				const events = await Promise.all(rules.map(rule => {
-  // 					return onTx.callback(tx, rule, block)
-  // 				}))
-  // 				return events;
-  // 			}))
-
-  // 			return events.flat();
-  // 		})
-  // 	);
-
-  // 	const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-  // 	return processedEvents;
-  // }
-
-  // private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-  // 	if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
-  // 		return []
-  // 	}
-
-  // 	const allEvents = await Promise.all(
-  // 		this.opts.onMessages.map(async (onMessage) => {
-  // 			let filteredTxs = block.transactions;
-  // 			if (onMessage.filter?.success !== undefined) {
-  // 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onMessage.filter?.success)
-  // 			}
-
-  // 			let allMessages = filteredTxs.flatMap((tx: any) => tx.messages)
-  // 			if (onMessage.filter?.types) {
-  // 				allMessages = allMessages.filter((m: any) => onMessage.filter?.types?.includes(m.type))
-  // 			}
-
-  // 			if (onMessage.filter?.addresses) {
-  // 				allMessages = allMessages.filter((m: any) => m.involved_account_addresses.some(
-  // 					(addr: string) => onMessage.filter?.addresses?.includes(addr)
-  // 				));
-  // 			}
-
-  // 			const allEvents = await Promise.all(
-  // 				allMessages.map(async (m: any) => {
-  // 					const events = await Promise.all(rules.map(rule => {
-  // 						return onMessage.callback(m, rule, block)
-  // 					}))
-  // 					return events;
-  // 				})
-  // 			)
-
-  // 			return allEvents.flat();
-  // 		})
-  // 	)
-
-  // 	const processedEvents = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-  // 	return processedEvents;
-  // }
 
   getCosmosClient(network: Network): CosmosClient {
     // TODO: we can add our proxy client here
