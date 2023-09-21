@@ -7,10 +7,16 @@ import { Network } from './network';
 import { CosmosClient } from './cosmos/CosmosClient';
 import { assert } from 'console';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
-import { ITaskPackage } from './types/IRangeTaskPackage';
+import {
+  BlockRuleGroupTaskPackage,
+  ErrorBlockRuleTaskPackage,
+} from './types/IRangeTaskPackage';
 import { fetchBlock } from './services/fetchBlock';
-import { fetchAlertRules } from './services/fetchAlertRules';
-import { taskAck } from './services/taskAck';
+import {
+  fetchAlertRuleByRuleGroupAndRuleID,
+  fetchAlertRulesByRuleGroupID,
+} from './services/fetchAlertRules';
+import { errorTaskAck, taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
 import { getKafkaClient } from './connections/KafkaClient';
 import { KafkaConsumerClient } from './connections/KafkaConsumer';
@@ -56,6 +62,7 @@ class RangeSDK {
   private runnerId: string;
   private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>;
   private blockRuleGroupTaskClient: KafkaConsumerClient;
+  private errorBlockRuleTaskClient: KafkaConsumerClient;
 
   constructor(options: Options) {
     this.opts = options;
@@ -75,9 +82,24 @@ class RangeSDK {
 
     const kafka = getKafkaClient();
     this.blockRuleGroupTaskClient = new KafkaConsumerClient(kafka, runnerId);
+    this.errorBlockRuleTaskClient = new KafkaConsumerClient(kafka, runnerId);
   }
 
   async init(): Promise<void> {
+    await this.initBlockRuleGroupTaskQueue();
+    await this.initErrorBlockRuleTaskQueue();
+
+    process.on('SIGINT', async () => {
+      console.log('Received SIGINT. Performing cleanup...');
+      // Perform your cleanup actions here
+      await this.blockRuleGroupTaskClient.gracefulShutdown();
+      await this.errorBlockRuleTaskClient.gracefulShutdown();
+
+      process.exit(0);
+    });
+  }
+
+  private async initBlockRuleGroupTaskQueue() {
     const blockRuleGroupTaskQueue =
       await this.blockRuleGroupTaskClient.subscribeAndConsume(env.KAFKA_TOPIC);
 
@@ -90,28 +112,22 @@ class RangeSDK {
           return;
         }
 
-        const parseMessage: ITaskPackage = JSON.parse(rawMessage);
-        await this.processMessage(parseMessage);
+        const parseMessage: BlockRuleGroupTaskPackage = JSON.parse(rawMessage);
+        await this.blockRuleGroupTaskQueueHandler(parseMessage);
       },
     });
     console.info(
-      `Blocks kafka consumer has started for topic: ${env.KAFKA_TOPIC}`,
+      `Block Rule Group Task Queue has started on topic: ${env.KAFKA_TOPIC}`,
     );
-
-    process.on('SIGINT', async () => {
-      console.log('Received SIGINT. Performing cleanup...');
-      // Perform your cleanup actions here
-      await this.blockRuleGroupTaskClient.gracefulShutdown();
-
-      process.exit(0);
-    });
   }
 
-  protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
+  private async blockRuleGroupTaskQueueHandler(
+    taskPackage: BlockRuleGroupTaskPackage,
+  ): Promise<void> {
     console.log('Received package:', taskPackage);
 
     const [rules, block] = await Promise.all([
-      fetchAlertRules({
+      fetchAlertRulesByRuleGroupID({
         token: this.opts.token,
         ruleGroupId: taskPackage.ruleGroupId,
       }),
@@ -150,6 +166,80 @@ class RangeSDK {
             errors,
           }
         : {}),
+    });
+  }
+
+  private async initErrorBlockRuleTaskQueue() {
+    const errorBlockRuleTaskQueue =
+      await this.errorBlockRuleTaskClient.subscribeAndConsume(
+        env.KAFKA_ERROR_TOPIC,
+      );
+    await errorBlockRuleTaskQueue.run({
+      autoCommit: true,
+      eachMessage: async ({ message }) => {
+        const rawMessage = message?.value?.toString();
+        if (!rawMessage) {
+          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          return;
+        }
+
+        const parseMessage: ErrorBlockRuleTaskPackage = JSON.parse(rawMessage);
+        await this.errorBlockRuleTaskQueueHandler(parseMessage);
+      },
+    });
+    console.info(
+      `Error Block Rule Task Queue has started on topic: ${env.KAFKA_ERROR_TOPIC}`,
+    );
+  }
+
+  private async errorBlockRuleTaskQueueHandler(
+    taskPackage: ErrorBlockRuleTaskPackage,
+  ) {
+    const [rule, block] = await Promise.all([
+      fetchAlertRuleByRuleGroupAndRuleID({
+        token: this.opts.token,
+        ruleGroupId: taskPackage.ruleGroupId,
+        ruleId: taskPackage.ruleId,
+      }),
+      fetchBlock({
+        token: this.opts.token,
+        height: taskPackage.blockNumber,
+        network: taskPackage.network,
+      }).catch((err) => {
+        // todo: log error while fetching block
+        if (err?.response?.status === 404) {
+          return null;
+        }
+        throw err;
+      }),
+    ]);
+
+    // call the error task acknowledgement API and mark the error task as non retry-able
+    if (!block || !rule) {
+      const e = !block
+        ? `Block Not Found: network: ${taskPackage.network}, height: ${taskPackage.blockNumber}`
+        : `Rule Not Found: id: ${taskPackage.ruleId}`;
+      await errorTaskAck({
+        token: this.opts.token,
+        errorId: taskPackage.errorId,
+        error: e,
+        retry: false,
+      });
+      return;
+    }
+
+    const [error] = await this.processBlockTask(block, [rule]);
+    await errorTaskAck({
+      token: this.opts.token,
+      errorId: taskPackage.errorId,
+      ...(error
+        ? {
+            error: error.error,
+            retry: true,
+          }
+        : {
+            retry: false,
+          }),
     });
   }
 
