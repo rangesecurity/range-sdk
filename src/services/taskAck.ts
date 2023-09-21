@@ -34,3 +34,29 @@ export async function taskAck(args: {
 
   return data;
 }
+
+export async function errorTaskAck(args: {
+  token: string;
+  errorId: string;
+  error?: string;
+  retry: boolean;
+}) {
+  const { token, errorId, error, retry } = args;
+  const url = `${env.MANAGER_SERVICE.DOMAIN}${env.MANAGER_SERVICE.ACK_ERROR_TASK_PATH}`;
+
+  const { data } = await axios.patch<{ success: boolean }>(
+    url,
+    {
+      errorId,
+      ...(error && { error }),
+      retry,
+    },
+    {
+      headers: {
+        'X-API-KEY': token,
+      },
+    },
+  );
+
+  return data;
+}

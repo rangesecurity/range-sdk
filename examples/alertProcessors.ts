@@ -1,19 +1,15 @@
 import {
   RangeSDK,
-  IRangeNetwork,
   IRangeEvent,
-  IRangeMessage,
-  OnMessage,
   OnBlock,
   IRangeBlock,
   IRangeAlertRule,
-  IRangeResult,
-} from "../src";
+} from '../src';
 
 const myOnBlock: OnBlock = {
   callback: async (
     block: IRangeBlock,
-    rule: IRangeAlertRule
+    rule: IRangeAlertRule,
   ): Promise<IRangeEvent[]> => {
     const successMessages = block.transactions
       .filter((tx) => tx.success)
@@ -21,7 +17,7 @@ const myOnBlock: OnBlock = {
 
     return successMessages.map((m) => ({
       details: {
-        message: "Success message of type: " + m.type,
+        message: 'Success message of type: ' + m.type,
       },
       workspaceId: rule.workspaceId,
       alertRuleId: rule.id,
@@ -34,112 +30,16 @@ const myOnBlock: OnBlock = {
   },
 };
 
-// const onMessageFailed: OnMessage = {
-//     callback: async (
-//         m: IRangeMessage,
-//         rule,
-//         block: IRangeBlock,
-//     ): Promise<MaybeIRangeResult> => {
-//         return {
-//             ruleType: "failedMessage",
-//             details: {
-//                 message: "Failed message of type: " + m.type,
-//             },
-//         };
-//     },
-//     filter: {
-//         success: false,
-//     }
-// }
-
-// const onMessageTransfer: OnMessage = {
-//     callback: async (
-//         m: IRangeMessage,
-//         rule,
-//         block: IRangeBlock,
-//     ): Promise<MaybeIRangeResult> => {
-//         return {
-//             ruleType: "transfer",
-//             details: {
-//                 message: "Transfer message of type: " + m.type,
-//             },
-//         };
-//     },
-//     filter: {
-//         types: ["cosmos-sdk/MsgSend"],
-//     }
-// }
-
-// const onMessageIBCTransfer: OnMessage = {
-//     callback: async (
-//         m: IRangeMessage,
-//         rule,
-//         block: IRangeBlock,
-//     ): Promise<MaybeIRangeResult> => {
-//         return {
-//             ruleType: "IBCTransfer",
-//             details: {
-//                 message: "IBC Transfer message of type: " + m.type,
-//             },
-//         };
-//     },
-//     filter: {
-//         types: ["cosmos-sdk/MsgTransfer"],
-//     }
-// }
-
-// const address = "osmo14lzvt4gdwh2q4ymyjqma0p4j4aykpn929zx75y"
-// const denom = "uosmo";
-// let lastBalance: string | null = null;
-
-// const onBlockBalanceChange: OnBlock = {
-//     callback: async (
-//         block: IRangeBlock,
-//         rule: IRangeAlertRule,
-//     ): Promise<MaybeIRangeResult> => {
-//         const isInvolved = block.transactions.some((tx) => {
-//             return tx.messages.some((m) => {
-//                 return m.addresses.includes(address);
-//             })
-//         });
-
-//         if (isInvolved) {
-//             const cosmosClient = range.getCosmosClient(block.network)
-//             const res = await cosmosClient.balance(address, denom)
-//             const currentBalance = res.balance?.amount
-
-//             if (currentBalance) {
-//                 if (lastBalance !== null) {
-//                     if (lastBalance !== currentBalance) {
-//                         lastBalance = currentBalance
-//                         return {
-//                             ruleType: "balanceChange",
-//                             details: {
-//                                 message: `Balance changed to ${currentBalance}`,
-//                             },
-//                         };
-//                     }
-//                 }
-//                 lastBalance = currentBalance
-//             }
-//         }
-
-//         return null;
-//     },
-//     filter: {
-//     }
-// }
-
 if (!process.env.RANGE_SDK_TOKEN) {
-  throw new Error("Range SDK Token is required");
+  throw new Error('Range SDK Token is required');
 }
 
 // Defining the RangeSDK instance
 const range = new RangeSDK({
   token: process.env.RANGE_SDK_TOKEN,
   onBlock: myOnBlock,
-  networks: ["osmosis-1"],
-  endpoints: { "osmosis-1": "https://rpc.osmosis.zone" },
+  networks: ['osmosis-1'],
+  endpoints: { 'osmosis-1': 'https://rpc.osmosis.zone' },
 });
 
 // Running the RangeSDK instance

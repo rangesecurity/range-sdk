@@ -1,10 +1,10 @@
-import NodeCache from 'node-cache';
+import { LRUCache } from 'lru-cache';
 import axios from 'axios';
 import { IRangeBlock } from '../types/chain/IRangeBlock';
 import { env } from '../env';
 
-const blockCache = new NodeCache({
-  stdTTL: 3600,
+const blockCache = new LRUCache<string, IRangeBlock>({
+  max: 100, // We will keep max of 100 blocks in memory
 });
 
 export async function fetchBlock(args: {
@@ -14,7 +14,7 @@ export async function fetchBlock(args: {
 }): Promise<IRangeBlock | null> {
   const { token, height, network } = args;
 
-  const cachedBlock = blockCache.get<IRangeBlock>(`${network}-${height}`);
+  const cachedBlock = blockCache.get(`${network}-${height}`);
   if (cachedBlock) {
     return cachedBlock;
   }

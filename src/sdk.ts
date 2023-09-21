@@ -1,19 +1,26 @@
 import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
-import { IRangeError, IRangeResult, IRangeEvent } from './types/IRangeEvent';
+import { IRangeError, IRangeEvent } from './types/IRangeEvent';
 import { IRangeMessage } from './types/chain/IRangeMessage';
 import { IRangeTransaction } from './types/chain/IRangeTransaction';
 import { Network } from './network';
 import { CosmosClient } from './cosmos/CosmosClient';
 import { assert } from 'console';
-import { env } from './env';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
-import { ITaskPackage } from './types/IRangeTaskPackage';
+import {
+  BlockRuleGroupTaskPackage,
+  ErrorBlockRuleTaskPackage,
+} from './types/IRangeTaskPackage';
 import { fetchBlock } from './services/fetchBlock';
-import { fetchAlertRules } from './services/fetchAlertRules';
-import { KafkaClient } from './connections/KafkaClient';
-import { taskAck } from './services/taskAck';
+import {
+  fetchAlertRuleByRuleGroupAndRuleID,
+  fetchAlertRulesByRuleGroupID,
+} from './services/fetchAlertRules';
+import { errorTaskAck, taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
+import { getKafkaClient } from './connections/KafkaClient';
+import { KafkaConsumerClient } from './connections/KafkaConsumer';
+import { env } from './env';
 
 export interface OnBlock {
   callback: (
@@ -50,13 +57,14 @@ export interface Options {
   onBlock: OnBlock;
 }
 
-class RangeSDK extends KafkaClient<ITaskPackage> {
+class RangeSDK {
   private opts: Options;
+  private runnerId: string;
   private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>;
+  private blockRuleGroupTaskClient: KafkaConsumerClient;
+  private errorBlockRuleTaskClient: KafkaConsumerClient;
 
   constructor(options: Options) {
-    super(options.networks.map((n) => env.KAFKA_TOPIC));
-
     this.opts = options;
     this.cosmosClients = {};
 
@@ -68,24 +76,70 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
         this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
       }
     }
+
+    const [runnerId] = this.opts.token.split('.');
+    this.runnerId = runnerId;
+
+    const kafka = getKafkaClient(runnerId);
+    this.blockRuleGroupTaskClient = new KafkaConsumerClient(
+      kafka,
+      `rangeSDK-runner-${runnerId}-block-rule-group-task`,
+      {
+        retries: 3,
+      },
+    );
+    this.errorBlockRuleTaskClient = new KafkaConsumerClient(
+      kafka,
+      `rangeSDK-runner-${runnerId}-error-block-rule-task`,
+      {
+        retries: 0,
+      },
+    );
   }
 
   async init(): Promise<void> {
-    this.listen();
+    await this.initBlockRuleGroupTaskQueue();
+    await this.initErrorBlockRuleTaskQueue();
 
     process.on('SIGINT', async () => {
       console.log('Received SIGINT. Performing cleanup...');
       // Perform your cleanup actions here
-      await this.close();
+      await this.blockRuleGroupTaskClient.gracefulShutdown();
+      await this.errorBlockRuleTaskClient.gracefulShutdown();
+
       process.exit(0);
     });
   }
 
-  protected async processMessage(taskPackage: ITaskPackage): Promise<void> {
+  private async initBlockRuleGroupTaskQueue() {
+    const blockRuleGroupTaskQueue =
+      await this.blockRuleGroupTaskClient.subscribeAndConsume(env.KAFKA_TOPIC);
+
+    await blockRuleGroupTaskQueue.run({
+      autoCommit: true,
+      eachMessage: async ({ message, topic, partition }) => {
+        const rawMessage = message?.value?.toString();
+        if (!rawMessage) {
+          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          return;
+        }
+
+        const parseMessage: BlockRuleGroupTaskPackage = JSON.parse(rawMessage);
+        await this.blockRuleGroupTaskQueueHandler(parseMessage);
+      },
+    });
+    console.info(
+      `Block Rule Group Task Queue has started on topic: ${env.KAFKA_TOPIC}`,
+    );
+  }
+
+  private async blockRuleGroupTaskQueueHandler(
+    taskPackage: BlockRuleGroupTaskPackage,
+  ): Promise<void> {
     console.log('Received package:', taskPackage);
 
     const [rules, block] = await Promise.all([
-      fetchAlertRules({
+      fetchAlertRulesByRuleGroupID({
         token: this.opts.token,
         ruleGroupId: taskPackage.ruleGroupId,
       }),
@@ -127,6 +181,82 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
     });
   }
 
+  private async initErrorBlockRuleTaskQueue() {
+    const errorBlockRuleTaskQueue =
+      await this.errorBlockRuleTaskClient.subscribeAndConsume(
+        env.KAFKA_ERROR_TOPIC,
+      );
+    await errorBlockRuleTaskQueue.run({
+      autoCommit: true,
+      eachMessage: async ({ message }) => {
+        const rawMessage = message?.value?.toString();
+        if (!rawMessage) {
+          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          return;
+        }
+
+        const parseMessage: ErrorBlockRuleTaskPackage = JSON.parse(rawMessage);
+        await this.errorBlockRuleTaskQueueHandler(parseMessage);
+      },
+    });
+    console.info(
+      `Error Block Rule Task Queue has started on topic: ${env.KAFKA_ERROR_TOPIC}`,
+    );
+  }
+
+  private async errorBlockRuleTaskQueueHandler(
+    taskPackage: ErrorBlockRuleTaskPackage,
+  ) {
+    console.log('Error package:', taskPackage);
+
+    const [rule, block] = await Promise.all([
+      fetchAlertRuleByRuleGroupAndRuleID({
+        token: this.opts.token,
+        ruleGroupId: taskPackage.ruleGroupId,
+        ruleId: taskPackage.ruleId,
+      }),
+      fetchBlock({
+        token: this.opts.token,
+        height: taskPackage.blockNumber,
+        network: taskPackage.network,
+      }).catch((err) => {
+        // todo: log error while fetching block
+        if (err?.response?.status === 404) {
+          return null;
+        }
+        throw err;
+      }),
+    ]);
+
+    // call the error task acknowledgement API and mark the error task as non retry-able
+    if (!block || !rule) {
+      const e = !block
+        ? `Block Not Found: network: ${taskPackage.network}, height: ${taskPackage.blockNumber}`
+        : `Rule Not Found: id: ${taskPackage.ruleId}`;
+      await errorTaskAck({
+        token: this.opts.token,
+        errorId: taskPackage.errorId,
+        error: e,
+        retry: false,
+      });
+      return;
+    }
+
+    const [error] = await this.processBlockTask(block, [rule]);
+    await errorTaskAck({
+      token: this.opts.token,
+      errorId: taskPackage.errorId,
+      ...(error
+        ? {
+            error: error.error,
+            retry: true,
+          }
+        : {
+            retry: false,
+          }),
+    });
+  }
+
   private async processBlockTask(
     block: IRangeBlock,
     rules: IRangeAlertRule[],
@@ -146,10 +276,15 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
 
           return [];
         } catch (error) {
+          let err = String(error);
+          if (error instanceof Error) {
+            err = error.message + error.stack ? `\n${error.stack}` : '';
+          }
+
           return [
             {
               ruleId: rule.id,
-              error: String(error),
+              error: err,
             },
           ];
         }
@@ -157,74 +292,6 @@ class RangeSDK extends KafkaClient<ITaskPackage> {
     );
     return events.flat().flat();
   }
-
-  // private async processTxTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-  // 	if (!this.opts.onTransactions || this.opts.onTransactions.length === 0) {
-  // 		return []
-  // 	}
-
-  // 	const allEvents = await Promise.all(
-  // 		this.opts.onTransactions.map(async (onTx) => {
-  // 			let filteredTxs = block.transactions;
-
-  // 			if (onTx.filter?.success !== undefined) {
-  // 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onTx.filter?.success)
-  // 			}
-
-  // 			const events = await Promise.all(filteredTxs.map(async (tx: any) => {
-  // 				const events = await Promise.all(rules.map(rule => {
-  // 					return onTx.callback(tx, rule, block)
-  // 				}))
-  // 				return events;
-  // 			}))
-
-  // 			return events.flat();
-  // 		})
-  // 	);
-
-  // 	const processedEvents: IRangeResult[] = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-  // 	return processedEvents;
-  // }
-
-  // private async processTxMessageTask(block: IRangeBlock, rules: IRangeAlertRule[]): Promise<IRangeResult[]> {
-  // 	if (!this.opts.onMessages || this.opts.onMessages.length === 0) {
-  // 		return []
-  // 	}
-
-  // 	const allEvents = await Promise.all(
-  // 		this.opts.onMessages.map(async (onMessage) => {
-  // 			let filteredTxs = block.transactions;
-  // 			if (onMessage.filter?.success !== undefined) {
-  // 				filteredTxs = filteredTxs.filter((tx: any) => tx.success === onMessage.filter?.success)
-  // 			}
-
-  // 			let allMessages = filteredTxs.flatMap((tx: any) => tx.messages)
-  // 			if (onMessage.filter?.types) {
-  // 				allMessages = allMessages.filter((m: any) => onMessage.filter?.types?.includes(m.type))
-  // 			}
-
-  // 			if (onMessage.filter?.addresses) {
-  // 				allMessages = allMessages.filter((m: any) => m.involved_account_addresses.some(
-  // 					(addr: string) => onMessage.filter?.addresses?.includes(addr)
-  // 				));
-  // 			}
-
-  // 			const allEvents = await Promise.all(
-  // 				allMessages.map(async (m: any) => {
-  // 					const events = await Promise.all(rules.map(rule => {
-  // 						return onMessage.callback(m, rule, block)
-  // 					}))
-  // 					return events;
-  // 				})
-  // 			)
-
-  // 			return allEvents.flat();
-  // 		})
-  // 	)
-
-  // 	const processedEvents = allEvents.flat().filter((x): x is IRangeResult => x !== null && x !== undefined);
-  // 	return processedEvents;
-  // }
 
   getCosmosClient(network: Network): CosmosClient {
     // TODO: we can add our proxy client here
