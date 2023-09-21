@@ -262,10 +262,15 @@ class RangeSDK {
 
           return [];
         } catch (error) {
+          let err = String(error);
+          if (error instanceof Error) {
+            err = error.message + error.stack ? `\n${error.stack}` : '';
+          }
+
           return [
             {
               ruleId: rule.id,
-              error: String(error),
+              error: err,
             },
           ];
         }
