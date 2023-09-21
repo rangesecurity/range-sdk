@@ -1,10 +1,10 @@
-import { Kafka, Consumer } from 'kafkajs';
+import { Kafka, Consumer, RetryOptions } from 'kafkajs';
 
 export class KafkaConsumerClient {
   private consumer: Consumer;
 
-  constructor(kafka: Kafka, runnerID: string) {
-    this.consumer = kafka.consumer({ groupId: `rangeSDK-runner-${runnerID}` });
+  constructor(kafka: Kafka, groupId: string, retry?: RetryOptions) {
+    this.consumer = kafka.consumer({ groupId, retry });
   }
 
   async subscribeAndConsume(topic: string): Promise<Consumer> {

@@ -2,10 +2,10 @@ import { Kafka, KafkaConfig, SASLOptions } from 'kafkajs';
 import { env } from '../env';
 import { readFileSync } from 'fs';
 
-export function getKafkaClient() {
+export function getKafkaClient(runnerID: string) {
   const brokers: string[] = env.KAFKA.HOSTS.split(',');
   const kafkaConfig: KafkaConfig = {
-    clientId: `block-fetcher`,
+    clientId: `rangeSDK-runner-${runnerID}`,
     brokers,
   };
 

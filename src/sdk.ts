@@ -80,9 +80,21 @@ class RangeSDK {
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
 
-    const kafka = getKafkaClient();
-    this.blockRuleGroupTaskClient = new KafkaConsumerClient(kafka, runnerId);
-    this.errorBlockRuleTaskClient = new KafkaConsumerClient(kafka, runnerId);
+    const kafka = getKafkaClient(runnerId);
+    this.blockRuleGroupTaskClient = new KafkaConsumerClient(
+      kafka,
+      `rangeSDK-runner-${runnerId}-block-rule-group-task`,
+      {
+        retries: 3,
+      },
+    );
+    this.errorBlockRuleTaskClient = new KafkaConsumerClient(
+      kafka,
+      `rangeSDK-runner-${runnerId}-error-block-rule-task`,
+      {
+        retries: 0,
+      },
+    );
   }
 
   async init(): Promise<void> {
@@ -195,6 +207,8 @@ class RangeSDK {
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
+    console.log('Error package:', taskPackage);
+
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
         token: this.opts.token,
