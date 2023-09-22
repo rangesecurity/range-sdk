@@ -33,6 +33,7 @@
     "@cosmjs/stargate": "^0.31.0",
     "@cosmjs/tendermint-rpc": "^0.31.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.10",
     "dotenv": "^16.3.1",
     "kafkajs": "^2.2.4",
     "knex": "^2.5.1",

@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, IRangeEvent } from './types/IRangeEvent';
@@ -264,6 +265,23 @@ class RangeSDK {
     const events = await Promise.all(
       rules.map(async (rule) => {
         try {
+          const blockTimestamp = dayjs(block.timestamp);
+          if (
+            !(
+              (blockTimestamp.isAfter(rule.createdAt) ||
+                blockTimestamp.isSame(rule.createdAt)) &&
+              blockTimestamp.isBefore(
+                rule.deletedAt || '2100-01-01T00:00:00.000',
+              )
+            )
+          ) {
+            console.info(
+              `Skipping processing of network block for rule:id: "${rule.id}" as it's not between the valid timeline.
+              Block timestamp: ${block.timestamp}, rule:createdAt: ${rule.createdAt}, rule:deletedAt: ${rule.deletedAt}`,
+            );
+            return [];
+          }
+
           const ruleResults = await this.opts.onBlock.callback(block, rule);
           if (ruleResults.length) {
             await createAlertEvents({

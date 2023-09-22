@@ -2,4 +2,7 @@ export interface IRangeAlertRule {
   id: string;
   ruleType: string;
   workspaceId: string;
+  parameters: Record<string, unknown> | null;
+  createdAt: Date;
+  deletedAt?: Date | null;
 }
