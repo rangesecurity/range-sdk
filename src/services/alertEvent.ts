@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IRangeEvent } from '../types/IRangeEvent';
-import { env } from '../env';
+import { constants } from '../constants';
 
 export async function createAlertEvents(args: {
   token: string;
@@ -11,7 +11,7 @@ export async function createAlertEvents(args: {
   const { token, workspaceId, alertRuleId, alerts } = args;
 
   const { data } = await axios.post<{ success: boolean }>(
-    `${env.MANAGER_SERVICE.DOMAIN}${env.MANAGER_SERVICE.CREATE_ALERT_EVENT_PATH}`,
+    `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.CREATE_ALERT_EVENT_PATH}`,
     {
       workspaceId,
       alertRuleId,
