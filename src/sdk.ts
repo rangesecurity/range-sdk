@@ -23,6 +23,10 @@ import { createAlertEvents } from './services/alertEvent';
 import { KafkaConsumerClient } from './connections/KafkaConsumer';
 import { IRangeConfig } from './types/IRangeConfig';
 import { fetchConfig } from './services/fetchConfig';
+import { getLogger } from './logger';
+import { constants } from './constants';
+
+const logger = getLogger({ name: 'rangeSDK' });
 
 export interface OnBlock {
   callback: (
@@ -82,6 +86,10 @@ class RangeSDK {
 
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
+
+    logger.info(
+      `Initiating rangeSDK for runnerID: ${runnerId}, manager: ${constants.MANAGER_SERVICE.DOMAIN}`,
+    );
   }
 
   async init(): Promise<void> {
@@ -108,11 +116,11 @@ class RangeSDK {
     await this.initErrorBlockRuleTaskQueue();
 
     process.on('SIGINT', async () => {
-      console.log('Received SIGINT. Performing cleanup...');
+      logger.info('Received SIGINT. Performing cleanup...');
       await this.gracefulCleanup();
     });
     process.on('SIGTERM', async () => {
-      console.log('Received SIGTERM. Performing cleanup...');
+      logger.info('Received SIGTERM. Performing cleanup...');
       await this.gracefulCleanup();
     });
   }
@@ -140,7 +148,7 @@ class RangeSDK {
       eachMessage: async ({ message }) => {
         const rawMessage = message?.value?.toString();
         if (!rawMessage) {
-          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          logger.error(`Error decoding incoming raw message: ${rawMessage}`);
           return;
         }
 
@@ -148,7 +156,7 @@ class RangeSDK {
         await this.blockRuleGroupTaskQueueHandler(parseMessage);
       },
     });
-    console.info(
+    logger.info(
       `Block Rule Group Task Queue has started on topic: ${kafkaTopic}`,
     );
   }
@@ -156,7 +164,7 @@ class RangeSDK {
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
-    console.log('Received package:', taskPackage);
+    logger.info('Received package:', taskPackage);
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -168,7 +176,10 @@ class RangeSDK {
         height: taskPackage.block.height,
         network: taskPackage.block.network,
       }).catch((err) => {
-        // todo: log error while fetching block
+        logger.error(
+          err,
+          `Error while fetching block: network:: ${taskPackage.block.network}, height:: ${taskPackage.block.height}`,
+        );
         if (err?.response?.status === 404) {
           return null;
         }
@@ -217,7 +228,7 @@ class RangeSDK {
       eachMessage: async ({ message }) => {
         const rawMessage = message?.value?.toString();
         if (!rawMessage) {
-          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          logger.error(`Error decoding incoming raw message: ${rawMessage}`);
           return;
         }
 
@@ -225,7 +236,7 @@ class RangeSDK {
         await this.errorBlockRuleTaskQueueHandler(parseMessage);
       },
     });
-    console.info(
+    logger.info(
       `Error Block Rule Task Queue has started on topic: ${kafkaTopic}`,
     );
   }
@@ -233,7 +244,7 @@ class RangeSDK {
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
-    console.log('Error package:', taskPackage);
+    logger.info('Error package:', taskPackage);
 
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
@@ -246,7 +257,10 @@ class RangeSDK {
         height: taskPackage.blockNumber,
         network: taskPackage.network,
       }).catch((err) => {
-        // todo: log error while fetching block
+        logger.error(
+          err,
+          `Error while fetching block: network:: ${taskPackage.network}, height:: ${taskPackage.blockNumber}`,
+        );
         if (err?.response?.status === 404) {
           return null;
         }
@@ -300,7 +314,7 @@ class RangeSDK {
               )
             )
           ) {
-            console.info(
+            logger.info(
               `Skipping processing of network block for rule:id: "${rule.id}" as it's not between the valid timeline.
               Block timestamp: ${block.timestamp}, rule:createdAt: ${rule.createdAt}, rule:deletedAt: ${rule.deletedAt}`,
             );
