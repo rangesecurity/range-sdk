@@ -58,8 +58,6 @@ export interface OnMessage {
 
 export interface Options {
   token: string;
-  networks: IRangeNetwork[];
-  endpoints?: Partial<Record<Network, string>>;
   onBlock: OnBlock;
 }
 
@@ -74,15 +72,6 @@ class RangeSDK {
   constructor(options: Options) {
     this.opts = options;
     this.cosmosClients = {};
-
-    if (this.opts.endpoints) {
-      for (const key of Object.keys(this.opts.endpoints)) {
-        const networkKey = key as Network;
-        const endpoint = this.opts.endpoints[networkKey];
-        assert(endpoint, `Endpoint for network ${networkKey} is not defined`);
-        this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
-      }
-    }
 
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
@@ -348,17 +337,6 @@ class RangeSDK {
       }),
     );
     return events.flat().flat();
-  }
-
-  getCosmosClient(network: Network): CosmosClient {
-    // TODO: we can add our proxy client here
-    const client = this.cosmosClients[network];
-    assert(client, `Cosmos client for network ${network} not found`);
-    return client!;
-  }
-
-  getBlock(network: Network, height: number): Promise<IRangeBlock | null> {
-    return Promise.resolve(null);
   }
 
   private async gracefulCleanup() {
