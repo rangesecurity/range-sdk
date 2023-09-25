@@ -5,9 +5,7 @@ import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, IRangeEvent } from './types/IRangeEvent';
 import { IRangeMessage } from './types/chain/IRangeMessage';
 import { IRangeTransaction } from './types/chain/IRangeTransaction';
-import { Network } from './network';
 import { CosmosClient } from './cosmos/CosmosClient';
-import { assert } from 'console';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
 import {
   BlockRuleGroupTaskPackage,
@@ -33,7 +31,6 @@ export interface OnBlock {
     block: IRangeBlock,
     rule: IRangeAlertRule,
   ) => Promise<IRangeEvent[]>;
-  filter?: {};
 }
 export interface OnTransaction {
   callback: (
@@ -104,14 +101,14 @@ class RangeSDK {
     await this.initBlockRuleGroupTaskQueue();
     await this.initErrorBlockRuleTaskQueue();
 
-    process.on('SIGINT', async () => {
-      logger.info('Received SIGINT. Performing cleanup...');
-      await this.gracefulCleanup();
-    });
-    process.on('SIGTERM', async () => {
-      logger.info('Received SIGTERM. Performing cleanup...');
-      await this.gracefulCleanup();
-    });
+    // process.on('SIGINT', async () => {
+    //   logger.info('Received SIGINT. Performing cleanup...');
+    //   await this.gracefulCleanup();
+    // });
+    // process.on('SIGTERM', async () => {
+    //   logger.info('Received SIGTERM. Performing cleanup...');
+    //   await this.gracefulCleanup();
+    // });
   }
 
   static async build(options: Options) {
@@ -339,7 +336,9 @@ class RangeSDK {
     return events.flat().flat();
   }
 
-  private async gracefulCleanup() {
+  async gracefulCleanup() {
+    logger.info('Shutting down range sdk');
+
     await new Promise((res) =>
       setTimeout(async () => {
         if (this.blockRuleGroupTaskClient) {
