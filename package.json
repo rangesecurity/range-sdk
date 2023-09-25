@@ -16,7 +16,6 @@
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.1",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.5",
     "@typescript-eslint/eslint-plugin": "^6.7.2",
@@ -34,14 +33,10 @@
     "@cosmjs/tendermint-rpc": "^0.31.0",
     "axios": "^1.4.0",
     "dayjs": "^1.11.10",
-    "dotenv": "^16.3.1",
     "kafkajs": "^2.2.4",
-    "knex": "^2.5.1",
     "lru-cache": "^10.0.1",
-    "node-cache": "^5.1.2",
     "osmojs": "^15.2.1",
-    "pg": "^8.11.3",
-    "sqlite3": "^5.1.6",
+    "pino": "^8.15.1",
     "zod": "^3.21.4"
   }
 }

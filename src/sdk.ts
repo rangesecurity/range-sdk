@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { Kafka } from 'kafkajs';
 import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, IRangeEvent } from './types/IRangeEvent';
@@ -19,9 +20,13 @@ import {
 } from './services/fetchAlertRules';
 import { errorTaskAck, taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
-import { getKafkaClient } from './connections/KafkaClient';
 import { KafkaConsumerClient } from './connections/KafkaConsumer';
-import { env } from './env';
+import { IRangeConfig } from './types/IRangeConfig';
+import { fetchConfig } from './services/fetchConfig';
+import { getLogger } from './logger';
+import { constants } from './constants';
+
+const logger = getLogger({ name: 'rangeSDK' });
 
 export interface OnBlock {
   callback: (
@@ -62,8 +67,9 @@ class RangeSDK {
   private opts: Options;
   private runnerId: string;
   private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>;
-  private blockRuleGroupTaskClient: KafkaConsumerClient;
-  private errorBlockRuleTaskClient: KafkaConsumerClient;
+  private config?: IRangeConfig;
+  private blockRuleGroupTaskClient?: KafkaConsumerClient;
+  private errorBlockRuleTaskClient?: KafkaConsumerClient;
 
   constructor(options: Options) {
     this.opts = options;
@@ -81,47 +87,68 @@ class RangeSDK {
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
 
-    const kafka = getKafkaClient(runnerId);
+    logger.info(
+      `Initiating rangeSDK for runnerID: ${runnerId}, manager: ${constants.MANAGER_SERVICE.DOMAIN}`,
+    );
+  }
+
+  async init(): Promise<void> {
+    /**
+     * Fetch config from the manager and setup task queues
+     */
+    this.config = await fetchConfig({ token: this.opts.token });
+    const kafka = new Kafka(this.config.kafka);
     this.blockRuleGroupTaskClient = new KafkaConsumerClient(
       kafka,
-      `rangeSDK-runner-${runnerId}-block-rule-group-task`,
+      `rangeSDK-runner-${this.runnerId}-block-rule-group-task`,
       {
         retries: 3,
       },
     );
     this.errorBlockRuleTaskClient = new KafkaConsumerClient(
       kafka,
-      `rangeSDK-runner-${runnerId}-error-block-rule-task`,
+      `rangeSDK-runner-${this.runnerId}-error-block-rule-task`,
       {
         retries: 0,
       },
     );
-  }
-
-  async init(): Promise<void> {
     await this.initBlockRuleGroupTaskQueue();
     await this.initErrorBlockRuleTaskQueue();
 
     process.on('SIGINT', async () => {
-      console.log('Received SIGINT. Performing cleanup...');
-      // Perform your cleanup actions here
-      await this.blockRuleGroupTaskClient.gracefulShutdown();
-      await this.errorBlockRuleTaskClient.gracefulShutdown();
-
-      process.exit(0);
+      logger.info('Received SIGINT. Performing cleanup...');
+      await this.gracefulCleanup();
+    });
+    process.on('SIGTERM', async () => {
+      logger.info('Received SIGTERM. Performing cleanup...');
+      await this.gracefulCleanup();
     });
   }
 
+  static async build(options: Options) {
+    const sdk = new RangeSDK(options);
+    await sdk.init();
+    return sdk;
+  }
+
   private async initBlockRuleGroupTaskQueue() {
+    if (!this.config) {
+      throw new Error('SDK not initiated, config missing');
+    }
+    if (!this.blockRuleGroupTaskClient) {
+      throw new Error('SDK not initiated, blockRuleGroupTaskClient missing');
+    }
+
+    const kafkaTopic = this.config.kafkaTopics.blockRuleGroupTasks;
     const blockRuleGroupTaskQueue =
-      await this.blockRuleGroupTaskClient.subscribeAndConsume(env.KAFKA_TOPIC);
+      await this.blockRuleGroupTaskClient.subscribeAndConsume(kafkaTopic);
 
     await blockRuleGroupTaskQueue.run({
       autoCommit: true,
-      eachMessage: async ({ message, topic, partition }) => {
+      eachMessage: async ({ message }) => {
         const rawMessage = message?.value?.toString();
         if (!rawMessage) {
-          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          logger.error(`Error decoding incoming raw message: ${rawMessage}`);
           return;
         }
 
@@ -129,15 +156,15 @@ class RangeSDK {
         await this.blockRuleGroupTaskQueueHandler(parseMessage);
       },
     });
-    console.info(
-      `Block Rule Group Task Queue has started on topic: ${env.KAFKA_TOPIC}`,
+    logger.info(
+      `Block Rule Group Task Queue has started on topic: ${kafkaTopic}`,
     );
   }
 
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
-    console.log('Received package:', taskPackage);
+    logger.info('Received package:', taskPackage);
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -149,7 +176,10 @@ class RangeSDK {
         height: taskPackage.block.height,
         network: taskPackage.block.network,
       }).catch((err) => {
-        // todo: log error while fetching block
+        logger.error(
+          err,
+          `Error while fetching block: network:: ${taskPackage.block.network}, height:: ${taskPackage.block.height}`,
+        );
         if (err?.response?.status === 404) {
           return null;
         }
@@ -183,16 +213,22 @@ class RangeSDK {
   }
 
   private async initErrorBlockRuleTaskQueue() {
+    if (!this.config) {
+      throw new Error('SDK not initiated, config missing');
+    }
+    if (!this.errorBlockRuleTaskClient) {
+      throw new Error('SDK not initiated, errorBlockRuleTaskClient missing');
+    }
+
+    const kafkaTopic = this.config.kafkaTopics.errorsBlockRuleTasks;
     const errorBlockRuleTaskQueue =
-      await this.errorBlockRuleTaskClient.subscribeAndConsume(
-        env.KAFKA_ERROR_TOPIC,
-      );
+      await this.errorBlockRuleTaskClient.subscribeAndConsume(kafkaTopic);
     await errorBlockRuleTaskQueue.run({
       autoCommit: true,
       eachMessage: async ({ message }) => {
         const rawMessage = message?.value?.toString();
         if (!rawMessage) {
-          console.error(`Error decoding incoming raw message: ${rawMessage}`);
+          logger.error(`Error decoding incoming raw message: ${rawMessage}`);
           return;
         }
 
@@ -200,15 +236,15 @@ class RangeSDK {
         await this.errorBlockRuleTaskQueueHandler(parseMessage);
       },
     });
-    console.info(
-      `Error Block Rule Task Queue has started on topic: ${env.KAFKA_ERROR_TOPIC}`,
+    logger.info(
+      `Error Block Rule Task Queue has started on topic: ${kafkaTopic}`,
     );
   }
 
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
-    console.log('Error package:', taskPackage);
+    logger.info('Error package:', taskPackage);
 
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
@@ -221,7 +257,10 @@ class RangeSDK {
         height: taskPackage.blockNumber,
         network: taskPackage.network,
       }).catch((err) => {
-        // todo: log error while fetching block
+        logger.error(
+          err,
+          `Error while fetching block: network:: ${taskPackage.network}, height:: ${taskPackage.blockNumber}`,
+        );
         if (err?.response?.status === 404) {
           return null;
         }
@@ -275,7 +314,7 @@ class RangeSDK {
               )
             )
           ) {
-            console.info(
+            logger.info(
               `Skipping processing of network block for rule:id: "${rule.id}" as it's not between the valid timeline.
               Block timestamp: ${block.timestamp}, rule:createdAt: ${rule.createdAt}, rule:deletedAt: ${rule.deletedAt}`,
             );
@@ -320,6 +359,21 @@ class RangeSDK {
 
   getBlock(network: Network, height: number): Promise<IRangeBlock | null> {
     return Promise.resolve(null);
+  }
+
+  private async gracefulCleanup() {
+    await new Promise((res) =>
+      setTimeout(async () => {
+        if (this.blockRuleGroupTaskClient) {
+          await this.blockRuleGroupTaskClient.gracefulShutdown();
+        }
+        res(null);
+      }, 1000),
+    );
+
+    if (this.errorBlockRuleTaskClient) {
+      await this.errorBlockRuleTaskClient.gracefulShutdown();
+    }
   }
 }
 

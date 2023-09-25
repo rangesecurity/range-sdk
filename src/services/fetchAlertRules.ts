@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IRangeAlertRule } from '../types/IRangeAlertRule';
-import { env } from '../env';
+import { constants } from '../constants';
 
 export async function fetchAlertRulesByRuleGroupID(args: {
   token: string;
@@ -8,8 +8,8 @@ export async function fetchAlertRulesByRuleGroupID(args: {
 }): Promise<IRangeAlertRule[]> {
   const { token, ruleGroupId } = args;
   const url = `${
-    env.MANAGER_SERVICE.DOMAIN
-  }${env.MANAGER_SERVICE.FETCH_RULES_BY_RULE_GROUP_ID_PATH(ruleGroupId)}`;
+    constants.MANAGER_SERVICE.DOMAIN
+  }${constants.MANAGER_SERVICE.FETCH_RULES_BY_RULE_GROUP_ID_PATH(ruleGroupId)}`;
 
   const {
     data: { rules },
@@ -31,8 +31,8 @@ export async function fetchAlertRuleByRuleGroupAndRuleID(args: {
 }) {
   const { token, ruleGroupId, ruleId } = args;
   const url = `${
-    env.MANAGER_SERVICE.DOMAIN
-  }${env.MANAGER_SERVICE.FETCH_RULE_BY_RULE_GROUP_ID_AND_RULE_ID_PATH({
+    constants.MANAGER_SERVICE.DOMAIN
+  }${constants.MANAGER_SERVICE.FETCH_RULE_BY_RULE_GROUP_ID_AND_RULE_ID_PATH({
     ruleGroupId,
     ruleId,
   })}`;

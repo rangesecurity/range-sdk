@@ -30,17 +30,16 @@ const myOnBlock: OnBlock = {
   },
 };
 
-if (!process.env.RANGE_SDK_TOKEN) {
-  throw new Error('Range SDK Token is required');
-}
+(async () => {
+  if (!process.env.RANGE_SDK_TOKEN) {
+    throw new Error('Range SDK Token is required');
+  }
 
-// Defining the RangeSDK instance
-const range = new RangeSDK({
-  token: process.env.RANGE_SDK_TOKEN,
-  onBlock: myOnBlock,
-  networks: ['osmosis-1'],
-  endpoints: { 'osmosis-1': 'https://rpc.osmosis.zone' },
-});
-
-// Running the RangeSDK instance
-range.init();
+  // Defining the RangeSDK instance
+  const range = await RangeSDK.build({
+    token: process.env.RANGE_SDK_TOKEN,
+    onBlock: myOnBlock,
+    networks: ['osmosis-1'],
+    endpoints: { 'osmosis-1': 'https://rpc.osmosis.zone' },
+  });
+})();

@@ -1,26 +1,7 @@
-import { IRangeNetwork } from './types/IRangeNetwork';
-
-require('dotenv').config();
-
-interface Env {
-  KAFKA_TOPIC: string;
-  KAFKA_ERROR_TOPIC: string;
-  KAFKA: {
-    HOSTS: string;
-    SECURE: boolean;
-    SSL?: {
-      CA_FILE: string;
-      KEY_FILE: string;
-      CERT_FILE: string;
-    };
-    SASL?: {
-      USERNAME: string;
-      PASSWORD: string;
-    };
-  };
-
+interface Constants {
   MANAGER_SERVICE: {
     DOMAIN: string;
+    FETCH_CONFIG_PATH: string;
     CREATE_ALERT_EVENT_PATH: string;
     ACK_TASK_PATH: string;
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: string;
@@ -30,6 +11,10 @@ interface Env {
       ruleId: string;
     }) => string;
     ACK_ERROR_TASK_PATH: string;
+  };
+
+  BLOCK_CACHE: {
+    MAX: number;
   };
 }
 
@@ -43,16 +28,13 @@ function getEnvVar(key: string, defaultValue?: string): string {
   return value;
 }
 
-export const env: Env = {
-  KAFKA_TOPIC: getEnvVar('KAFKA_TOPIC'),
-  KAFKA_ERROR_TOPIC: getEnvVar('KAFKA_ERROR_TOPIC'),
-  KAFKA: {
-    HOSTS: getEnvVar('KAFKA_HOSTS'),
-    SECURE: getEnvVar('KAFKA_SECURE', 'false') === 'false' ? false : true,
-  },
-
+export const constants: Constants = {
   MANAGER_SERVICE: {
-    DOMAIN: getEnvVar('NOTIFIER_SERVICE_DOMAIN'),
+    DOMAIN: getEnvVar(
+      'RANGE_SDK_MANAGER_SERVICE_DOMAIN',
+      'https://manager.range.org',
+    ),
+    FETCH_CONFIG_PATH: '/v1.0/range-sdk/config',
     CREATE_ALERT_EVENT_PATH: '/v1.0/rule-group/block/alerts/by-rule-id',
     ACK_TASK_PATH: '/v1.0/rule-group/block/ack',
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: '/v1.0/rule-group/block',
@@ -63,5 +45,9 @@ export const env: Env = {
       ruleId: string;
     }) => `/v1.0/rule-group/${args.ruleGroupId}/rule/${args.ruleId}`,
     ACK_ERROR_TASK_PATH: '/v1.0/rule-group/block/error/ack',
+  },
+
+  BLOCK_CACHE: {
+    MAX: 100,
   },
 };

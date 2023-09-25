@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { env } from '../env';
+import { constants } from '../constants';
 
 export async function taskAck(args: {
   token: string;
@@ -15,7 +15,7 @@ export async function taskAck(args: {
   }[];
 }): Promise<{ ackId: string }> {
   const { token, block, ruleGroupId, runnerId, errors } = args;
-  const url = `${env.MANAGER_SERVICE.DOMAIN}${env.MANAGER_SERVICE.ACK_TASK_PATH}`;
+  const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.ACK_TASK_PATH}`;
 
   const { data } = await axios.post<{ ackId: string }>(
     url,
@@ -42,7 +42,7 @@ export async function errorTaskAck(args: {
   retry: boolean;
 }) {
   const { token, errorId, error, retry } = args;
-  const url = `${env.MANAGER_SERVICE.DOMAIN}${env.MANAGER_SERVICE.ACK_ERROR_TASK_PATH}`;
+  const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.ACK_ERROR_TASK_PATH}`;
 
   const { data } = await axios.patch<{ success: boolean }>(
     url,
