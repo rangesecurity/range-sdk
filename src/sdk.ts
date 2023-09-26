@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { Kafka } from 'kafkajs';
 import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
-import { IRangeError, IRangeEvent } from './types/IRangeEvent';
+import { IRangeError, ISubEvent } from './types/IRangeEvent';
 import { IRangeMessage } from './types/chain/IRangeMessage';
 import { IRangeTransaction } from './types/chain/IRangeTransaction';
 import { Network } from './network';
@@ -29,10 +29,7 @@ import { constants } from './constants';
 const logger = getLogger({ name: 'rangeSDK' });
 
 export interface OnBlock {
-  callback: (
-    block: IRangeBlock,
-    rule: IRangeAlertRule,
-  ) => Promise<IRangeEvent[]>;
+  callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
   filter?: {};
 }
 export interface OnTransaction {
@@ -40,7 +37,7 @@ export interface OnTransaction {
     transaction: IRangeTransaction,
     rule: IRangeAlertRule,
     block: IRangeBlock,
-  ) => Promise<IRangeEvent[]>;
+  ) => Promise<ISubEvent[]>;
   filter?: { success?: boolean };
 }
 export interface OnMessage {
@@ -48,7 +45,7 @@ export interface OnMessage {
     message: IRangeMessage,
     rule: IRangeAlertRule,
     block: IRangeBlock,
-  ) => Promise<IRangeEvent[]>;
+  ) => Promise<ISubEvent[]>;
   filter?: {
     success?: boolean;
     types?: string[];
@@ -206,8 +203,8 @@ class RangeSDK {
       runnerId: taskPackage.runnerId,
       ...(errors?.length
         ? {
-            errors,
-          }
+          errors,
+        }
         : {}),
     });
   }
@@ -288,12 +285,12 @@ class RangeSDK {
       errorId: taskPackage.errorId,
       ...(error
         ? {
-            error: error.error,
-            retry: true,
-          }
+          error: error.error,
+          retry: true,
+        }
         : {
-            retry: false,
-          }),
+          retry: false,
+        }),
     });
   }
 
@@ -321,7 +318,16 @@ class RangeSDK {
             return [];
           }
 
-          const ruleResults = await this.opts.onBlock.callback(block, rule);
+          const ruleSubResults = await this.opts.onBlock.callback(block, rule);
+          const ruleResults = ruleSubResults.map((subResult) => ({
+            ...subResult,
+            workspaceId: rule.workspaceId,
+            alertRuleId: rule.id,
+            time: block.timestamp,
+            blockNumber: String(block.height),
+            network: block.network,
+          }));
+
           if (ruleResults.length) {
             await createAlertEvents({
               token: this.opts.token,
