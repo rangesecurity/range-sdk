@@ -100,15 +100,6 @@ class RangeSDK {
     );
     await this.initBlockRuleGroupTaskQueue();
     await this.initErrorBlockRuleTaskQueue();
-
-    // process.on('SIGINT', async () => {
-    //   logger.info('Received SIGINT. Performing cleanup...');
-    //   await this.gracefulCleanup();
-    // });
-    // process.on('SIGTERM', async () => {
-    //   logger.info('Received SIGTERM. Performing cleanup...');
-    //   await this.gracefulCleanup();
-    // });
   }
 
   static async build(options: Options) {

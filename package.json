@@ -1,9 +1,13 @@
 {
-  "name": "range-sdk",
-  "version": "0.0.1",
+  "name": "@rangesecurity/range-sdk",
+  "version": "0.0.2",
   "description": "SDK for easy custom alerts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@rangesecurity",
+    "access": "restricted"
+  },
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
