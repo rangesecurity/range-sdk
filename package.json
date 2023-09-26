@@ -1,6 +1,6 @@
 {
   "name": "@rangesecurity/range-sdk",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "SDK for easy custom alerts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -18,7 +18,7 @@
     "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "publish": "npm run build && npm publish"
+    "publish": "rm -rf dist && npm run build && npm publish dist/src"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
