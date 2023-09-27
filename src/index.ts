@@ -7,3 +7,5 @@ export * from './types/IRangeAlertRule';
 export * from './types/chain/IRangeTransaction';
 export * from './network';
 export * from './cosmos/CosmosClient';
+export * from './services/fetchBlock';
+export * from './services/getCosmosClient';

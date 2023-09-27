@@ -9,6 +9,12 @@ export interface IRangeEvent {
   addressesInvolved: string[];
 }
 
+export interface ISubEvent {
+  details: { message: string };
+  txHash: string;
+  addressesInvolved: string[];
+}
+
 export interface IRangeError {
   ruleId: string;
   error: string;

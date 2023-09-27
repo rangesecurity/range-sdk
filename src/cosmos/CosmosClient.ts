@@ -60,7 +60,7 @@ export class CosmosClient {
     return res;
   }
 
-  private async getRpcClient(): Promise<ProtobufRpcClient> {
+  async getRpcClient(): Promise<ProtobufRpcClient> {
     const tmClient = await Tendermint34Client.connect(this.rpcEndpoint);
     const client = new QueryClient(tmClient);
     return createProtobufRpcClient(client);
