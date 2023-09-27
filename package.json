@@ -18,7 +18,7 @@
     "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "publish": "rm -rf dist && npm run build && npm publish dist/src"
+    "publish": "rm -rf dist && npm run build && npm publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
