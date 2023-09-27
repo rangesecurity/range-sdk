@@ -1,0 +1,8 @@
+.vscode
+examples
+src
+tests
+.editorconfig
+.eslintrc.js
+.prettierrc
+tsconfig.json

@@ -39,7 +39,5 @@ const myOnBlock: OnBlock = {
   const range = await RangeSDK.build({
     token: process.env.RANGE_SDK_TOKEN,
     onBlock: myOnBlock,
-    networks: ['osmosis-1'],
-    endpoints: { 'osmosis-1': 'https://rpc.osmosis.zone' },
   });
 })();

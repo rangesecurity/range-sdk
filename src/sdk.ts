@@ -5,9 +5,7 @@ import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, ISubEvent } from './types/IRangeEvent';
 import { IRangeMessage } from './types/chain/IRangeMessage';
 import { IRangeTransaction } from './types/chain/IRangeTransaction';
-import { Network } from './network';
 import { CosmosClient } from './cosmos/CosmosClient';
-import { assert } from 'console';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
 import {
   BlockRuleGroupTaskPackage,
@@ -30,7 +28,6 @@ const logger = getLogger({ name: 'rangeSDK' });
 
 export interface OnBlock {
   callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
-  filter?: {};
 }
 export interface OnTransaction {
   callback: (
@@ -55,8 +52,6 @@ export interface OnMessage {
 
 export interface Options {
   token: string;
-  networks: IRangeNetwork[];
-  endpoints?: Partial<Record<Network, string>>;
   onBlock: OnBlock;
 }
 
@@ -71,15 +66,6 @@ class RangeSDK {
   constructor(options: Options) {
     this.opts = options;
     this.cosmosClients = {};
-
-    if (this.opts.endpoints) {
-      for (const key of Object.keys(this.opts.endpoints)) {
-        const networkKey = key as Network;
-        const endpoint = this.opts.endpoints[networkKey];
-        assert(endpoint, `Endpoint for network ${networkKey} is not defined`);
-        this.cosmosClients[networkKey] = new CosmosClient(endpoint!);
-      }
-    }
 
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
@@ -111,15 +97,6 @@ class RangeSDK {
     );
     await this.initBlockRuleGroupTaskQueue();
     await this.initErrorBlockRuleTaskQueue();
-
-    process.on('SIGINT', async () => {
-      logger.info('Received SIGINT. Performing cleanup...');
-      await this.gracefulCleanup();
-    });
-    process.on('SIGTERM', async () => {
-      logger.info('Received SIGTERM. Performing cleanup...');
-      await this.gracefulCleanup();
-    });
   }
 
   static async build(options: Options) {
@@ -203,8 +180,8 @@ class RangeSDK {
       runnerId: taskPackage.runnerId,
       ...(errors?.length
         ? {
-          errors,
-        }
+            errors,
+          }
         : {}),
     });
   }
@@ -285,12 +262,12 @@ class RangeSDK {
       errorId: taskPackage.errorId,
       ...(error
         ? {
-          error: error.error,
-          retry: true,
-        }
+            error: error.error,
+            retry: true,
+          }
         : {
-          retry: false,
-        }),
+            retry: false,
+          }),
     });
   }
 
@@ -356,18 +333,9 @@ class RangeSDK {
     return events.flat().flat();
   }
 
-  getCosmosClient(network: Network): CosmosClient {
-    // TODO: we can add our proxy client here
-    const client = this.cosmosClients[network];
-    assert(client, `Cosmos client for network ${network} not found`);
-    return client!;
-  }
+  async gracefulCleanup() {
+    logger.info('Shutting down range sdk');
 
-  getBlock(network: Network, height: number): Promise<IRangeBlock | null> {
-    return Promise.resolve(null);
-  }
-
-  private async gracefulCleanup() {
     await new Promise((res) =>
       setTimeout(async () => {
         if (this.blockRuleGroupTaskClient) {

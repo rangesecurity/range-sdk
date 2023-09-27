@@ -1,9 +1,13 @@
 {
-  "name": "range-sdk",
-  "version": "0.0.1",
+  "name": "@rangesecurity/range-sdk",
+  "version": "0.0.5",
   "description": "SDK for easy custom alerts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@rangesecurity",
+    "access": "restricted"
+  },
   "license": "UNLICENSED",
   "private": false,
   "scripts": {
@@ -13,7 +17,8 @@
     "example": "tsc-watch --onSuccess \"node dist/examples/alertProcessors.js\"",
     "pushBlock": "tsc-watch --onSuccess \"node dist/tests/pushBlock.js\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\""
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "publish": "rm -rf dist && npm run build && npm publish"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
