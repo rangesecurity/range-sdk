@@ -138,7 +138,7 @@ class RangeSDK {
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
-    logger.info('Received package:', taskPackage);
+    logger.info(`Received package: ${JSON.stringify(taskPackage)}`);
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -163,6 +163,7 @@ class RangeSDK {
 
     // call the acknowledgement API and mark the package as done if block is not found or rule group is empty
     if (!block || rules.length === 0) {
+      logger.warn({ block, rules }, 'Early task package ack');
       await taskAck({
         token: this.opts.token,
         block: taskPackage.block,
@@ -218,7 +219,7 @@ class RangeSDK {
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
-    logger.info('Error package:', taskPackage);
+    logger.info(`Error package: ${JSON.stringify(taskPackage)}`);
 
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
@@ -288,10 +289,6 @@ class RangeSDK {
               )
             )
           ) {
-            logger.info(
-              `Skipping processing of network block for rule:id: "${rule.id}" as it's not between the valid timeline.
-              Block timestamp: ${block.timestamp}, rule:createdAt: ${rule.createdAt}, rule:deletedAt: ${rule.deletedAt}`,
-            );
             return [];
           }
 
@@ -305,15 +302,24 @@ class RangeSDK {
             network: block.network,
           }));
 
-          if (ruleResults.length) {
-            await createAlertEvents({
-              token: this.opts.token,
-              workspaceId: rule.workspaceId,
-              alertRuleId: rule.id,
-              alerts: ruleResults,
-            });
+          if (!ruleResults.length) {
+            logger.warn(
+              {
+                ruleResults,
+                block: { network: block.network, height: block.height },
+                ruleId: rule.id,
+              },
+              'No alert rule events for task package',
+            );
+            return [];
           }
 
+          await createAlertEvents({
+            token: this.opts.token,
+            workspaceId: rule.workspaceId,
+            alertRuleId: rule.id,
+            alerts: ruleResults,
+          });
           return [];
         } catch (error) {
           let err = String(error);
