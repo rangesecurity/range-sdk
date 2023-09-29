@@ -314,6 +314,8 @@ class RangeSDK {
             return [];
           }
 
+          logger.info(`ruleResults:: ${JSON.stringify(ruleResults)}`);
+
           await createAlertEvents({
             token: this.opts.token,
             workspaceId: rule.workspaceId,
