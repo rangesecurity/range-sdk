@@ -138,7 +138,7 @@ class RangeSDK {
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
-    logger.info(`Received package: ${JSON.stringify(taskPackage)}`);
+    logger.info(taskPackage, `Received task package`);
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -219,7 +219,7 @@ class RangeSDK {
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
-    logger.info(`Error package: ${JSON.stringify(taskPackage)}`);
+    logger.info(taskPackage, `Error package`);
 
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
@@ -313,8 +313,6 @@ class RangeSDK {
             );
             return [];
           }
-
-          logger.info(`ruleResults:: ${JSON.stringify(ruleResults)}`);
 
           await createAlertEvents({
             token: this.opts.token,
