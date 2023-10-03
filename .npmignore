@@ -6,3 +6,4 @@ tests
 .eslintrc.js
 .prettierrc
 tsconfig.json
+.env

@@ -295,7 +295,7 @@ class RangeSDK {
           const ruleSubResults = await this.opts.onBlock.callback(block, rule);
           const ruleResults = ruleSubResults.map((subResult) => ({
             ...subResult,
-            workspaceId: rule.workspaceId,
+            workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
             time: block.timestamp,
             blockNumber: String(block.height),
@@ -318,7 +318,7 @@ class RangeSDK {
 
           await createAlertEvents({
             token: this.opts.token,
-            workspaceId: rule.workspaceId,
+            workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
             alerts: ruleResults,
           });
