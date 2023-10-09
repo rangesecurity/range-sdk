@@ -1,4 +1,5 @@
 export * from './sdk';
+export * from './test-sdk';
 export * from './types/chain/IRangeBlock';
 export * from './types/IRangeEvent';
 export * from './types/chain/IRangeMessage';

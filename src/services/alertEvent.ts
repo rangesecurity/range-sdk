@@ -4,7 +4,7 @@ import { constants } from '../constants';
 
 export async function createAlertEvents(args: {
   token: string;
-  workspaceId: string;
+  workspaceId: string | null;
   alertRuleId: string;
   alerts: IRangeEvent[];
 }): Promise<{ success: boolean }> {
