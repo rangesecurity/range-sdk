@@ -1,11 +1,7 @@
 import dayjs from 'dayjs';
 import { Kafka } from 'kafkajs';
-import { IRangeNetwork } from './types/IRangeNetwork';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, ISubEvent } from './types/IRangeEvent';
-import { IRangeMessage } from './types/chain/IRangeMessage';
-import { IRangeTransaction } from './types/chain/IRangeTransaction';
-import { CosmosClient } from './cosmos/CosmosClient';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
 import {
   BlockRuleGroupTaskPackage,
@@ -29,57 +25,43 @@ const logger = getLogger({ name: 'rangeSDK' });
 export interface OnBlock {
   callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
 }
-export interface OnTransaction {
-  callback: (
-    transaction: IRangeTransaction,
-    rule: IRangeAlertRule,
-    block: IRangeBlock,
-  ) => Promise<ISubEvent[]>;
-  filter?: { success?: boolean };
-}
-export interface OnMessage {
-  callback: (
-    message: IRangeMessage,
-    rule: IRangeAlertRule,
-    block: IRangeBlock,
-  ) => Promise<ISubEvent[]>;
-  filter?: {
-    success?: boolean;
-    types?: string[];
-    addresses?: string[];
-  };
+
+export interface RangeSDKOptions {
+  token: string;
 }
 
-export interface Options {
-  token: string;
+export interface RangeSDKInitOptions {
   onBlock: OnBlock;
 }
 
-class RangeSDK {
-  private opts: Options;
-  private runnerId: string;
-  private cosmosClients: Partial<Record<IRangeNetwork, CosmosClient>>;
+export interface IRangeSDK {
+  init(initOpts: RangeSDKInitOptions): Promise<void>;
+}
+
+class RangeSDK implements IRangeSDK {
+  private opts: RangeSDKOptions;
+  private runnerId?: string;
+  private initOpts?: RangeSDKInitOptions;
   private config?: IRangeConfig;
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
 
-  constructor(options: Options) {
-    this.opts = options;
-    this.cosmosClients = {};
-
+  constructor(opts: RangeSDKOptions) {
+    this.opts = opts;
     const [runnerId] = this.opts.token.split('.');
     this.runnerId = runnerId;
-
     logger.info(
       `Initiating rangeSDK for runnerID: ${runnerId}, manager: ${constants.MANAGER_SERVICE.DOMAIN}`,
     );
   }
 
-  async init(): Promise<void> {
+  async init(initOpts: RangeSDKInitOptions): Promise<void> {
     /**
      * Fetch config from the manager and setup task queues
      */
     this.config = await fetchConfig({ token: this.opts.token });
+    this.initOpts = initOpts;
+
     const kafka = new Kafka(this.config.kafka);
     this.blockRuleGroupTaskClient = new KafkaConsumerClient(
       kafka,
@@ -99,9 +81,12 @@ class RangeSDK {
     await this.initErrorBlockRuleTaskQueue();
   }
 
-  static async build(options: Options) {
-    const sdk = new RangeSDK(options);
-    await sdk.init();
+  static async build(
+    sdkOpts: RangeSDKOptions,
+    sdkInitOpts: RangeSDKInitOptions,
+  ) {
+    const sdk = new RangeSDK(sdkOpts);
+    await sdk.init(sdkInitOpts);
     return sdk;
   }
 
@@ -279,6 +264,10 @@ class RangeSDK {
     const events = await Promise.all(
       rules.map(async (rule) => {
         try {
+          if (!this.initOpts) {
+            throw new Error('SDK Init not called, onBlock missing');
+          }
+
           const blockTimestamp = dayjs(block.timestamp);
           if (
             !(
@@ -292,7 +281,10 @@ class RangeSDK {
             return [];
           }
 
-          const ruleSubResults = await this.opts.onBlock.callback(block, rule);
+          const ruleSubResults = await this.initOpts.onBlock.callback(
+            block,
+            rule,
+          );
           const ruleResults = ruleSubResults.map((subResult) => ({
             ...subResult,
             workspaceId: rule.workspaceId || null,

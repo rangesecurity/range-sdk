@@ -1,6 +1,6 @@
 import {
   RangeSDK,
-  IRangeEvent,
+  ISubEvent,
   OnBlock,
   IRangeBlock,
   IRangeAlertRule,
@@ -10,7 +10,7 @@ const myOnBlock: OnBlock = {
   callback: async (
     block: IRangeBlock,
     rule: IRangeAlertRule,
-  ): Promise<IRangeEvent[]> => {
+  ): Promise<ISubEvent[]> => {
     const successMessages = block.transactions
       .filter((tx) => tx.success)
       .flatMap((tx) => tx.messages);
@@ -19,12 +19,8 @@ const myOnBlock: OnBlock = {
       details: {
         message: 'Success message of type: ' + m.type,
       },
-      workspaceId: rule.workspaceId,
-      alertRuleId: rule.id,
-      time: block.timestamp,
+      workspaceId: rule.workspaceId || null,
       txHash: m.hash,
-      blockNumber: String(block.height),
-      network: block.network,
       addressesInvolved: m.addresses,
     }));
   },
@@ -36,8 +32,12 @@ const myOnBlock: OnBlock = {
   }
 
   // Defining the RangeSDK instance
-  const range = await RangeSDK.build({
-    token: process.env.RANGE_SDK_TOKEN,
-    onBlock: myOnBlock,
-  });
+  await RangeSDK.build(
+    {
+      token: process.env.RANGE_SDK_TOKEN,
+    },
+    {
+      onBlock: myOnBlock,
+    },
+  );
 })();
