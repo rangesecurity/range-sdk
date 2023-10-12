@@ -66,6 +66,10 @@ class TestRangeSDK implements IRangeSDK {
 
     return this.initOpts.onBlock.callback(block, rule);
   }
+
+  async gracefulCleanup(): Promise<void> {
+    // no-op
+  }
 }
 
 export { TestRangeSDK };
