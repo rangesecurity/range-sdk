@@ -7,4 +7,5 @@ export interface IRangeBlock {
   transactions: IRangeTransaction[];
   network: IRangeNetwork;
   timestamp: string;
+  block_data?: string;
 }

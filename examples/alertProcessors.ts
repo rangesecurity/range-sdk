@@ -20,7 +20,7 @@ const myOnBlock: OnBlock = {
         message: 'Success message of type: ' + m.type,
       },
       workspaceId: rule.workspaceId || null,
-      txHash: m.hash,
+      txHash: m.tx_hash,
       addressesInvolved: m.addresses,
     }));
   },

@@ -15,9 +15,13 @@ export interface ITransactionLog {
 }
 
 export interface IRangeTransaction {
-  height: number;
-  messages: IRangeMessage[];
-  success: boolean;
+  data: string;
   hash: string;
   logs: { events: ITransactionEvent[] }[];
+  index: number;
+  height: number;
+  status: string;
+  network: string;
+  success: boolean;
+  messages: IRangeMessage[];
 }
