@@ -4,14 +4,16 @@ Range SDK is a powerful Typescript library that simplifies the development of se
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Documentation](#documentation)
-- [How to Contribute](#how-to-contribute)
-- [Reporting Bugs](#reporting-bugs)
-- [License](#license)
-- [Credits](#credits)
+- [Range SDK](#range-sdk)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Features](#features)
+  - [Documentation](#documentation)
+  - [How To Contribute](#how-to-contribute)
+  - [Reporting bugs](#reporting-bugs)
+  - [License](#license)
+  - [Credits](#credits)
 
 ## Installation
 
@@ -24,12 +26,42 @@ yarn add range-sdk
 Here's a basic example to get you started:
 
 ```typescript
-import { SecurityRule, AnomalyDetector } from 'range-sdk';
+// Range Implementation of `new-contract-code-stored` alert rule
+import { RangeSDK } from '@rangesecurity/range-sdk';
+import { env } from './env';
+import { myOnBlock } from './processor';
 
-const rule = new SecurityRule('Your Rule Configuration');
-const detector = new AnomalyDetector('Your Detector Configuration');
+// Define your OnBlock handler
+const myOnBlock: OnBlock = {
+  callback: async (
+    block: IRangeBlock,
+    rule: IRangeAlertRule,
+  ): Promise<ISubEvent[]> => {
+    const allMessages = block.transactions.flatMap((tx) => tx.messages);
+    const targetMessages = allMessages.filter((m) => {
+      return m.type === 'cosmwasm.wasm.v1.MsgStoreCode';
+    });
 
-// Use the rule and detector...
+    const results = targetMessages.map((m) => ({
+      details: {
+        message: `New CW contract code stored by ${m.value.sender}`,
+      },
+      txHash: m.hash,
+      addressesInvolved: m.addresses,
+    }));
+
+    return results;
+  },
+};
+
+// Defining the RangeSDK instance
+const range = new RangeSDK({
+  token: env.RANGE_TOKEN,
+  onBlock: myOnBlock,
+});
+
+// Running the RangeSDK instance
+range.init();
 ```
 
 For more examples and use-cases, see the open-source rule repositories of several Cosmos chains:
@@ -80,10 +112,3 @@ This project is licensed under the MIT License. See the [LICENSE](link) file for
 ## Credits
 
 Thank you to all the contributors who have helped make Range SDK what it is today!
-
-
-
-
-
-
-
