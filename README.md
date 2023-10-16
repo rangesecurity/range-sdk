@@ -2,8 +2,6 @@
 
 Range SDK is a powerful Typescript library that simplifies the development of security rules and anomaly detectors for Cosmos blockchains. With the Range SDK, developers can easily extend the security of their protocols, monitoring in real-time the validity of invariants, risk scenarios, phishing attacks, spam, and much more.
 
-![Logo or Banner Image](url-to-logo-or-banner)
-
 ## Table of Contents
 
 - [Installation](#installation)
@@ -36,11 +34,8 @@ const detector = new AnomalyDetector('Your Detector Configuration');
 
 For more examples and use-cases, see the open-source rule repositories of several Cosmos chains:
 
-- [Osmosis Range Rules](link)
-- [Cosmos Hub Range Rules](link)
-- [Neutron Range Rules](link)
-- [Noble Range Rules](link)
-- etc
+- [Osmosis Range Rules](https://github.com/rangesecurity/osmosis-range-rules)
+- [Cosmos Hub Range Rules](https://github.com/rangesecurity/cosmos-range-rules)
 
 ## Features
 
