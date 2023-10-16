@@ -52,14 +52,16 @@ const myOnBlock: OnBlock = {
   },
 };
 
-// Defining the RangeSDK instance
-const range = new RangeSDK({
-  token: env.RANGE_TOKEN,
-  onBlock: myOnBlock,
-});
+(async () => {
+    // Defining the RangeSDK instance
+    const range = new RangeSDK({
+      token: env.RANGE_TOKEN,
+      onBlock: myOnBlock,
+    });
 
-// Running the RangeSDK instance
-range.init();
+    // Running the RangeSDK instance
+    await range.init();
+})();
 ```
 
 For more examples and use-cases, see the open-source rule repositories of several Cosmos chains:
