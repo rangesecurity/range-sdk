@@ -28,8 +28,6 @@ Here's a basic example to get you started:
 ```typescript
 // Range Implementation of `new-contract-code-stored` alert rule
 import { RangeSDK } from '@rangesecurity/range-sdk';
-import { env } from './env';
-import { myOnBlock } from './processor';
 
 // Define your OnBlock handler
 const myOnBlock: OnBlock = {
