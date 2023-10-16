@@ -18,7 +18,7 @@ Range SDK is a powerful Typescript library that simplifies the development of se
 ## Installation
 
 ```bash
-yarn add range-sdk
+yarn add @rangesecurity/range-sdk
 ```
 
 ## Usage
