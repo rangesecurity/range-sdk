@@ -1,13 +1,13 @@
-import { IRangeNetwork } from '../IRangeNetwork';
-import { NetworkEnum } from '../../network';
+import { NetworkEnum } from '../IRangeNetwork';
 import { IRangeTransaction } from './IRangeTransaction';
 import { OsmosisTrx } from './osmosis-1/IRangeBlockOsmosisTrx';
+import { Grand1Trx } from './grand-1/IRangeBlockGrand1Trx';
 
 interface BlockBase {
   hash: string;
   height: number;
   transactions: IRangeTransaction[];
-  network: IRangeNetwork;
+  network: NetworkEnum;
   timestamp: string;
   block_data?: string;
 }
@@ -17,4 +17,9 @@ interface OsmosisBlock extends BlockBase {
   network: NetworkEnum.Osmosis1;
 }
 
-export type IRangeBlock = OsmosisBlock;
+interface Grand1Block extends BlockBase {
+  transactions: Grand1Trx[];
+  network: NetworkEnum.Grand1;
+}
+
+export type IRangeBlock = OsmosisBlock | Grand1Block;
