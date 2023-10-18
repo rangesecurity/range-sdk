@@ -1,8 +1,11 @@
 export interface IRangeMessage {
+  network_id: string;
+  tx_hash: string;
+  index: number;
   type: string;
-  success: boolean;
-  value: any;
+  data: unknown;
+  status: string;
+  block_number: string;
   addresses: string[];
-  height: number;
-  hash: string;
+  contract_addresses?: any;
 }

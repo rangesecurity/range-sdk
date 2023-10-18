@@ -1,5 +1,3 @@
-import { IRangeMessage } from './IRangeMessage';
-
 export interface IKeyValuePair {
   key: string;
   value: string;
@@ -15,9 +13,13 @@ export interface ITransactionLog {
 }
 
 export interface IRangeTransaction {
-  height: number;
-  messages: IRangeMessage[];
-  success: boolean;
-  hash: string;
-  logs: { events: ITransactionEvent[] }[];
+  network_id: string;
+  tx_hash: string;
+  index: number;
+  type: string;
+  data: unknown;
+  status: string;
+  block_number: string;
+  addresses: string[];
+  contract_addresses?: any;
 }

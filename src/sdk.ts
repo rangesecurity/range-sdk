@@ -36,6 +36,7 @@ export interface RangeSDKInitOptions {
 
 export interface IRangeSDK {
   init(initOpts: RangeSDKInitOptions): Promise<void>;
+  gracefulCleanup(): Promise<void>;
 }
 
 class RangeSDK implements IRangeSDK {

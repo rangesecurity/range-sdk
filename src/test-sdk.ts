@@ -29,7 +29,10 @@ class TestRangeSDK implements IRangeSDK {
     this.initOpts = initOpts;
   }
 
-  async getNetworkBlock(args: { network: string; height: string }) {
+  async getNetworkBlock(args: {
+    network: string;
+    height: string;
+  }): Promise<IRangeBlock | null> {
     return fetchBlock({
       token: this.opts.token,
       height: args.height,
@@ -65,6 +68,10 @@ class TestRangeSDK implements IRangeSDK {
     }
 
     return this.initOpts.onBlock.callback(block, rule);
+  }
+
+  async gracefulCleanup(): Promise<void> {
+    // no-op
   }
 }
 
