@@ -1,14 +1,20 @@
 import { ZodLiteral, z } from 'zod';
 
-export const networkIds = {
-  osmosis_1: 'osmosis-1',
-  osmo_test_5: 'osmo-test-5',
-  cosmoshub_4: 'cosmoshub-4',
-  mocha_3: 'mocha-3',
-} as const;
+export enum NetworkEnum {
+  CelestiaMocha = 'celestia-mocha',
+  CosmosHub4 = 'cosmoshub-4',
+  Grand1 = 'grand-1',
+  Mocha3 = 'mocha-3',
+  Mocha4 = 'mocha-4',
+  Neutron1 = 'neutron-1',
+  Noble1 = 'noble-1',
+  Osmosis1 = 'osmosis-1',
+  OsmoTest5 = 'osmo-test-5',
+  Stride1 = 'stride-1',
+}
 
 export const NetworkValidator = z.union(
-  Object.values(networkIds).map((networkId) => z.literal(networkId)) as [
+  Object.values(NetworkEnum).map((networkId) => z.literal(networkId)) as [
     ZodLiteral<'osmosis-1'>,
     ZodLiteral<'osmo-test-5'>,
     ZodLiteral<'cosmoshub-4'>,
@@ -18,13 +24,13 @@ export const NetworkValidator = z.union(
 
 export type Network = z.infer<typeof NetworkValidator>;
 
-export const networkArray = Object.values(networkIds) as Network[];
+export const networkArray = Object.values(NetworkEnum) as Network[];
 
 export const validateNetwork = (network: Network) => {
   if (!networkArray.includes(network)) {
     throw new Error(
       `The network ${network} is not supported. Supporter networks are: ${Object.values(
-        networkIds,
+        NetworkEnum,
       ).join(', ')}`,
     );
   }
