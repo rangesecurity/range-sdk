@@ -206,7 +206,7 @@ interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
           hash: string;
           child_size: number;
           child_order: number[];
-          empty_child?: any;
+          empty_child?: unknown;
           max_prefix_length: number;
           min_prefix_length: number;
         };
@@ -243,7 +243,7 @@ interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
       revision_number: string;
     };
     counterparty_connection_id: string;
-    host_consensus_state_proof?: any;
+    host_consensus_state_proof?: unknown;
   };
 }
 
@@ -334,7 +334,7 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>;
+      timeoutHeight: Record<string | number | symbol, unknown>; // todo: couldn't find value in db
       destinationPort: string;
       timeoutTimestamp: string;
       destinationChannel: string;
@@ -519,7 +519,7 @@ interface Grand1TrxMsgIbcCoreClientV1MsgCreateClient {
           hash: string;
           child_size: number;
           child_order: number[];
-          empty_child?: any;
+          empty_child?: unknown;
           max_prefix_length: number;
           min_prefix_length: number;
         };
