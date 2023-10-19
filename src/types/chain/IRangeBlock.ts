@@ -1,6 +1,6 @@
 import { NetworkEnum } from '../IRangeNetwork';
 import { IRangeTransaction } from './IRangeTransaction';
-import { OsmosisTrx } from './osmosis-1/IRangeBlockOsmosisTrx';
+import { Osmosis1Trx } from './osmosis-1/IRangeBlockOsmosis1Trx';
 import { Grand1Trx } from './grand-1/IRangeBlockGrand1Trx';
 import { CosmosHub4Trx } from './cosmoshub-4/IRangeBlockCosmosHub4Trx';
 import { Mocha4Trx } from './mocha-4/IRangeBlockMocha4Trx';
@@ -14,8 +14,8 @@ interface BlockBase {
   block_data?: string;
 }
 
-interface OsmosisBlock extends BlockBase {
-  transactions: OsmosisTrx[];
+interface Osmosis1Block extends BlockBase {
+  transactions: Osmosis1Trx[];
   network: NetworkEnum.Osmosis1;
 }
 
@@ -35,7 +35,7 @@ interface Mocha4Block extends BlockBase {
 }
 
 export type IRangeBlock =
-  | OsmosisBlock
+  | Osmosis1Block
   | Grand1Block
   | CosmosHub4Block
   | Mocha4Block;

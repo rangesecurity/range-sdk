@@ -1,6 +1,6 @@
 import { IRangeMessage } from '../IRangeMessage';
 
-export enum OsmosisTrxMsgTypes {
+export enum Osmosis1TrxMsgTypes {
   CosmosAuthzV1beta1MsgExec = 'cosmos.authz.v1beta1.MsgExec',
   CosmosAuthzV1beta1MsgGrant = 'cosmos.authz.v1beta1.MsgGrant',
   CosmosAuthzV1beta1MsgRevoke = 'cosmos.authz.v1beta1.MsgRevoke',
@@ -67,75 +67,75 @@ export enum OsmosisTrxMsgTypes {
   OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards = 'osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards',
 }
 
-export type OsmosisTrxMsg =
-  | OsmosisTrxMsgCosmosAuthzV1beta1MsgExec
-  | OsmosisTrxMsgCosmosAuthzV1beta1MsgGrant
-  | OsmosisTrxMsgCosmosAuthzV1beta1MsgRevoke
-  | OsmosisTrxMsgCosmosBankV1beta1MsgSend
-  | OsmosisTrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
-  | OsmosisTrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
-  | OsmosisTrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
-  | OsmosisTrxMsgCosmosGovV1beta1MsgDeposit
-  | OsmosisTrxMsgCosmosGovV1beta1MsgSubmitProposal
-  | OsmosisTrxMsgCosmosGovV1beta1MsgVote
-  | OsmosisTrxMsgCosmosSlashingV1beta1MsgUnjail
-  | OsmosisTrxMsgCosmosStakingV1beta1MsgBeginRedelegate
-  | OsmosisTrxMsgCosmosStakingV1beta1MsgDelegate
-  | OsmosisTrxMsgCosmosStakingV1beta1MsgEditValidator
-  | OsmosisTrxMsgCosmosStakingV1beta1MsgUndelegate
-  | OsmosisTrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
-  | OsmosisTrxMsgCosmwasmWasmV1MsgExecuteContract
-  | OsmosisTrxMsgCosmwasmWasmV1MsgInstantiateContract
-  | OsmosisTrxMsgCosmwasmWasmV1MsgMigrateContract
-  | OsmosisTrxMsgCosmwasmWasmV1MsgStoreCode
-  | OsmosisTrxMsgIbcApplicationsTransferV1MsgTransfer
-  | OsmosisTrxMsgIbcCoreChannelV1MsgAcknowledgement
-  | OsmosisTrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
-  | OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
-  | OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenTry
-  | OsmosisTrxMsgIbcCoreChannelV1MsgRecvPacket
-  | OsmosisTrxMsgIbcCoreChannelV1MsgTimeout
-  | OsmosisTrxMsgIbcCoreClientV1MsgCreateClient
-  | OsmosisTrxMsgIbcCoreClientV1MsgUpdateClient
-  | OsmosisTrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
-  | OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
-  | OsmosisTrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
-  | OsmosisTrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
-  | OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
-  | OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors
-  | OsmosisTrxMsgOsmosisGammV1beta1MsgExitPool
-  | OsmosisTrxMsgOsmosisGammV1beta1MsgJoinPool
-  | OsmosisTrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
-  | OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
-  | OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
-  | OsmosisTrxMsgOsmosisIncentivesMsgAddToGauge
-  | OsmosisTrxMsgOsmosisIncentivesMsgCreateGauge
-  | OsmosisTrxMsgOsmosisLockupMsgBeginUnlocking
-  | OsmosisTrxMsgOsmosisLockupMsgLockTokens
-  | OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
-  | OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
-  | OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
-  | OsmosisTrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
-  | OsmosisTrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
-  | OsmosisTrxMsgOsmosisSuperfluidMsgLockAndSuperfluidDelegate
-  | OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidDelegate
-  | OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUnbondLock
-  | OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUndelegate
-  | OsmosisTrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
-  | OsmosisTrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
-  | OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
-  | OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgMint
-  | OsmosisTrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
+export type Osmosis1TrxMsg =
+  | Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec
+  | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
+  | Osmosis1TrxMsgCosmosAuthzV1beta1MsgRevoke
+  | Osmosis1TrxMsgCosmosBankV1beta1MsgSend
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
+  | Osmosis1TrxMsgCosmosGovV1beta1MsgDeposit
+  | Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
+  | Osmosis1TrxMsgCosmosGovV1beta1MsgVote
+  | Osmosis1TrxMsgCosmosSlashingV1beta1MsgUnjail
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgDelegate
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidator
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgUndelegate
+  | Osmosis1TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
+  | Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
+  | Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
+  | Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
+  | Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
+  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
+  | Osmosis1TrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
+  | Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
+  | Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
+  | Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors
+  | Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool
+  | Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool
+  | Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
+  | Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
+  | Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
+  | Osmosis1TrxMsgOsmosisIncentivesMsgAddToGauge
+  | Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
+  | Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
+  | Osmosis1TrxMsgOsmosisLockupMsgLockTokens
+  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
+  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgLockAndSuperfluidDelegate
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidDelegate
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidUnbondLock
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidUndelegate
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
+  | Osmosis1TrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
+  | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-interface OsmosisTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
       '@type': string;
@@ -152,8 +152,8 @@ interface OsmosisTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-interface OsmosisTrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
     '@type': string;
     grant: {
@@ -173,8 +173,8 @@ interface OsmosisTrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
-interface OsmosisTrxMsgCosmosAuthzV1beta1MsgRevoke extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosAuthzV1beta1MsgRevoke;
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgRevoke extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgRevoke;
   data: {
     grantee: string;
     granter: string;
@@ -183,8 +183,8 @@ interface OsmosisTrxMsgCosmosAuthzV1beta1MsgRevoke extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
-interface OsmosisTrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosBankV1beta1MsgSend;
+interface Osmosis1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: {
       denom: string;
@@ -196,9 +196,9 @@ interface OsmosisTrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgSetWithdrawAddress
-interface OsmosisTrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
+interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosDistributionV1beta1MsgSetWithdrawAddress;
+  type: Osmosis1TrxMsgTypes.CosmosDistributionV1beta1MsgSetWithdrawAddress;
   data: {
     withdrawAddress: string;
     delegatorAddress: string;
@@ -206,9 +206,9 @@ interface OsmosisTrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
-interface OsmosisTrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
+interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawDelegatorReward;
+  type: Osmosis1TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawDelegatorReward;
   data: {
     delegatorAddress: string;
     validatorAddress: string;
@@ -216,17 +216,17 @@ interface OsmosisTrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
-interface OsmosisTrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
+interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawValidatorCommission;
+  type: Osmosis1TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawValidatorCommission;
   data: {
     validatorAddress: string;
   };
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgDeposit
-interface OsmosisTrxMsgCosmosGovV1beta1MsgDeposit extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosGovV1beta1MsgDeposit;
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgDeposit extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgDeposit;
   data: {
     amount: {
       denom: string;
@@ -238,8 +238,9 @@ interface OsmosisTrxMsgCosmosGovV1beta1MsgDeposit extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-interface OsmosisTrxMsgCosmosGovV1beta1MsgSubmitProposal extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
     '@type': string;
     content: {
@@ -261,8 +262,8 @@ interface OsmosisTrxMsgCosmosGovV1beta1MsgSubmitProposal extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
-interface OsmosisTrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosGovV1beta1MsgVote;
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgVote;
   data: {
     voter: string;
     option: string;
@@ -271,17 +272,17 @@ interface OsmosisTrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.slashing.v1beta1.MsgUnjail
-interface OsmosisTrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosSlashingV1beta1MsgUnjail;
+interface Osmosis1TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosSlashingV1beta1MsgUnjail;
   data: {
     validatorAddr: string;
   };
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgBeginRedelegate
-interface OsmosisTrxMsgCosmosStakingV1beta1MsgBeginRedelegate
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosStakingV1beta1MsgBeginRedelegate;
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgBeginRedelegate;
   data: {
     amount: {
       denom: string;
@@ -294,8 +295,8 @@ interface OsmosisTrxMsgCosmosStakingV1beta1MsgBeginRedelegate
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgDelegate
-interface OsmosisTrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosStakingV1beta1MsgDelegate;
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgDelegate;
   data: {
     amount: {
       denom: string;
@@ -307,9 +308,9 @@ interface OsmosisTrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgEditValidator
-interface OsmosisTrxMsgCosmosStakingV1beta1MsgEditValidator
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidator
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
     description: {
       details: string;
@@ -323,8 +324,9 @@ interface OsmosisTrxMsgCosmosStakingV1beta1MsgEditValidator
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgUndelegate
-interface OsmosisTrxMsgCosmosStakingV1beta1MsgUndelegate extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosStakingV1beta1MsgUndelegate;
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgUndelegate
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgUndelegate;
   data: {
     amount: {
       denom: string;
@@ -336,9 +338,9 @@ interface OsmosisTrxMsgCosmosStakingV1beta1MsgUndelegate extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.vesting.v1beta1.MsgCreateVestingAccount
-interface OsmosisTrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
+interface Osmosis1TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmosVestingV1beta1MsgCreateVestingAccount;
+  type: Osmosis1TrxMsgTypes.CosmosVestingV1beta1MsgCreateVestingAccount;
   data: {
     amount: {
       denom: string;
@@ -352,8 +354,8 @@ interface OsmosisTrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgExecuteContract
-interface OsmosisTrxMsgCosmwasmWasmV1MsgExecuteContract extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
     msg: string;
     funds: {
@@ -366,9 +368,9 @@ interface OsmosisTrxMsgCosmwasmWasmV1MsgExecuteContract extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-interface OsmosisTrxMsgCosmwasmWasmV1MsgInstantiateContract
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
     msg: string;
     label: string;
@@ -378,8 +380,8 @@ interface OsmosisTrxMsgCosmwasmWasmV1MsgInstantiateContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgMigrateContract
-interface OsmosisTrxMsgCosmwasmWasmV1MsgMigrateContract extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmwasmWasmV1MsgMigrateContract;
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgMigrateContract;
   data: {
     msg: string;
     codeId: string;
@@ -389,8 +391,8 @@ interface OsmosisTrxMsgCosmwasmWasmV1MsgMigrateContract extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgStoreCode
-interface OsmosisTrxMsgCosmwasmWasmV1MsgStoreCode extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.CosmwasmWasmV1MsgStoreCode;
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgStoreCode;
   data: {
     sender: string;
     wasmByteCode: string;
@@ -398,9 +400,9 @@ interface OsmosisTrxMsgCosmwasmWasmV1MsgStoreCode extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-interface OsmosisTrxMsgIbcApplicationsTransferV1MsgTransfer
+interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
+  type: Osmosis1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
     token: {
       denom: string;
@@ -415,9 +417,9 @@ interface OsmosisTrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface OsmosisTrxMsgIbcCoreChannelV1MsgAcknowledgement
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
       data: string;
@@ -443,9 +445,9 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
-interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
   data: {
     portId: string;
     signer: string;
@@ -459,9 +461,9 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
     portId: string;
     signer: string;
@@ -475,8 +477,9 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenTry extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
     portId: string;
     signer: string;
@@ -500,8 +503,8 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgChannelOpenTry extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-interface OsmosisTrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
       data: string;
@@ -526,8 +529,8 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-interface OsmosisTrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreChannelV1MsgTimeout;
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
       data: string;
@@ -553,8 +556,8 @@ interface OsmosisTrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-interface OsmosisTrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreClientV1MsgCreateClient;
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
     signer: string;
@@ -612,8 +615,8 @@ interface OsmosisTrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-interface OsmosisTrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
+interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
     signer: string;
@@ -711,9 +714,9 @@ interface OsmosisTrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
-interface OsmosisTrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
+  type: Osmosis1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
   data: {
     signer: string;
     proofAck: string;
@@ -725,9 +728,9 @@ interface OsmosisTrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.poolmodel.concentrated.v1beta1.MsgCreateConcentratedPool
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool;
   data: {
     denom0: string;
     denom1: string;
@@ -738,9 +741,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1M
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgAddToPosition
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgAddToPosition;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgAddToPosition;
   data: {
     sender: string;
     amount0: string;
@@ -752,9 +755,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCollectIncentives
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectIncentives;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectIncentives;
   data: {
     sender: string;
     positionIds: string[];
@@ -762,9 +765,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCollectSpreadRewards
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards;
   data: {
     sender: string;
     positionIds: string[];
@@ -772,9 +775,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadReward
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCreatePosition
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCreatePosition;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCreatePosition;
   data: {
     poolId: string;
     sender: string;
@@ -790,9 +793,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgFungifyChargedPositions
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions;
   data: {
     sender: string;
     positionIds: string[];
@@ -804,9 +807,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPosit
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgWithdrawPosition
-interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
+interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition;
+  type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition;
   data: {
     sender: string;
     positionId: string;
@@ -815,9 +818,9 @@ interface OsmosisTrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
 }
 
 // types for mgs type:: /osmosis.cosmwasmpool.v1beta1.MsgCreateCosmWasmPool
-interface OsmosisTrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
+interface Osmosis1TrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool;
+  type: Osmosis1TrxMsgTypes.OsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool;
   data: {
     codeId: string;
     sender: string;
@@ -826,9 +829,9 @@ interface OsmosisTrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
 }
 
 // types for mgs type:: /osmosis.gamm.poolmodels.balancer.v1beta1.MsgCreateBalancerPool
-interface OsmosisTrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
+interface Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool;
+  type: Osmosis1TrxMsgTypes.OsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool;
   data: {
     sender: string;
     poolAssets: {
@@ -847,9 +850,9 @@ interface OsmosisTrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
 }
 
 // types for mgs type:: /osmosis.gamm.poolmodels.stableswap.v1beta1.MsgCreateStableswapPool
-interface OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
+interface Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool;
+  type: Osmosis1TrxMsgTypes.OsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool;
   data: {
     sender: string;
     poolParams: {
@@ -866,9 +869,9 @@ interface OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwap
 }
 
 // types for mgs type:: /osmosis.gamm.poolmodels.stableswap.v1beta1.MsgStableSwapAdjustScalingFactors
-interface OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors
+interface Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors;
+  type: Osmosis1TrxMsgTypes.OsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors;
   data: {
     poolId: string;
     sender: string;
@@ -877,8 +880,8 @@ interface OsmosisTrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjust
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgExitPool
-interface OsmosisTrxMsgOsmosisGammV1beta1MsgExitPool extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammV1beta1MsgExitPool;
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgExitPool;
   data: {
     poolId: string;
     sender: string;
@@ -891,8 +894,8 @@ interface OsmosisTrxMsgOsmosisGammV1beta1MsgExitPool extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinPool
-interface OsmosisTrxMsgOsmosisGammV1beta1MsgJoinPool extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammV1beta1MsgJoinPool;
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgJoinPool;
   data: {
     poolId: string;
     sender: string;
@@ -905,9 +908,9 @@ interface OsmosisTrxMsgOsmosisGammV1beta1MsgJoinPool extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn
-interface OsmosisTrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammV1beta1MsgJoinSwapExternAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgJoinSwapExternAmountIn;
   data: {
     poolId: string;
     sender: string;
@@ -920,9 +923,9 @@ interface OsmosisTrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountIn
-interface OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
   data: {
     routes: {
       poolId: string;
@@ -938,9 +941,9 @@ interface OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountOut
-interface OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountOut;
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountOut;
   data: {
     routes: {
       poolId: string;
@@ -956,8 +959,8 @@ interface OsmosisTrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
 }
 
 // types for mgs type:: /osmosis.incentives.MsgAddToGauge
-interface OsmosisTrxMsgOsmosisIncentivesMsgAddToGauge extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisIncentivesMsgAddToGauge;
+interface Osmosis1TrxMsgOsmosisIncentivesMsgAddToGauge extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisIncentivesMsgAddToGauge;
   data: {
     owner: string;
     gaugeId: string;
@@ -969,8 +972,8 @@ interface OsmosisTrxMsgOsmosisIncentivesMsgAddToGauge extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.incentives.MsgCreateGauge
-interface OsmosisTrxMsgOsmosisIncentivesMsgCreateGauge extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisIncentivesMsgCreateGauge;
+interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisIncentivesMsgCreateGauge;
   data: {
     coins: {
       denom: string;
@@ -988,8 +991,8 @@ interface OsmosisTrxMsgOsmosisIncentivesMsgCreateGauge extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.lockup.MsgBeginUnlocking
-interface OsmosisTrxMsgOsmosisLockupMsgBeginUnlocking extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisLockupMsgBeginUnlocking;
+interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisLockupMsgBeginUnlocking;
   data: {
     ID: string;
     owner: string;
@@ -997,8 +1000,8 @@ interface OsmosisTrxMsgOsmosisLockupMsgBeginUnlocking extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.lockup.MsgLockTokens
-interface OsmosisTrxMsgOsmosisLockupMsgLockTokens extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisLockupMsgLockTokens;
+interface Osmosis1TrxMsgOsmosisLockupMsgLockTokens extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisLockupMsgLockTokens;
   data: {
     coins: {
       denom: string;
@@ -1010,9 +1013,9 @@ interface OsmosisTrxMsgOsmosisLockupMsgLockTokens extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn
-interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
+interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn;
   data: {
     routes: {
       pools: {
@@ -1028,9 +1031,9 @@ interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn
-interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
   data: {
     routes: {
       poolId: string;
@@ -1046,9 +1049,9 @@ interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountOut
-interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
+interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountOut;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountOut;
   data: {
     routes: {
       poolId: string;
@@ -1064,9 +1067,9 @@ interface OsmosisTrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgAddToConcentratedLiquiditySuperfluidPosition
-interface OsmosisTrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition;
   data: {
     sender: string;
     positionId: string;
@@ -1082,9 +1085,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidP
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgCreateFullRangePositionAndSuperfluidDelegate
-interface OsmosisTrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate;
   data: {
     coins: {
       denom: string;
@@ -1097,9 +1100,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidD
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgLockAndSuperfluidDelegate
-interface OsmosisTrxMsgOsmosisSuperfluidMsgLockAndSuperfluidDelegate
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgLockAndSuperfluidDelegate
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgLockAndSuperfluidDelegate;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgLockAndSuperfluidDelegate;
   data: {
     coins: {
       denom: string;
@@ -1111,9 +1114,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgLockAndSuperfluidDelegate
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgSuperfluidDelegate
-interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidDelegate
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidDelegate
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgSuperfluidDelegate;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgSuperfluidDelegate;
   data: {
     lockId: string;
     sender: string;
@@ -1122,9 +1125,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidDelegate
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgSuperfluidUnbondLock
-interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUnbondLock
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidUnbondLock
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgSuperfluidUnbondLock;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgSuperfluidUnbondLock;
   data: {
     lockId: string;
     sender: string;
@@ -1132,9 +1135,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUnbondLock
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgSuperfluidUndelegate
-interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUndelegate
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgSuperfluidUndelegate
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgSuperfluidUndelegate;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgSuperfluidUndelegate;
   data: {
     lockId: string;
     sender: string;
@@ -1142,9 +1145,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgSuperfluidUndelegate
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgUnbondConvertAndStake
-interface OsmosisTrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgUnbondConvertAndStake;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgUnbondConvertAndStake;
   data: {
     lockId: string;
     sender: string;
@@ -1158,9 +1161,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
 }
 
 // types for mgs type:: /osmosis.superfluid.MsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
-interface OsmosisTrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
+interface Osmosis1TrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition;
+  type: Osmosis1TrxMsgTypes.OsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition;
   data: {
     lockId: string;
     sender: string;
@@ -1176,9 +1179,9 @@ interface OsmosisTrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConc
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
-interface OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
+interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisTokenFactoryV1beta1MsgCreateDenom;
+  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgCreateDenom;
   data: {
     sender: string;
     subdenom: string;
@@ -1186,8 +1189,9 @@ interface OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgMint
-interface OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgMint extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
+interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
   data: {
     amount: {
       denom: string;
@@ -1199,9 +1203,9 @@ interface OsmosisTrxMsgOsmosisTokenFactoryV1beta1MsgMint extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards
-interface OsmosisTrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
+interface Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
   extends IRangeMessage {
-  type: OsmosisTrxMsgTypes.OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
+  type: Osmosis1TrxMsgTypes.OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
   data: {
     delegator: string;
   };
