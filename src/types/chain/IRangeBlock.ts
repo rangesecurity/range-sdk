@@ -3,6 +3,7 @@ import { IRangeTransaction } from './IRangeTransaction';
 import { OsmosisTrx } from './osmosis-1/IRangeBlockOsmosisTrx';
 import { Grand1Trx } from './grand-1/IRangeBlockGrand1Trx';
 import { CosmosHub4Trx } from './cosmoshub-4/IRangeBlockCosmosHub4Trx';
+import { Mocha4Trx } from './mocha-4/IRangeBlockMocha4Trx';
 
 interface BlockBase {
   hash: string;
@@ -28,4 +29,13 @@ interface CosmosHub4Block extends BlockBase {
   network: NetworkEnum.CosmosHub4;
 }
 
-export type IRangeBlock = OsmosisBlock | Grand1Block | CosmosHub4Block;
+interface Mocha4Block extends BlockBase {
+  transactions: Mocha4Trx[];
+  network: NetworkEnum.Mocha4;
+}
+
+export type IRangeBlock =
+  | OsmosisBlock
+  | Grand1Block
+  | CosmosHub4Block
+  | Mocha4Block;
