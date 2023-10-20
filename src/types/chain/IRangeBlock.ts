@@ -7,6 +7,7 @@ import { Mocha4Trx } from './mocha-4/IRangeBlockMocha4Trx';
 import { Neutron1Trx } from './neutron-1/IRangeBlockNeutron1Trx';
 import { Noble1Trx } from './noble-1/IRangeBlockNoble1Trx';
 import { Stride1Trx } from './stride-1/IRangeBlockStride1Trx';
+import { OsmoTest5Trx } from './osmo-test-5/IRangeBlockOsmoTest5Trx';
 
 interface BlockBase {
   hash: string;
@@ -52,6 +53,11 @@ interface Stride1Block extends BlockBase {
   network: NetworkEnum.Stride1;
 }
 
+interface OsmoTest5Block extends BlockBase {
+  transactions: OsmoTest5Trx[];
+  network: NetworkEnum.OsmoTest5;
+}
+
 export type IRangeBlock =
   | Osmosis1Block
   | Grand1Block
@@ -59,4 +65,5 @@ export type IRangeBlock =
   | Mocha4Block
   | Neutron1Block
   | Noble1Block
-  | Stride1Block;
+  | Stride1Block
+  | OsmoTest5Block;
