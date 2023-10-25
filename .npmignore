@@ -7,3 +7,4 @@ tests
 .prettierrc
 tsconfig.json
 .env
+yarn-error.log

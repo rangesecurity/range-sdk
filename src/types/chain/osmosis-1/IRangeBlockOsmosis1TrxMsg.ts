@@ -65,6 +65,7 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisTokenFactoryV1beta1MsgCreateDenom = 'osmosis.tokenfactory.v1beta1.MsgCreateDenom',
   OsmosisTokenFactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
   OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards = 'osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards',
+  CosmosStakingV1beta1MsgCreateValidator = 'cosmos.staking.v1beta1.MsgCreateValidator',
 }
 
 export type Osmosis1TrxMsg =
@@ -131,7 +132,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
-  | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
+  | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1208,5 +1210,31 @@ interface Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
   type: Osmosis1TrxMsgTypes.OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards;
   data: {
     delegator: string;
+  };
+}
+
+// types for mgs type:: /cosmos.authz.v1beta1.MsgExec
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
+  data: {
+    value: { denom: string; amount: string };
+    pubkey: {
+      key: string;
+      '@type': string;
+    };
+    commission: {
+      rate: string;
+      maxRate: string;
+      maxChangeRate: string;
+    };
+    description: {
+      details: string;
+      moniker: string;
+      identity: string;
+    };
+    delegatorAddress: string;
+    validatorAddress: string;
+    minSelfDelegation: string;
   };
 }
