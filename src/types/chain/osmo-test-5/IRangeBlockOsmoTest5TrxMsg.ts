@@ -82,7 +82,7 @@ export type OsmoTest5TrxMsg =
   | OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgSetValidatorSetPreference;
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
-interface OsmoTest5TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: { denom: string; amount: string }[];
@@ -92,7 +92,7 @@ interface OsmoTest5TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
-interface OsmoTest5TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
+export interface OsmoTest5TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawDelegatorReward;
   data: {
@@ -102,7 +102,7 @@ interface OsmoTest5TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-interface OsmoTest5TrxMsgCosmosGovV1beta1MsgSubmitProposal
+export interface OsmoTest5TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
@@ -125,7 +125,7 @@ interface OsmoTest5TrxMsgCosmosGovV1beta1MsgSubmitProposal
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
-interface OsmoTest5TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosGovV1beta1MsgVote;
   data: {
     voter: string;
@@ -135,7 +135,8 @@ interface OsmoTest5TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.slashing.v1beta1.MsgUnjail
-interface OsmoTest5TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosSlashingV1beta1MsgUnjail
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosSlashingV1beta1MsgUnjail;
   data: {
     validatorAddr: string;
@@ -143,7 +144,7 @@ interface OsmoTest5TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgBeginRedelegate
-interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
+export interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosStakingV1beta1MsgBeginRedelegate;
   data: {
@@ -155,7 +156,7 @@ interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgCreateValidator
-interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgCreateValidator
+export interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgCreateValidator
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
@@ -177,7 +178,8 @@ interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgCreateValidator
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgDelegate
-interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgDelegate
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosStakingV1beta1MsgDelegate;
   data: {
     amount: { denom: string; amount: string };
@@ -187,7 +189,7 @@ interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgUndelegate
-interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgUndelegate
+export interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgUndelegate
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosStakingV1beta1MsgUndelegate;
   data: {
@@ -198,7 +200,8 @@ interface OsmoTest5TrxMsgCosmosStakingV1beta1MsgUndelegate
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgExecuteContract
-interface OsmoTest5TrxMsgCosmosWasmV1MsgExecuteContract extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosWasmV1MsgExecuteContract
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosWasmV1MsgExecuteContract;
   data: {
     msg: string;
@@ -209,7 +212,7 @@ interface OsmoTest5TrxMsgCosmosWasmV1MsgExecuteContract extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-interface OsmoTest5TrxMsgCosmosWasmV1MsgInstantiateContract
+export interface OsmoTest5TrxMsgCosmosWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosWasmV1MsgInstantiateContract;
   data: {
@@ -223,7 +226,8 @@ interface OsmoTest5TrxMsgCosmosWasmV1MsgInstantiateContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgMigrateContract
-interface OsmoTest5TrxMsgCosmosWasmV1MsgMigrateContract extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmosWasmV1MsgMigrateContract
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmosWasmV1MsgMigrateContract;
   data: {
     msg: string;
@@ -234,7 +238,8 @@ interface OsmoTest5TrxMsgCosmosWasmV1MsgMigrateContract extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgStoreCode
-interface OsmoTest5TrxMsgCosmWasmWasmV1MsgStoreCode extends IRangeMessage {
+export interface OsmoTest5TrxMsgCosmWasmWasmV1MsgStoreCode
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.CosmWasmWasmV1MsgStoreCode;
   data: {
     sender: string;
@@ -243,7 +248,7 @@ interface OsmoTest5TrxMsgCosmWasmWasmV1MsgStoreCode extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-interface OsmoTest5TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface OsmoTest5TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -260,7 +265,7 @@ interface OsmoTest5TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgAcknowledgement
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
@@ -282,7 +287,7 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
   data: {
@@ -295,7 +300,7 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenAck
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenAck
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
@@ -313,7 +318,7 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenAck
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
@@ -329,7 +334,7 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenInit
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenInit
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenInit
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
@@ -348,7 +353,7 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenInit
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenTry
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
@@ -374,7 +379,8 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for msg type: /ibc.core.channel.v1.MsgRecvPacket
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
@@ -394,7 +400,8 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for msg type: /ibc.core.channel.v1.MsgTimeout
-interface OsmoTest5TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+export interface OsmoTest5TrxMsgIbcCoreChannelV1MsgTimeout
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -415,7 +422,8 @@ interface OsmoTest5TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for msg type: /ibc.core.client.v1.MsgCreateClient
-interface OsmoTest5TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
+export interface OsmoTest5TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
@@ -463,7 +471,8 @@ interface OsmoTest5TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgUpdateClient
-interface OsmoTest5TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface OsmoTest5TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
@@ -562,7 +571,7 @@ interface OsmoTest5TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
-interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
+export interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
   data: {
@@ -632,7 +641,7 @@ interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
-interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+export interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
   data: {
@@ -644,7 +653,7 @@ interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+export interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
@@ -664,7 +673,7 @@ interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
+export interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
@@ -740,7 +749,7 @@ interface OsmoTest5TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
 }
 
 // types for msg type:: /osmosis.concentratedliquidity.poolmodel.concentrated.v1beta1.MsgCreateConcentratedPool
-interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
+export interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool;
   data: {
@@ -753,7 +762,7 @@ interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCollectIncentives
-interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityV1Beta1MsgCollectIncentives
+export interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityV1Beta1MsgCollectIncentives
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisConcentratedLiquidityV1Beta1MsgCollectIncentives;
   data: {
@@ -763,7 +772,7 @@ interface OsmoTest5TrxMsgOsmosisConcentratedLiquidityV1Beta1MsgCollectIncentives
 }
 
 // types for mgs type:: /osmosis.cosmwasmpool.v1beta1.MsgCreateCosmWasmPool
-interface OsmoTest5TrxMsgOsmosisCosmwasmPoolV1Beta1MsgCreateCosmWasmPool
+export interface OsmoTest5TrxMsgOsmosisCosmwasmPoolV1Beta1MsgCreateCosmWasmPool
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisCosmwasmPoolV1Beta1MsgCreateCosmWasmPool;
   data: {
@@ -774,7 +783,8 @@ interface OsmoTest5TrxMsgOsmosisCosmwasmPoolV1Beta1MsgCreateCosmWasmPool
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinPool
-interface OsmoTest5TrxMsgOsmosisGammV1Beta1MsgJoinPool extends IRangeMessage {
+export interface OsmoTest5TrxMsgOsmosisGammV1Beta1MsgJoinPool
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisGammV1Beta1MsgJoinPool;
   data: {
     poolId: string;
@@ -788,7 +798,7 @@ interface OsmoTest5TrxMsgOsmosisGammV1Beta1MsgJoinPool extends IRangeMessage {
 }
 
 // types for msg type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountIn
-interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
+export interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
   type: OsmoTest5TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
   data: {
     routes: Array<{ poolId: string; tokenOutDenom: string }>;
@@ -799,7 +809,7 @@ interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
 }
 
 // types for msg type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn
-interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn {
+export interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn {
   type: OsmoTest5TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
   data: {
     routes: Array<{ poolId: string; tokenOutDenom: string }>;
@@ -810,7 +820,7 @@ interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn {
 }
 
 // types for msg type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
-interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom {
+export interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom {
   type: OsmoTest5TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgCreateDenom;
   data: {
     sender: string;
@@ -819,7 +829,7 @@ interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom {
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgMint
-interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgMint
+export interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgMint
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
   data: {
@@ -833,7 +843,7 @@ interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgMint
 }
 
 // types for mgs type:: /osmosis.valsetpref.v1beta1.MsgDelegateToValidatorSet
-interface OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgDelegateToValidatorSet
+export interface OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgDelegateToValidatorSet
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisValsetprefV1beta1MsgDelegateToValidatorSet;
   data: {
@@ -846,7 +856,7 @@ interface OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgDelegateToValidatorSet
 }
 
 // types for mgs type:: /osmosis.valsetpref.v1beta1.MsgSetValidatorSetPreference
-interface OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgSetValidatorSetPreference
+export interface OsmoTest5TrxMsgOsmosisValsetprefV1beta1MsgSetValidatorSetPreference
   extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisValsetprefV1beta1MsgSetValidatorSetPreference;
   data: {

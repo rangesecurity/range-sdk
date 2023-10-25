@@ -34,7 +34,7 @@ export type Neutron1TrxMsg =
   | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject;
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
-interface Neutron1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface Neutron1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: { denom: string; amount: string }[];
@@ -44,7 +44,8 @@ interface Neutron1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgExecuteContract
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract extends IRangeMessage {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
     msg: string;
@@ -54,7 +55,7 @@ interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract extends IRangeMessage {
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
@@ -66,7 +67,7 @@ interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract2
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract2;
   data: {
@@ -79,7 +80,8 @@ interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgMigrateContract
-interface Neutron1TrxMsgCosmwasmWasmV1MsgMigrateContract extends IRangeMessage {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgMigrateContract
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgMigrateContract;
   data: {
     msg: string;
@@ -90,7 +92,8 @@ interface Neutron1TrxMsgCosmwasmWasmV1MsgMigrateContract extends IRangeMessage {
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgStoreCode
-interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode extends IRangeMessage {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgStoreCode;
   data: {
     sender: string;
@@ -99,7 +102,7 @@ interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -119,7 +122,7 @@ interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
@@ -144,7 +147,8 @@ interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for mgs type:: ibc.core.channel.v1.MsgRecvPacket
-interface Neutron1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+export interface Neutron1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
@@ -167,7 +171,8 @@ interface Neutron1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+export interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -194,7 +199,8 @@ interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
+export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
@@ -253,7 +259,8 @@ interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
 }
 
 // types for mgs type:: ibc.core.client.v1.MsgUpdateClient
-interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
@@ -352,7 +359,7 @@ interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
-interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
+export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgCreateDenom;
   data: {
@@ -362,7 +369,7 @@ interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgMint
-interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
+export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
   data: {

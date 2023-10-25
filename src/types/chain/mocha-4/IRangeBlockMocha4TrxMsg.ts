@@ -52,7 +52,7 @@ export type Mocha4TrxMsg =
   | Mocha4TrxMsgConnectionOpenTry;
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-interface Mocha4TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
@@ -66,7 +66,7 @@ interface Mocha4TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-interface Mocha4TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
     '@type': string;
@@ -83,7 +83,7 @@ interface Mocha4TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
-interface Mocha4TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: Array<{
@@ -96,7 +96,7 @@ interface Mocha4TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.distribution.v1beta1.MsgSetWithdrawAddress
-interface Mocha4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
+export interface Mocha4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosDistributionV1beta1MsgSetWithdrawAddress;
   data: {
@@ -106,7 +106,7 @@ interface Mocha4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
 }
 
 // types for msg type:: /cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
-interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
+export interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawDelegatorReward;
   data: {
@@ -116,7 +116,7 @@ interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
 }
 
 // types for msg type:: /cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
-interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
+export interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawValidatorCommission;
   data: {
@@ -125,7 +125,7 @@ interface Mocha4TrxMsgCosmosDistributionV1beta1MsgWithdrawValidatorCommission
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-interface Mocha4TrxMsgCosmosFeeGrantV1beta1MsgGrantAllowance
+export interface Mocha4TrxMsgCosmosFeeGrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosFeeGrantV1beta1MsgGrantAllowance;
   data: {
@@ -141,7 +141,8 @@ interface Mocha4TrxMsgCosmosFeeGrantV1beta1MsgGrantAllowance
 }
 
 // types for msg type:: /cosmos.slashing.v1beta1.MsgUnjail
-interface Mocha4TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosSlashingV1beta1MsgUnjail
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosSlashingV1beta1MsgUnjail;
   data: {
     validatorAddr: string;
@@ -149,7 +150,7 @@ interface Mocha4TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgBeginRedelegate
-interface Mocha4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
+export interface Mocha4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosStakingV1beta1MsgBeginRedelegate;
   data: {
@@ -164,7 +165,7 @@ interface Mocha4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgCreateValidator
-interface Mocha4TrxMsgCosmosStakingV1beta1MsgCreateValidator
+export interface Mocha4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
@@ -196,7 +197,8 @@ interface Mocha4TrxMsgCosmosStakingV1beta1MsgCreateValidator
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgDelegate
-interface Mocha4TrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosStakingV1beta1MsgDelegate
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosStakingV1beta1MsgDelegate;
   data: {
     amount: {
@@ -209,7 +211,7 @@ interface Mocha4TrxMsgCosmosStakingV1beta1MsgDelegate extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgEditValidator
-interface Mocha4TrxMsgCosmosStakingV1beta1MsgEditValidator
+export interface Mocha4TrxMsgCosmosStakingV1beta1MsgEditValidator
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
@@ -225,7 +227,8 @@ interface Mocha4TrxMsgCosmosStakingV1beta1MsgEditValidator
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgUndelegate
-interface Mocha4TrxMsgCosmosStakingV1beta1MsgUndelegate extends IRangeMessage {
+export interface Mocha4TrxMsgCosmosStakingV1beta1MsgUndelegate
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosStakingV1beta1MsgUndelegate;
   data: {
     amount: {
@@ -238,7 +241,7 @@ interface Mocha4TrxMsgCosmosStakingV1beta1MsgUndelegate extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.vesting.v1beta1.MsgCreateVestingAccount
-interface Mocha4TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
+export interface Mocha4TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.CosmosVestingV1beta1MsgCreateVestingAccount;
   data: {
@@ -253,7 +256,7 @@ interface Mocha4TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-interface Mocha4TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface Mocha4TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -273,7 +276,8 @@ interface Mocha4TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface Mocha4TrxMsgIbcCoreChannelV1MsgAcknowledgement extends IRangeMessage {
+export interface Mocha4TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
@@ -299,7 +303,7 @@ interface Mocha4TrxMsgIbcCoreChannelV1MsgAcknowledgement extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+export interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
@@ -316,7 +320,8 @@ interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenTry
-interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenTry extends IRangeMessage {
+export interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
     portId: string;
@@ -341,7 +346,8 @@ interface Mocha4TrxMsgIbcCoreChannelV1MsgChannelOpenTry extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgCreateClient
-interface Mocha4TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
+export interface Mocha4TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
@@ -400,7 +406,8 @@ interface Mocha4TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgUpdateClient
-interface Mocha4TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface Mocha4TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
@@ -499,7 +506,7 @@ interface Mocha4TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
-interface Mocha4TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+export interface Mocha4TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
   extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
   data: {
@@ -514,7 +521,7 @@ interface Mocha4TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-interface Mocha4TrxMsgConnectionOpenInit extends IRangeMessage {
+export interface Mocha4TrxMsgConnectionOpenInit extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
     '@type': string;
@@ -534,7 +541,7 @@ interface Mocha4TrxMsgConnectionOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-interface Mocha4TrxMsgConnectionOpenTry extends IRangeMessage {
+export interface Mocha4TrxMsgConnectionOpenTry extends IRangeMessage {
   type: Mocha4TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
     '@type': string;

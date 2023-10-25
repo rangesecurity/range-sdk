@@ -66,7 +66,8 @@ enum CosmosHub4TrxMsgTypes {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
@@ -84,7 +85,8 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
     '@type': string;
@@ -105,7 +107,8 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgRevoke extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgRevoke
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgRevoke;
   data: {
     grantee: string;
@@ -115,7 +118,8 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgRevoke extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgMultiSend
-interface CosmosHub4TrxMsgCosmosBankV1beta1MsgMultiSend extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosBankV1beta1MsgMultiSend
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosBankV1beta1MsgMultiSend;
   data: {
     inputs: {
@@ -136,7 +140,8 @@ interface CosmosHub4TrxMsgCosmosBankV1beta1MsgMultiSend extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
-interface CosmosHub4TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosBankV1beta1MsgSend
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: {
@@ -149,7 +154,7 @@ interface CosmosHub4TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgSetWithdrawAddress
-interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
+export interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosDistributionV1beta1MsgSetWithdrawAddress;
   data: {
@@ -159,7 +164,7 @@ interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgSetWithdrawAddress
 }
 
 // types for msg type:: /cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
-interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
+export interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawDelegatorReward;
   data: {
@@ -169,7 +174,8 @@ interface CosmosHub4TrxMsgCosmosDistributionV1beta1MsgWithdrawDelegatorReward
 }
 
 // types for msg type:: /cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
-interface CosmosHub4TrxMsgWithdrawValidatorCommission extends IRangeMessage {
+export interface CosmosHub4TrxMsgWithdrawValidatorCommission
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosDistributionV1beta1MsgWithdrawValidatorCommission;
   data: {
     validatorAddress: string;
@@ -177,7 +183,7 @@ interface CosmosHub4TrxMsgWithdrawValidatorCommission extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
+export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
@@ -193,7 +199,8 @@ interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgDeposit
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgDeposit;
   data: {
     amount: {
@@ -206,7 +213,7 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
@@ -225,7 +232,7 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgVote;
   data: {
     voter: string;
@@ -235,7 +242,7 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVoteWeighted
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteWeighted
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteWeighted
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgVoteWeighted;
   data: {
@@ -249,7 +256,8 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteWeighted
 }
 
 // types for msg type:: /cosmos.slashing.v1beta1.MsgUnjail
-interface CosmosHub4TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
+export interface CosmosHub4TrxMsgCosmosSlashingV1beta1MsgUnjail
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosSlashingV1beta1MsgUnjail;
   data: {
     validatorAddr: string;
@@ -257,7 +265,7 @@ interface CosmosHub4TrxMsgCosmosSlashingV1beta1MsgUnjail extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgBeginRedelegate
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgBeginRedelegate;
   data: {
@@ -272,7 +280,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgBeginRedelegate
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgCancelUnbondingDelegation
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCancelUnbondingDelegation
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCancelUnbondingDelegation
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCancelUnbondingDelegation;
   data: {
@@ -287,7 +295,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCancelUnbondingDelegation
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgCreateValidator
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
@@ -319,7 +327,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgDelegate
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgDelegate
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgDelegate
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgDelegate;
   data: {
@@ -333,7 +341,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgDelegate
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgEditValidator
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
@@ -351,7 +359,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgUndelegate
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgUndelegate
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgUndelegate
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgUndelegate;
   data: {
@@ -365,7 +373,7 @@ interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgUndelegate
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -386,7 +394,7 @@ interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
@@ -414,7 +422,7 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
   data: {
@@ -430,7 +438,7 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
@@ -444,7 +452,7 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   };
 }
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
@@ -469,7 +477,8 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
@@ -492,7 +501,8 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -519,7 +529,8 @@ interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
@@ -578,7 +589,7 @@ interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgSubmitMisbehaviour
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgSubmitMisbehaviour;
   data: {
@@ -769,7 +780,7 @@ interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient {
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
