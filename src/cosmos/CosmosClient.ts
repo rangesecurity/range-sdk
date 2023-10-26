@@ -57,7 +57,7 @@ export class CosmosClient {
       address,
       queryData: Buffer.from(JSON.stringify(queryData)),
     });
-    return Buffer.from(res.data).toString('utf8');
+    return JSON.parse(Buffer.from(res.data).toString('utf8'));
   }
 
   async getRpcClient(): Promise<ProtobufRpcClient> {
