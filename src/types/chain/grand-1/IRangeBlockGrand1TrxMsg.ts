@@ -470,7 +470,8 @@ export interface Grand1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgAddRemoteTokenMessenger
-export interface Grand1TrxMsgCircleCctpV1MsgAddRemoteTokenMessenger {
+export interface Grand1TrxMsgCircleCctpV1MsgAddRemoteTokenMessenger
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgAddRemoteTokenMessenger;
   data: {
     from: string;
@@ -507,7 +508,8 @@ export interface Grand1TrxMsgNobleFiatTokenFactoryMsgMint
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-export interface Grand1TrxMsgIbcCoreClientV1MsgCreateClient {
+export interface Grand1TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;

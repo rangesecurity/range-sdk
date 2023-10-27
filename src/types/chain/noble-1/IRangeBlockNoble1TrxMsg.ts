@@ -100,7 +100,7 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec {
+export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
