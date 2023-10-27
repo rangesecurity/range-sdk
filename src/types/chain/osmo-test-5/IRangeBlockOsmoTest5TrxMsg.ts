@@ -798,7 +798,8 @@ export interface OsmoTest5TrxMsgOsmosisGammV1Beta1MsgJoinPool
 }
 
 // types for msg type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountIn
-export interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
+export interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
   data: {
     routes: Array<{ poolId: string; tokenOutDenom: string }>;
@@ -809,7 +810,8 @@ export interface OsmoTest5TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
 }
 
 // types for msg type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn
-export interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn {
+export interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
   data: {
     routes: Array<{ poolId: string; tokenOutDenom: string }>;
@@ -820,7 +822,8 @@ export interface OsmoTest5TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn {
 }
 
 // types for msg type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
-export interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom {
+export interface OsmoTest5TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
+  extends IRangeMessage {
   type: OsmoTest5TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgCreateDenom;
   data: {
     sender: string;

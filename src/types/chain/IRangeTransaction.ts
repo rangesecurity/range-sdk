@@ -1,3 +1,5 @@
+import { IRangeMessage } from './IRangeMessage';
+
 export interface IKeyValuePair {
   key: string;
   value: string;
@@ -21,4 +23,5 @@ export interface IRangeTransaction {
   status: string;
   network: string;
   success: boolean;
+  messages: IRangeMessage[];
 }
