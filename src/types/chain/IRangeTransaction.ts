@@ -13,13 +13,12 @@ export interface ITransactionLog {
 }
 
 export interface IRangeTransaction {
-  network_id: string;
-  tx_hash: string;
-  index: number;
-  type: string;
   data: unknown;
+  hash: string;
+  logs: ITransactionLog[] | null;
+  index: number;
+  height: string;
   status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: any;
+  network: string;
+  success: boolean;
 }
