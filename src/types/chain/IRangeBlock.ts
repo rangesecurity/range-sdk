@@ -11,7 +11,7 @@ import { OsmoTest5Trx } from './osmo-test-5/IRangeBlockOsmoTest5Trx';
 
 interface BlockBase {
   hash: string;
-  height: number;
+  height: string;
   transactions: IRangeTransaction[];
   network: NetworkEnum;
   timestamp: string;
