@@ -15,6 +15,7 @@ enum Neutron1TrxMsgTypes {
   IbcCoreClientV1MsgUpdateClient = 'ibc.core.client.v1.MsgUpdateClient',
   OsmosisTokenFactoryV1beta1MsgCreateDenom = 'osmosis.tokenfactory.v1beta1.MsgCreateDenom',
   OsmosisTokenFactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
+  CosmwasmWasmV1MsgUpdateAdmin = 'cosmwasm.wasm.v1.MsgUpdateAdmin',
 }
 
 export type Neutron1TrxMsg =
@@ -31,7 +32,8 @@ export type Neutron1TrxMsg =
   | Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
   | Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
   | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
-  | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject;
+  | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
+  | Neutron1TrxMsgCosmwasmWasmV1MsgUpdateAdmin;
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
 export interface Neutron1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
@@ -378,5 +380,16 @@ export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
       amount: string;
     };
     sender: string;
+  };
+}
+
+// types for mgs type:: /cosmwasm.wasm.v1.MsgUpdateAdmin
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
+  extends IRangeMessage {
+  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgUpdateAdmin;
+  data: {
+    sender: string;
+    contract: string;
+    newAdmin: string;
   };
 }
