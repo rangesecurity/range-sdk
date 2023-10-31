@@ -66,6 +66,7 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisTokenFactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
   OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards = 'osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards',
   CosmosStakingV1beta1MsgCreateValidator = 'cosmos.staking.v1beta1.MsgCreateValidator',
+  CosmosDistributionV1beta1MsgFundCommunityPool = 'cosmos.distribution.v1beta1.MsgFundCommunityPool',
 }
 
 export type Osmosis1TrxMsg =
@@ -133,7 +134,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
   | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
-  | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator;
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1254,5 +1256,18 @@ export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
     delegatorAddress: string;
     validatorAddress: string;
     minSelfDelegation: string;
+  };
+}
+
+// types for mgs type:: /cosmos.distribution.v1beta1.MsgFundCommunityPool
+export interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosDistributionV1beta1MsgFundCommunityPool;
+  data: {
+    amount: {
+      denom: string;
+      amount: string;
+    }[];
+    depositor: string;
   };
 }
