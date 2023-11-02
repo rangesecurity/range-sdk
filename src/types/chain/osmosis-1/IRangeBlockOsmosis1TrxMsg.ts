@@ -69,6 +69,15 @@ export enum Osmosis1TrxMsgTypes {
   CosmosDistributionV1beta1MsgFundCommunityPool = 'cosmos.distribution.v1beta1.MsgFundCommunityPool',
   IbcCoreChannelV1MsgChannelCloseInit = 'ibc.core.channel.v1.MsgChannelCloseInit',
   CosmwasmWasmV1MsgUpdateAdmin = 'cosmwasm.wasm.v1.MsgUpdateAdmin',
+  CosmosAuthV1beta1MsgUpdateParams = 'cosmos.auth.v1beta1.MsgUpdateParams',
+  CosmosCrisisV1beta1MsgUpdateParams = 'cosmos.crisis.v1beta1.MsgUpdateParams',
+  CosmosDistributionV1beta1MsgCommunityPoolSpend = 'cosmos.distribution.v1beta1.MsgCommunityPoolSpend',
+  CosmosEvidenceV1beta1MsgSubmitEvidence = 'cosmos.evidence.v1beta1.MsgSubmitEvidence',
+  CosmosSlashingV1beta1MsgUpdateParams = 'cosmos.slashing.v1beta1.MsgUpdateParams',
+  CosmosStakingV1beta1MsgUpdateParams = 'cosmos.staking.v1beta1.MsgUpdateParams',
+  CosmosUpgradeV1beta1MsgCancelUpgrade = 'cosmos.upgrade.v1beta1.MsgCancelUpgrade',
+  CosmosUpgradeV1beta1MsgSoftwareUpgrade = 'cosmos.upgrade.v1beta1.MsgSoftwareUpgrade',
+  CosmwasmWasmV1MsgClearAdmin = 'cosmwasm.wasm.v1.MsgClearAdmin',
 }
 
 export type Osmosis1TrxMsg =
@@ -139,7 +148,16 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
   | Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
   | Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseInit
-  | Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin;
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
+  | Osmosis1TrxMsgCosmosAuthV1beta1MsgUpdateParams
+  | Osmosis1TrxMsgCosmosCrisisV1beta1MsgUpdateParams
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgCommunityPoolSpend
+  | Osmosis1TrxMsgCosmosEvidenceV1beta1MsgSubmitEvidence
+  | Osmosis1TrxMsgCosmosSlashingV1beta1MsgUpdateParams
+  | Osmosis1TrxMsgCosmosStakingV1beta1MsgUpdateParams
+  | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgCancelUpgrade
+  | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgSoftwareUpgrade
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1294,6 +1312,133 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
   data: {
     sender: string;
     new_admin: string;
+    contract: string;
+  };
+}
+
+// types for msg type:: /cosmos.auth.v1beta1.MsgUpdateParams
+export interface Osmosis1TrxMsgCosmosAuthV1beta1MsgUpdateParams
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthV1beta1MsgUpdateParams;
+  data: {
+    authority: string;
+    params: {
+      max_memo_characters: string;
+      tx_sig_limit: string;
+      tx_size_cost_per_byte: string;
+      sig_verify_cost_ed25519: string;
+      sig_verify_cost_secp256k1: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.crisis.v1beta1.MsgUpdateParams
+export interface Osmosis1TrxMsgCosmosCrisisV1beta1MsgUpdateParams
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosCrisisV1beta1MsgUpdateParams;
+  data: {
+    authority: string;
+    constant_fee: {
+      denom: string;
+      amount: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.distribution.v1beta1.MsgCommunityPoolSpend
+export interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgCommunityPoolSpend
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosDistributionV1beta1MsgCommunityPoolSpend;
+  data: {
+    authority: string;
+    recipient: string;
+    amount: {
+      denom: string;
+      amount: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.evidence.v1beta1.MsgSubmitEvidence
+export interface Osmosis1TrxMsgCosmosEvidenceV1beta1MsgSubmitEvidence
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosEvidenceV1beta1MsgSubmitEvidence;
+  data: {
+    submitter: string;
+    evidence: {
+      type_url: string;
+      value: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.slashing.v1beta1.MsgUpdateParams
+export interface Osmosis1TrxMsgCosmosSlashingV1beta1MsgUpdateParams
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosSlashingV1beta1MsgUpdateParams;
+  data: {
+    authority: string;
+    params: {
+      signed_blocks_window: string;
+      min_signed_per_window: string;
+      downtime_jail_duration: string;
+      slash_fraction_double_sign: string;
+      slash_fraction_downtime: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.staking.v1beta1.MsgUpdateParams
+export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgUpdateParams
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgUpdateParams;
+  data: {
+    authority: string;
+    params: {
+      unbonding_time: string;
+      max_validators: string;
+      max_entries: string;
+      historical_entries: string;
+      bond_denom: string;
+      min_commission_rate: string;
+    };
+  };
+}
+
+// types for msg type:: /cosmos.upgrade.v1beta1.MsgCancelUpgrade
+export interface Osmosis1TrxMsgCosmosUpgradeV1beta1MsgCancelUpgrade
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosUpgradeV1beta1MsgCancelUpgrade;
+  data: {
+    authority: string;
+  };
+}
+
+// types for msg type:: /cosmos.upgrade.v1beta1.MsgSoftwareUpgrade
+export interface Osmosis1TrxMsgCosmosUpgradeV1beta1MsgSoftwareUpgrade
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosUpgradeV1beta1MsgSoftwareUpgrade;
+  data: {
+    authority: string;
+    plan: {
+      name: string;
+      time: string;
+      height: string;
+      info: string;
+      upgraded_client_state: {
+        type_url: string;
+        value: string;
+      };
+    };
+  };
+}
+
+// types for msg type:: /cosmwasm.wasm.v1.MsgClearAdmin
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgClearAdmin;
+  data: {
+    sender: string;
     contract: string;
   };
 }
