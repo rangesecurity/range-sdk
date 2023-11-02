@@ -78,6 +78,7 @@ export enum Osmosis1TrxMsgTypes {
   CosmosUpgradeV1beta1MsgCancelUpgrade = 'cosmos.upgrade.v1beta1.MsgCancelUpgrade',
   CosmosUpgradeV1beta1MsgSoftwareUpgrade = 'cosmos.upgrade.v1beta1.MsgSoftwareUpgrade',
   CosmwasmWasmV1MsgClearAdmin = 'cosmwasm.wasm.v1.MsgClearAdmin',
+  CosmosBankV1beta1MsgUpdateParams = 'cosmos.bank.v1beta1.MsgUpdateParams',
 }
 
 export type Osmosis1TrxMsg =
@@ -157,7 +158,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgCosmosStakingV1beta1MsgUpdateParams
   | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgCancelUpgrade
   | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgSoftwareUpgrade
-  | Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin;
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin
+  | Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1440,5 +1442,21 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin
   data: {
     sender: string;
     contract: string;
+  };
+}
+
+// types for msg type:: /cosmos.bank.v1beta1.MsgUpdateParams
+export interface Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosBankV1beta1MsgUpdateParams;
+  data: {
+    authority: string;
+    params: {
+      send_enabled: {
+        denom: string;
+        enabled: string;
+      }[];
+      default_send_enabled: boolean;
+    };
   };
 }
