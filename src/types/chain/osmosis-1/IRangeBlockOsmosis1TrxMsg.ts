@@ -67,6 +67,8 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards = 'osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards',
   CosmosStakingV1beta1MsgCreateValidator = 'cosmos.staking.v1beta1.MsgCreateValidator',
   CosmosDistributionV1beta1MsgFundCommunityPool = 'cosmos.distribution.v1beta1.MsgFundCommunityPool',
+  IbcCoreChannelV1MsgChannelCloseInit = 'ibc.core.channel.v1.MsgChannelCloseInit',
+  CosmwasmWasmV1MsgUpdateAdmin = 'cosmwasm.wasm.v1.MsgUpdateAdmin',
 }
 
 export type Osmosis1TrxMsg =
@@ -135,7 +137,9 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
   | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
   | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
-  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool;
+  | Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
+  | Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseInit
+  | Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1269,5 +1273,27 @@ export interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
       amount: string;
     }[];
     depositor: string;
+  };
+}
+
+// types for msg type:: /ibc.core.channel.v1.MsgChannelCloseInit
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseInit
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseInit;
+  data: {
+    port_id: string;
+    channel_id: string;
+    signer: string;
+  };
+}
+
+// types for msg type:: /cosmwasm.wasm.v1.MsgUpdateAdmin
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgUpdateAdmin;
+  data: {
+    sender: string;
+    new_admin: string;
+    contract: string;
   };
 }
