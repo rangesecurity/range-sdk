@@ -5,6 +5,7 @@ interface Constants {
     CREATE_ALERT_EVENT_PATH: string;
     ACK_TASK_PATH: string;
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: string;
+    FETCH_BLOCKS_BY_RANGE: string;
     FETCH_RULES_BY_RULE_GROUP_ID_PATH: (ruleGroupId: string) => string;
     FETCH_RULE_BY_RULE_GROUP_ID_AND_RULE_ID_PATH: (args: {
       ruleGroupId: string;
@@ -38,6 +39,7 @@ export const constants: Constants = {
     CREATE_ALERT_EVENT_PATH: '/v1.0/rule-group/block/alerts/by-rule-id',
     ACK_TASK_PATH: '/v1.0/rule-group/block/ack',
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: '/v1.0/rule-group/block',
+    FETCH_BLOCKS_BY_RANGE: '/v1.0/rule-group/block/by-range',
     FETCH_RULES_BY_RULE_GROUP_ID_PATH: (ruleGroupId: string) =>
       `/v1.0/rule-group/${ruleGroupId}/rules`,
     FETCH_RULE_BY_RULE_GROUP_ID_AND_RULE_ID_PATH: (args: {
