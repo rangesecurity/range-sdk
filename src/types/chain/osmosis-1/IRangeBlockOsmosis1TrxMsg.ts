@@ -163,7 +163,9 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgSoftwareUpgrade
   | Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin
   | Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams
-  | Osmosis1TrxMsgOsmosisTokenFactoryV1betaBurn;
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1betaBurn
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgChangeAdmin
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
