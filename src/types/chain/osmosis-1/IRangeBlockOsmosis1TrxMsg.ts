@@ -79,6 +79,9 @@ export enum Osmosis1TrxMsgTypes {
   CosmosUpgradeV1beta1MsgSoftwareUpgrade = 'cosmos.upgrade.v1beta1.MsgSoftwareUpgrade',
   CosmwasmWasmV1MsgClearAdmin = 'cosmwasm.wasm.v1.MsgClearAdmin',
   CosmosBankV1beta1MsgUpdateParams = 'cosmos.bank.v1beta1.MsgUpdateParams',
+  OsmosisTokenFactoryV1betaBurn = 'osmosis.tokenfactory.v1beta1.MsgBurn',
+  OsmosisTokenFactoryV1beta1MsgChangeAdmin = 'osmosis.tokenfactory.v1beta1.MsgChangeAdmin',
+  OsmosisTokenFactoryV1beta1MsgSetDenomMetadata = 'osmosis.tokenfactory.v1beta1.MsgSetDenomMetadata',
 }
 
 export type Osmosis1TrxMsg =
@@ -159,7 +162,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgCancelUpgrade
   | Osmosis1TrxMsgCosmosUpgradeV1beta1MsgSoftwareUpgrade
   | Osmosis1TrxMsgCosmwasmWasmV1MsgClearAdmin
-  | Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams;
+  | Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams
+  | Osmosis1TrxMsgOsmosisTokenFactoryV1betaBurn;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1457,6 +1461,54 @@ export interface Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams
         enabled: string;
       }[];
       default_send_enabled: boolean;
+    };
+  };
+}
+
+// types for msg type:: /osmosis.tokenfactory.v1beta1.MsgBurn
+export interface Osmosis1TrxMsgOsmosisTokenFactoryV1betaBurn
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1betaBurn;
+  data: {
+    sender: string;
+    amount: {
+      denom: string;
+      amount: string;
+    };
+    burnFromAddress: string;
+  };
+}
+
+// types for msg type:: /osmosis.tokenfactory.v1beta1.MsgChangeAdmin
+export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgChangeAdmin
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgChangeAdmin;
+  data: {
+    sender: string;
+    denom: string;
+    new_admin: string;
+  };
+}
+
+// types for msg type:: /osmosis.tokenfactory.v1beta1.MsgChangeAdmin
+export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
+  data: {
+    sender: string;
+    metadata: {
+      description: string;
+      denom_units: {
+        denom: string;
+        exponent: number;
+        aliases: string;
+      }[];
+      base: string;
+      display: string;
+      name: string;
+      symbol: string;
+      uri: string;
+      uri_hash: string;
     };
   };
 }
