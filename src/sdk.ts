@@ -279,6 +279,25 @@ class RangeSDK implements IRangeSDK {
               )
             )
           ) {
+            logger.warn(
+              {
+                block: {
+                  network: block.network,
+                  height: block.height,
+                  timestamp: block.timestamp,
+                },
+                rule: rule,
+                condition: {
+                  blockYoungerOrSameThanRuleCreation:
+                    blockTimestamp.isAfter(rule.createdAt) ||
+                    blockTimestamp.isSame(rule.createdAt),
+                  blockOlderThanRuleDeletedAt: blockTimestamp.isBefore(
+                    rule.deletedAt || '2100-01-01T00:00:00.000',
+                  ),
+                },
+              },
+              `rule processing skipped as timestamp conditions fail`,
+            );
             return [];
           }
 

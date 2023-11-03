@@ -1,10 +1,8 @@
 import { ZodLiteral, z } from 'zod';
 
 export enum NetworkEnum {
-  CelestiaMocha = 'celestia-mocha',
   CosmosHub4 = 'cosmoshub-4',
   Grand1 = 'grand-1',
-  Mocha3 = 'mocha-3',
   Mocha4 = 'mocha-4',
   Neutron1 = 'neutron-1',
   Noble1 = 'noble-1',
@@ -15,10 +13,10 @@ export enum NetworkEnum {
 
 export const NetworkValidator = z.union(
   Object.values(NetworkEnum).map((networkId) => z.literal(networkId)) as [
-    ZodLiteral<'osmosis-1'>,
-    ZodLiteral<'osmo-test-5'>,
     ZodLiteral<'cosmoshub-4'>,
     ZodLiteral<'mocha-3'>,
+    ZodLiteral<'osmosis-1'>,
+    ZodLiteral<'osmo-test-5'>,
   ],
 );
 

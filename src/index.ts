@@ -23,3 +23,4 @@ export * from './types/IRangeAlertRule';
 export * from './cosmos/CosmosClient';
 export * from './services/fetchBlock';
 export * from './services/getCosmosClient';
+export * from './services/fetchBlocksByRange';

@@ -64,7 +64,8 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreClientV1MsgUpdateClient;
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgMultiSend
-interface Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend extends IRangeMessage {
+export interface Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosBankV1Beta1MsgMultiSend;
   data: {
     inputs: {
@@ -79,7 +80,7 @@ interface Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
-interface Stride1TrxMsgCosmosBankV1Beta1MsgSend extends IRangeMessage {
+export interface Stride1TrxMsgCosmosBankV1Beta1MsgSend extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosBankV1Beta1MsgSend;
   data: {
     amount: { denom: string; amount: string }[];
@@ -89,7 +90,7 @@ interface Stride1TrxMsgCosmosBankV1Beta1MsgSend extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgSetWithdrawAddress
-interface Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
+export interface Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosDistributionV1Beta1MsgSetWithdrawAddress;
   data: {
@@ -99,7 +100,7 @@ interface Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
-interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
+export interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosDistributionV1Beta1MsgWithdrawDelegatorReward;
   data: {
@@ -109,7 +110,7 @@ interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
 }
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
-interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
+export interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosDistributionV1Beta1MsgWithdrawValidatorCommission;
   data: {
@@ -118,7 +119,7 @@ interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
 }
 
 // types for mgs type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
+export interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosFeeGrantV1Beta1MsgGrantAllowance;
   data: {
@@ -134,7 +135,8 @@ interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-interface Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal extends IRangeMessage {
+export interface Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosGovV1Beta1MsgSubmitProposal;
   data: {
     '@type': string;
@@ -149,7 +151,7 @@ interface Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
-interface Stride1TrxMsgCosmosGovV1Beta1MsgVote extends IRangeMessage {
+export interface Stride1TrxMsgCosmosGovV1Beta1MsgVote extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosGovV1Beta1MsgVote;
   data: {
     voter: string;
@@ -159,7 +161,7 @@ interface Stride1TrxMsgCosmosGovV1Beta1MsgVote extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.gov.v1.MsgVote
-interface Stride1TrxMsgCosmosGovV1MsgVote extends IRangeMessage {
+export interface Stride1TrxMsgCosmosGovV1MsgVote extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosGovV1MsgVote;
   data: {
     voter: string;
@@ -169,7 +171,7 @@ interface Stride1TrxMsgCosmosGovV1MsgVote extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.gov.v1.MsgVoteWeighted
-interface Stride1TrxMsgCosmosGovV1MsgVoteWeighted extends IRangeMessage {
+export interface Stride1TrxMsgCosmosGovV1MsgVoteWeighted extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosGovV1MsgVoteWeighted;
   data: {
     voter: string;
@@ -182,7 +184,7 @@ interface Stride1TrxMsgCosmosGovV1MsgVoteWeighted extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgBeginRedelegate
-interface Stride1TrxMsgCosmosStakingV1Beta1MsgBeginRedelegate
+export interface Stride1TrxMsgCosmosStakingV1Beta1MsgBeginRedelegate
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosStakingV1Beta1MsgBeginRedelegate;
   data: {
@@ -197,7 +199,7 @@ interface Stride1TrxMsgCosmosStakingV1Beta1MsgBeginRedelegate
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgCancelUnbondingDelegation
-interface Stride1TrxMsgCosmosStakingV1Beta1MsgCancelUnbondingDelegation
+export interface Stride1TrxMsgCosmosStakingV1Beta1MsgCancelUnbondingDelegation
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosStakingV1Beta1MsgCancelUnbondingDelegation;
   data: {
@@ -212,7 +214,8 @@ interface Stride1TrxMsgCosmosStakingV1Beta1MsgCancelUnbondingDelegation
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgDelegate
-interface Stride1TrxMsgCosmosStakingV1Beta1MsgDelegate extends IRangeMessage {
+export interface Stride1TrxMsgCosmosStakingV1Beta1MsgDelegate
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosStakingV1Beta1MsgDelegate;
   data: {
     amount: {
@@ -225,7 +228,8 @@ interface Stride1TrxMsgCosmosStakingV1Beta1MsgDelegate extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgUndelegate
-interface Stride1TrxMsgCosmosStakingV1Beta1MsgUndelegate extends IRangeMessage {
+export interface Stride1TrxMsgCosmosStakingV1Beta1MsgUndelegate
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.CosmosStakingV1Beta1MsgUndelegate;
   data: {
     amount: {
@@ -238,7 +242,7 @@ interface Stride1TrxMsgCosmosStakingV1Beta1MsgUndelegate extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -259,7 +263,7 @@ interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
@@ -284,7 +288,8 @@ interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenAck
-interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
+export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
     portId: string;
@@ -300,7 +305,8 @@ interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket extends IRangeMessage {
+export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreChannelMsgRecvPacket;
   data: {
     packet: {
@@ -325,7 +331,7 @@ interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-interface Stride1TrxMsgIbcCoreChannelMsgTimeout extends IRangeMessage {
+export interface Stride1TrxMsgIbcCoreChannelMsgTimeout extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreChannelMsgTimeout;
   data: {
     packet: {
@@ -351,7 +357,8 @@ interface Stride1TrxMsgIbcCoreChannelMsgTimeout extends IRangeMessage {
 }
 
 // types for mgs type:: /stride.claim.MsgClaimFreeAmount
-interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount extends IRangeMessage {
+export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideClaimMsgClaimFreeAmount;
   data: {
     user: string;
@@ -359,7 +366,7 @@ interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount extends IRangeMessage {
 }
 
 // types for mgs type:: /stride.interchainquery.v1.MsgSubmitQueryResponse
-interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideInterchainQueryMsgSubmitQueryResponse;
   data: {
@@ -379,7 +386,8 @@ interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
 }
 
 // types for mgs type:: /stride.stakeibc.MsgAddValidators
-interface Stride1TrxMsgStrideStakeIBCMsgAddValidators extends IRangeMessage {
+export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgAddValidators;
   data: {
     creator: string;
@@ -393,7 +401,7 @@ interface Stride1TrxMsgStrideStakeIBCMsgAddValidators extends IRangeMessage {
 }
 
 // types for mgs type:: /stride.stakeibc.MsgChangeValidatorWeight
-interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
+export interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgChangeValidatorWeight;
   data: {
@@ -404,7 +412,7 @@ interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
 }
 
 // types for mgs type:: /stride.stakeibc.MsgClaimUndelegatedTokens
-interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
+export interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgClaimUndelegatedTokens;
   data: {
@@ -416,7 +424,8 @@ interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
 }
 
 // types for mgs type:: /stride.stakeibc.MsgLiquidStake
-interface Stride1TrxMsgStrideStakeIBCMsgLiquidStake extends IRangeMessage {
+export interface Stride1TrxMsgStrideStakeIBCMsgLiquidStake
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgLiquidStake;
   data: {
     amount: string;
@@ -426,7 +435,8 @@ interface Stride1TrxMsgStrideStakeIBCMsgLiquidStake extends IRangeMessage {
 }
 
 // types for mgs type:: /stride.stakeibc.MsgRedeemStake
-interface Stride1TrxMsgStrideStakeIBCMsgRedeemStake extends IRangeMessage {
+export interface Stride1TrxMsgStrideStakeIBCMsgRedeemStake
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgRedeemStake;
   data: {
     amount: string;
@@ -437,7 +447,7 @@ interface Stride1TrxMsgStrideStakeIBCMsgRedeemStake extends IRangeMessage {
 }
 
 // types for mgs type:: /stride.stakeibc.MsgRestoreInterchainAccount
-interface Stride1TrxMsgStrideStakeIBCMsgRestoreInterchainAccount
+export interface Stride1TrxMsgStrideStakeIBCMsgRestoreInterchainAccount
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgRestoreInterchainAccount;
   data: {
@@ -447,7 +457,7 @@ interface Stride1TrxMsgStrideStakeIBCMsgRestoreInterchainAccount
 }
 
 // types for mgs type:: /stride.stakeibc.MsgUpdateValidatorSharesExchRate
-interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
+export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.StrideStakeIBCMsgUpdateValidatorSharesExchRate;
   data: {
@@ -457,7 +467,8 @@ interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
   };
 }
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;

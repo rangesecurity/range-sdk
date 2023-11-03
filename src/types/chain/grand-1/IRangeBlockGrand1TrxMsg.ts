@@ -48,7 +48,8 @@ enum Grand1TrxMsgTypes {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-interface Grand1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
@@ -147,7 +148,7 @@ interface Grand1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-interface Grand1TrxMsgIbcApplicationsTransferV1MsgTransfer
+export interface Grand1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
@@ -168,7 +169,8 @@ interface Grand1TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgReceiveMessage
-interface Grand1TrxMsgCircleCctpV1MsgReceiveMessage extends IRangeMessage {
+export interface Grand1TrxMsgCircleCctpV1MsgReceiveMessage
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgReceiveMessage;
   data: {
     from: string;
@@ -178,7 +180,7 @@ interface Grand1TrxMsgCircleCctpV1MsgReceiveMessage extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.connection.v1.MsgConnectionOpenAck
-interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
+export interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
   data: {
@@ -248,7 +250,8 @@ interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenInit
-interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenInit extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenInit
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
     portId: string;
@@ -266,7 +269,7 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenInit extends IRangeMessage {
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgRemoveRemoteTokenMessenger
-interface Grand1TrxMsgCircleCctpV1MsgRemoveRemoteTokenMessenger
+export interface Grand1TrxMsgCircleCctpV1MsgRemoveRemoteTokenMessenger
   extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgRemoveRemoteTokenMessenger;
   data: {
@@ -276,7 +279,7 @@ interface Grand1TrxMsgCircleCctpV1MsgRemoveRemoteTokenMessenger
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgSendMessage
-interface Grand1TrxMsgCircleCctpV1MsgSendMessage extends IRangeMessage {
+export interface Grand1TrxMsgCircleCctpV1MsgSendMessage extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgSendMessage;
   data: {
     from: string;
@@ -286,7 +289,7 @@ interface Grand1TrxMsgCircleCctpV1MsgSendMessage extends IRangeMessage {
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgReplaceDepositForBurn
-interface Grand1TrxMsgCircleCctpV1MsgReplaceDepositForBurn
+export interface Grand1TrxMsgCircleCctpV1MsgReplaceDepositForBurn
   extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgReplaceDepositForBurn;
   data: {
@@ -299,7 +302,8 @@ interface Grand1TrxMsgCircleCctpV1MsgReplaceDepositForBurn
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgDepositForBurn
-interface Grand1TrxMsgCircleCctpV1MsgDepositForBurn extends IRangeMessage {
+export interface Grand1TrxMsgCircleCctpV1MsgDepositForBurn
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgDepositForBurn;
   data: {
     from: string;
@@ -310,7 +314,7 @@ interface Grand1TrxMsgCircleCctpV1MsgDepositForBurn extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+export interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
@@ -326,7 +330,8 @@ interface Grand1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-interface Grand1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
@@ -349,7 +354,8 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenAck
-interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
     portId: string;
@@ -366,7 +372,8 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgLinkTokenPair
-interface Grand1TrxMsgCircleCctpV1MsgLinkTokenPair extends IRangeMessage {
+export interface Grand1TrxMsgCircleCctpV1MsgLinkTokenPair
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgLinkTokenPair;
   data: {
     from: string;
@@ -377,7 +384,7 @@ interface Grand1TrxMsgCircleCctpV1MsgLinkTokenPair extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
-interface Grand1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface Grand1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
   type: Grand1TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: {
@@ -390,7 +397,8 @@ interface Grand1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface Grand1TrxMsgIbcCoreChannelV1MsgAcknowledgement extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
@@ -417,7 +425,7 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgAcknowledgement extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-interface Grand1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+export interface Grand1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -444,7 +452,7 @@ interface Grand1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-interface Grand1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+export interface Grand1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Grand1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
@@ -462,7 +470,8 @@ interface Grand1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /circle.cctp.v1.MsgAddRemoteTokenMessenger
-interface Grand1TrxMsgCircleCctpV1MsgAddRemoteTokenMessenger {
+export interface Grand1TrxMsgCircleCctpV1MsgAddRemoteTokenMessenger
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.CircleCctpV1MsgAddRemoteTokenMessenger;
   data: {
     from: string;
@@ -472,7 +481,8 @@ interface Grand1TrxMsgCircleCctpV1MsgAddRemoteTokenMessenger {
 }
 
 // types for mgs type:: /noble.fiattokenfactory.MsgBurn
-interface Grand1TrxMsgNobleFiatTokenFactoryMsgBurn extends IRangeMessage {
+export interface Grand1TrxMsgNobleFiatTokenFactoryMsgBurn
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.NobleFiatTokenFactoryMsgBurn;
   data: {
     from: string;
@@ -484,7 +494,8 @@ interface Grand1TrxMsgNobleFiatTokenFactoryMsgBurn extends IRangeMessage {
 }
 
 // types for mgs type:: /noble.fiattokenfactory.MsgMint
-interface Grand1TrxMsgNobleFiatTokenFactoryMsgMint extends IRangeMessage {
+export interface Grand1TrxMsgNobleFiatTokenFactoryMsgMint
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.NobleFiatTokenFactoryMsgMint;
   data: {
     from: string;
@@ -497,7 +508,8 @@ interface Grand1TrxMsgNobleFiatTokenFactoryMsgMint extends IRangeMessage {
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-interface Grand1TrxMsgIbcCoreClientV1MsgCreateClient {
+export interface Grand1TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: Grand1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
