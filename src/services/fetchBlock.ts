@@ -20,21 +20,29 @@ export async function fetchBlock(args: {
   }
 
   const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.FETCH_BLOCK_BY_NETWORK_AND_HEIGHT}`;
-  const {
-    data: { block },
-  } = await axios.get<{
-    block: IRangeBlock;
-  }>(url, {
-    params: {
-      network,
-      height,
-    },
-    headers: {
-      'X-API-KEY': token,
-    },
-  });
+  try {
+    const {
+      data: { block },
+    } = await axios.get<{
+      block: IRangeBlock;
+    }>(url, {
+      params: {
+        network,
+        height,
+      },
+      headers: {
+        'X-API-KEY': token,
+      },
+    });
 
-  blockCache.set(`${network}-${height}`, block);
+    blockCache.set(`${network}-${height}`, block);
 
-  return block;
+    return block;
+  } catch (err: any) {
+    if (err.response?.data?.msg) {
+      throw new Error(err.response.data.msg);
+    }
+
+    throw err;
+  }
 }

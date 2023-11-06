@@ -11,17 +11,25 @@ export async function fetchAlertRulesByRuleGroupID(args: {
     constants.MANAGER_SERVICE.DOMAIN
   }${constants.MANAGER_SERVICE.FETCH_RULES_BY_RULE_GROUP_ID_PATH(ruleGroupId)}`;
 
-  const {
-    data: { rules },
-  } = await axios.get<{
-    rules: IRangeAlertRule[];
-  }>(url, {
-    headers: {
-      'X-API-KEY': token,
-    },
-  });
+  try {
+    const {
+      data: { rules },
+    } = await axios.get<{
+      rules: IRangeAlertRule[];
+    }>(url, {
+      headers: {
+        'X-API-KEY': token,
+      },
+    });
 
-  return rules;
+    return rules;
+  } catch (err: any) {
+    if (err.response?.data?.msg) {
+      throw new Error(err.response.data.msg);
+    }
+
+    throw err;
+  }
 }
 
 export async function fetchAlertRuleByRuleGroupAndRuleID(args: {
@@ -37,15 +45,23 @@ export async function fetchAlertRuleByRuleGroupAndRuleID(args: {
     ruleId,
   })}`;
 
-  const {
-    data: { rule },
-  } = await axios.get<{
-    rule: IRangeAlertRule | null | undefined;
-  }>(url, {
-    headers: {
-      'X-API-KEY': token,
-    },
-  });
+  try {
+    const {
+      data: { rule },
+    } = await axios.get<{
+      rule: IRangeAlertRule | null | undefined;
+    }>(url, {
+      headers: {
+        'X-API-KEY': token,
+      },
+    });
 
-  return rule;
+    return rule;
+  } catch (err: any) {
+    if (err.response?.data?.msg) {
+      throw new Error(err.response.data.msg);
+    }
+
+    throw err;
+  }
 }

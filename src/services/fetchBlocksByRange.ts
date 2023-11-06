@@ -9,22 +9,30 @@ export async function fetchBlocksByRange(args: {
   endHeight: string;
 }): Promise<IRangeBlock[]> {
   const { token, startHeight, endHeight, network } = args;
-
   const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.FETCH_BLOCKS_BY_RANGE}`;
-  const {
-    data: { blocks },
-  } = await axios.get<{
-    blocks: IRangeBlock[];
-  }>(url, {
-    params: {
-      network,
-      startHeight,
-      endHeight,
-    },
-    headers: {
-      'X-API-KEY': token,
-    },
-  });
 
-  return blocks;
+  try {
+    const {
+      data: { blocks },
+    } = await axios.get<{
+      blocks: IRangeBlock[];
+    }>(url, {
+      params: {
+        network,
+        startHeight,
+        endHeight,
+      },
+      headers: {
+        'X-API-KEY': token,
+      },
+    });
+
+    return blocks;
+  } catch (err: any) {
+    if (err.response?.data?.msg) {
+      throw new Error(err.response.data.msg);
+    }
+
+    throw err;
+  }
 }
