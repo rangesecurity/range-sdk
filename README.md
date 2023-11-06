@@ -18,7 +18,7 @@ Range SDK is a powerful Typescript library that simplifies the development of se
 ## Installation
 
 ```bash
-yarn add @rangesecurity/range-sdk
+yarn add @range-security/range-sdk
 ```
 
 ## Usage
@@ -27,7 +27,7 @@ Here's a basic example to get you started:
 
 ```typescript
 // Range Implementation of `new-contract-code-stored` alert rule
-import { RangeSDK } from '@rangesecurity/range-sdk';
+import { RangeSDK } from '@range-security/range-sdk';
 
 // Define your OnBlock handler
 const myOnBlock: OnBlock = {
@@ -53,14 +53,14 @@ const myOnBlock: OnBlock = {
 };
 
 (async () => {
-    // Defining the RangeSDK instance
-    const range = new RangeSDK({
-      token: env.RANGE_TOKEN,
-      onBlock: myOnBlock,
-    });
+  // Defining the RangeSDK instance
+  const range = new RangeSDK({
+    token: env.RANGE_TOKEN,
+    onBlock: myOnBlock,
+  });
 
-    // Running the RangeSDK instance
-    await range.init();
+  // Running the RangeSDK instance
+  await range.init();
 })();
 ```
 
