@@ -8,16 +8,13 @@ export interface IRangeEvent {
   network: string;
   addressesInvolved: string[];
   severity?: string;
-  caption?: string;
+  caption: string;
 }
 
-export interface ISubEvent {
-  details: { message: string };
-  txHash: string;
-  addressesInvolved: string[];
-  severity?: string;
-  caption?: string;
-}
+export type ISubEvent = Pick<
+  IRangeEvent,
+  'details' | 'txHash' | 'addressesInvolved' | 'severity' | 'caption'
+>;
 
 export interface IRangeError {
   ruleId: string;
