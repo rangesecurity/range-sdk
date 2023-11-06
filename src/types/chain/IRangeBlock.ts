@@ -11,49 +11,49 @@ import { OsmoTest5Trx } from './osmo-test-5/IRangeBlockOsmoTest5Trx';
 
 interface BlockBase {
   hash: string;
-  height: number;
+  height: string;
   transactions: IRangeTransaction[];
   network: NetworkEnum;
   timestamp: string;
   block_data?: string;
 }
 
-interface Osmosis1Block extends BlockBase {
+export interface Osmosis1Block extends BlockBase {
   transactions: Osmosis1Trx[];
   network: NetworkEnum.Osmosis1;
 }
 
-interface Grand1Block extends BlockBase {
+export interface Grand1Block extends BlockBase {
   transactions: Grand1Trx[];
   network: NetworkEnum.Grand1;
 }
 
-interface CosmosHub4Block extends BlockBase {
+export interface CosmosHub4Block extends BlockBase {
   transactions: CosmosHub4Trx[];
   network: NetworkEnum.CosmosHub4;
 }
 
-interface Mocha4Block extends BlockBase {
+export interface Mocha4Block extends BlockBase {
   transactions: Mocha4Trx[];
   network: NetworkEnum.Mocha4;
 }
 
-interface Neutron1Block extends BlockBase {
+export interface Neutron1Block extends BlockBase {
   transactions: Neutron1Trx[];
   network: NetworkEnum.Neutron1;
 }
 
-interface Noble1Block extends BlockBase {
+export interface Noble1Block extends BlockBase {
   transactions: Noble1Trx[];
   network: NetworkEnum.Noble1;
 }
 
-interface Stride1Block extends BlockBase {
+export interface Stride1Block extends BlockBase {
   transactions: Stride1Trx[];
   network: NetworkEnum.Stride1;
 }
 
-interface OsmoTest5Block extends BlockBase {
+export interface OsmoTest5Block extends BlockBase {
   transactions: OsmoTest5Trx[];
   network: NetworkEnum.OsmoTest5;
 }

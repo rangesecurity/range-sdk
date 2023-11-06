@@ -48,7 +48,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgIbcCoreClientV1MsgUpdateClient;
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
   data: {
@@ -63,7 +63,8 @@ interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for msg type:: /noble.fiattokenfactory.MsgBurn
-interface Noble1TrxMsgNobleFiatTokenFactoryMsgBurn extends IRangeMessage {
+export interface Noble1TrxMsgNobleFiatTokenFactoryMsgBurn
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.NobleFiatTokenFactoryMsgBurn;
   data: {
     from: string;
@@ -75,7 +76,7 @@ interface Noble1TrxMsgNobleFiatTokenFactoryMsgBurn extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgTimeout
-interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -99,7 +100,7 @@ interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec {
+export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     msgs: {
@@ -117,7 +118,8 @@ interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
-interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
@@ -144,7 +146,7 @@ interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
   data: {
@@ -212,7 +214,7 @@ interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
+export interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
     '@type': string;
@@ -231,7 +233,7 @@ interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenInit
-interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
+export interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
     portId: string;
@@ -249,7 +251,7 @@ interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
+export interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
     signer: string;
@@ -278,7 +280,7 @@ interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
+export interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
     signer: string;
@@ -293,7 +295,7 @@ interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-interface Noble1TrxMsgTypeMsgTransfer extends IRangeMessage {
+export interface Noble1TrxMsgTypeMsgTransfer extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
     token: {
@@ -310,7 +312,7 @@ interface Noble1TrxMsgTypeMsgTransfer extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
-interface Noble1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
+export interface Noble1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosBankV1beta1MsgSend;
   data: {
     amount: { denom: string; amount: string }[];
@@ -320,7 +322,8 @@ interface Noble1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenAck
-interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
     portId: string;
@@ -334,7 +337,8 @@ interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck extends IRangeMessage {
 }
 
 // types for msg type:: /noble.fiattokenfactory.MsgMint
-interface Noble1TrxMsgNobleFiatTokenFactoryMsgMint extends IRangeMessage {
+export interface Noble1TrxMsgNobleFiatTokenFactoryMsgMint
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.NobleFiatTokenFactoryMsgMint;
   data: {
     from: string;
@@ -344,7 +348,7 @@ interface Noble1TrxMsgNobleFiatTokenFactoryMsgMint extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenTry
-interface Noble1TrxMsgIbcCoreChannelOpenTry extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelOpenTry extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
     portId: string;
@@ -369,7 +373,7 @@ interface Noble1TrxMsgIbcCoreChannelOpenTry extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-interface Noble1TrxMsgIbcCoreChannelOpenConfirm extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelOpenConfirm extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
     portId: string;
@@ -384,7 +388,8 @@ interface Noble1TrxMsgIbcCoreChannelOpenConfirm extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-interface Noble1TrxMsgIbcCoreChannelAcknowledgement extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreChannelAcknowledgement
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
@@ -408,7 +413,7 @@ interface Noble1TrxMsgIbcCoreChannelAcknowledgement extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-interface Noble1TrxMsgCosmosAuthzMsgGrant extends IRangeMessage {
+export interface Noble1TrxMsgCosmosAuthzMsgGrant extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
     '@type': string;
@@ -425,7 +430,7 @@ interface Noble1TrxMsgCosmosAuthzMsgGrant extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgCreateClient
-interface Noble1TrxMsgIbcCoreClientCreateClient extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreClientCreateClient extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
     '@type': string;
@@ -464,7 +469,7 @@ interface Noble1TrxMsgIbcCoreClientCreateClient extends IRangeMessage {
   };
 }
 // types for mgs type:: /cosmos.feegrant.v1beta1.MsgRevokeAllowance
-interface Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
+export interface Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosFeegrantV1beta1MsgRevokeAllowance;
   data: {
@@ -474,7 +479,8 @@ interface Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     '@type': string;
