@@ -66,14 +66,14 @@ class RangeSDK implements IRangeSDK {
     const kafka = new Kafka(this.config.kafka);
     this.blockRuleGroupTaskClient = new KafkaConsumerClient(
       kafka,
-      `rangeSDK-runner-${this.runnerId}-block-rule-group-task`,
+      this.config.kafkaGroupIds.blockRuleGroupTasks,
       {
         retries: 3,
       },
     );
     this.errorBlockRuleTaskClient = new KafkaConsumerClient(
       kafka,
-      `rangeSDK-runner-${this.runnerId}-error-block-rule-task`,
+      this.config.kafkaGroupIds.errorsBlockRuleTasks,
       {
         retries: 0,
       },

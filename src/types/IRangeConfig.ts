@@ -6,4 +6,8 @@ export interface IRangeConfig {
     blockRuleGroupTasks: string;
     errorsBlockRuleTasks: string;
   };
+  kafkaGroupIds: {
+    blockRuleGroupTasks: string;
+    errorsBlockRuleTasks: string;
+  };
 }
