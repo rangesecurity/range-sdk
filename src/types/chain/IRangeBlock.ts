@@ -15,7 +15,8 @@ interface BlockBase {
   transactions: IRangeTransaction[];
   network: NetworkEnum;
   timestamp: string;
-  block_data?: string;
+  block_data?: Record<string | number | symbol, unknown>;
+  block_events?: Record<string | number | symbol, unknown>;
 }
 
 export interface Osmosis1Block extends BlockBase {
