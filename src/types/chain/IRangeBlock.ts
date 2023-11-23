@@ -16,7 +16,17 @@ interface BlockBase {
   network: NetworkEnum;
   timestamp: string;
   block_data?: Record<string | number | symbol, unknown>;
-  block_events?: Record<string | number | symbol, unknown>;
+  block_events?: BlockEvents;
+}
+
+export interface BlockEvent {
+  type: string;
+  attributes: { key: string; value: string }[];
+}
+
+export interface BlockEvents {
+  end_block: BlockEvent[];
+  begin_block: BlockEvent[];
 }
 
 export interface Osmosis1Block extends BlockBase {
