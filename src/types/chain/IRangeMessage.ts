@@ -5,7 +5,6 @@ export interface IRangeMessage {
   type: string;
   data: unknown;
   status: string;
-  block_number: string;
   addresses: string[];
   contract_addresses?: any;
 }
