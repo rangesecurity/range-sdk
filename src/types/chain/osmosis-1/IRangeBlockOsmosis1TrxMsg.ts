@@ -168,22 +168,42 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
-  data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      };
-      delegator_address: string;
-      validator_address: string;
-    }[];
-    '@type': string;
-    grantee: string;
-  };
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
+    type: string;
+    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecData;
 }
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecData {
+    grantee: string;
+    msgs: Osmosis1TrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
+    '@type': string;
+    positionId?: string;
+    sender: string;
+    liquidityAmount?: string;
+    routes?: Osmosis1TrxMsgCosmosAuthzV1Beta1MsgExecRoutesItem[];
+    tokenIn?: Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecTokenIn;
+    tokenOutMinAmount?: string;
+    poolId?: string;
+    lowerTick?: string;
+    upperTick?: string;
+    tokensProvided?: Osmosis1TrxMsgCosmosAuthzV1Beta1MsgExecTokensProvidedItem[];
+    tokenMinAmount0?: string;
+    tokenMinAmount1?: string;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecRoutesItem {
+    poolId: string;
+    tokenOutDenom: string;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecTokenIn {
+    denom: string;
+    amount: string;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecTokensProvidedItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
