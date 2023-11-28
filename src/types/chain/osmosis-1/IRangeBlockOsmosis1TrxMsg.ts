@@ -408,16 +408,31 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
-  data: {
-    msg: string;
-    label: string;
-    codeId: string;
-    sender: string;
-  };
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+    type: string;
+    data: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData;
 }
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData {
+    sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg;
+}
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg {
+    fee_rate: string;
+    fee_pool: string;
+    query_contract: string;
+    base_denom: string;
+    power_denom: string;
+    base_pool_id: number;
+    base_pool_quote: string;
+    power_pool_id: number;
+    base_decimals: number;
+    power_decimals: number;
+    index_scale: number;
+}
+
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgMigrateContract
 export interface Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract
