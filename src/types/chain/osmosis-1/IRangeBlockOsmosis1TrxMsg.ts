@@ -186,26 +186,29 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
-  data: {
-    '@type': string;
-    grant: {
-      expiration: string;
-      authorization: {
-        '@type': string;
-        allow_list: {
-          address: string[];
-        };
-        max_tokens?: any;
-        authorization_type: string;
-      };
-    };
-    grantee: string;
-    granter: string;
-  };
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
+    type: string;
+    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData;
 }
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData {
+    granter: string;
+    grantee: string;
+    grant: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
+    authorization: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+    expiration: string;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
+    '@type': string;
+    allowList?: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList;
+    authorizationType?: string;
+    msg?: string;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList {
+    address: string[];
+}
+
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgRevoke
