@@ -393,17 +393,16 @@ export interface Osmosis1TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgExecuteContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
-  extends IRangeMessage {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
-    funds: {
+    sender: string;
+    contract: string;
+    msg: unknown;
+    funds?: {
       denom: string;
       amount: string;
     }[];
-    sender: string;
-    contract: string;
   };
 }
 
