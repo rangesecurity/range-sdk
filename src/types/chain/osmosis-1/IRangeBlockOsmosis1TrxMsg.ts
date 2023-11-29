@@ -394,26 +394,17 @@ export interface Osmosis1TrxMsgCosmosVestingV1beta1MsgCreateVestingAccount
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgExecuteContract
 export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract {
-    type: string;
-    data: Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractData;
-}
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractData {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
+  data: {
     sender: string;
     contract: string;
-    msg: Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractMsg;
+    msg: unknown;
+    funds?: {
+      denom: string;
+      amount: string;
+    }[];
+  };
 }
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractMsg {
-    crank: Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractCrank;
-    execute_trigger?: Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractExecute_trigger;
-}
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractCrank {
-    execs: number;
-    rewards: string;
-}
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContractExecute_trigger {
-    trigger_id: string;
-}
-
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
 export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
