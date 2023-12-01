@@ -9,6 +9,7 @@ export enum NetworkEnum {
   Osmosis1 = 'osmosis-1',
   OsmoTest5 = 'osmo-test-5',
   Stride1 = 'stride-1',
+  Celestia = 'celestia',
 }
 
 export const NetworkValidator = z.union(
