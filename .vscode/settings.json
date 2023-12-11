@@ -1,5 +1,17 @@
 {
-  "cSpell.words": ["cosmoshub", "kafkajs", "osmo", "SASL"],
+  "cSpell.words": [
+    "Celestia",
+    "cosmoshub",
+    "Delegator",
+    "Feegrant",
+    "kafkajs",
+    "osmo",
+    "Redelegate",
+    "SASL",
+    "Unbonding",
+    "Undelegate",
+    "Unjail"
+  ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true
 }

@@ -397,13 +397,13 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
-    funds: {
+    sender: string;
+    contract: string;
+    msg: unknown;
+    funds?: {
       denom: string;
       amount: string;
     }[];
-    sender: string;
-    contract: string;
   };
 }
 
