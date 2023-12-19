@@ -408,14 +408,14 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
-    label: string;
-    codeId: string;
     sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: unknown;
   };
 }
 
