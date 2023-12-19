@@ -661,96 +661,13 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient {
-    type: string;
-    data: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientData;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientData {
+  type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
+  data: {
     clientId: string;
-    clientMessage: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    clientMessage: unknown;
     signer: string;
+  };
 }
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
-    '@type': string;
-    signedHeader: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
-    validatorSet: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
-    trustedHeight: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
-    trustedValidators: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
-    header: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
-    commit: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
-    version: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
-    chainId: string;
-    height: string;
-    time: string;
-    lastBlockId: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
-    lastCommitHash: string;
-    dataHash: string;
-    validatorsHash: string;
-    nextValidatorsHash: string;
-    consensusHash: string;
-    appHash: string;
-    lastResultsHash: string;
-    evidenceHash: string;
-    proposerAddress: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
-    block: string;
-    app?: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
-    hash: string;
-    partSetHeader: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
-    total: number;
-    hash: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
-    height: string;
-    blockId: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
-    signatures: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
-    hash: string;
-    partSetHeader: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
-    blockIdFlag: string;
-    validatorAddress?: string;
-    timestamp?: string;
-    signature?: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
-    validators: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
-    address: string;
-    pubKey: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
-    ed25519: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
-    address: string;
-    pubKey: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
-    revisionNumber?: string;
-    revisionHeight: string;
-}
-interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
-    validators: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
-
 
 // types for mgs type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
 export interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
