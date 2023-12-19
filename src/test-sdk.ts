@@ -37,6 +37,7 @@ class TestRangeSDK implements IRangeSDK {
       token: this.opts.token,
       height: args.height,
       network: args.network,
+      includeAvailableRangeOnNotFound: true,
     });
   }
 

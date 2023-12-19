@@ -397,25 +397,25 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
-    funds: {
+    sender: string;
+    contract: string;
+    msg: unknown;
+    funds?: {
       denom: string;
       amount: string;
     }[];
-    sender: string;
-    contract: string;
   };
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
-    label: string;
-    codeId: string;
     sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: unknown;
   };
 }
 
