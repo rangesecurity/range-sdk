@@ -397,25 +397,25 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
-    funds: {
+    sender: string;
+    contract: string;
+    msg: unknown;
+    funds?: {
       denom: string;
       amount: string;
     }[];
-    sender: string;
-    contract: string;
   };
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
-    label: string;
-    codeId: string;
     sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: unknown;
   };
 }
 
@@ -572,30 +572,28 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
-  extends IRangeMessage {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout {
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight?: string;
-        revisionNumber?: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
