@@ -408,7 +408,8 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
     sender: string;
@@ -572,7 +573,8 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -658,7 +660,8 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient {
+export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     clientId: string;
