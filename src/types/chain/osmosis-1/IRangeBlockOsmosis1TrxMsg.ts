@@ -408,7 +408,8 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
     sender: string;
@@ -572,7 +573,8 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
@@ -662,98 +664,9 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
+    clientId: string;
+    clientMessage: unknown;
     signer: string;
-    client_id: string;
-    client_message: {
-      '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
-          height: string;
-          block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          signatures: {
-            signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
-          }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
-      };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-    };
   };
 }
 
