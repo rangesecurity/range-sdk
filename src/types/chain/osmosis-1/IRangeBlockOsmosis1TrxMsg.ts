@@ -455,34 +455,30 @@ export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
-    type: string;
-    data: Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
-    packet: Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
-    acknowledgement: string;
+  type: string;
+  data: {
+    packet: {
+      sequence: string;
+      sourcePort: string;
+      sourceChannel: string;
+      destinationPort: string;
+      destinationChannel: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
+    };
+    acknowledgement?: string;
     proofAcked: string;
-    proofHeight: Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     signer: string;
+  };
 }
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
