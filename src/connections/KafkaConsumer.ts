@@ -4,7 +4,12 @@ export class KafkaConsumerClient {
   private consumer: Consumer;
 
   constructor(kafka: Kafka, groupId: string, retry?: RetryOptions) {
-    this.consumer = kafka.consumer({ groupId, retry });
+    this.consumer = kafka.consumer({
+      groupId,
+      retry,
+      readUncommitted: false,
+      allowAutoTopicCreation: false,
+    });
   }
 
   async subscribeAndConsume(topic: string): Promise<Consumer> {
