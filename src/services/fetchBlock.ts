@@ -11,8 +11,9 @@ export async function fetchBlock(args: {
   token: string;
   height: string;
   network: string;
+  includeAvailableRangeOnNotFound?: boolean;
 }): Promise<IRangeBlock | null> {
-  const { token, height, network } = args;
+  const { token, height, network, includeAvailableRangeOnNotFound } = args;
 
   const cachedBlock = blockCache.get(`${network}-${height}`);
   if (cachedBlock) {
@@ -29,6 +30,9 @@ export async function fetchBlock(args: {
       params: {
         network,
         height,
+        ...(includeAvailableRangeOnNotFound && {
+          includeAvailableRangeOnNotFound,
+        }),
       },
       headers: {
         'X-API-KEY': token,
@@ -40,7 +44,15 @@ export async function fetchBlock(args: {
     return block;
   } catch (err: any) {
     if (err.response?.data?.msg) {
-      throw new Error(err.response.data.msg);
+      let msg = err.response.data.msg;
+      const availableRanges = err.response.data.availableRanges;
+      if (availableRanges) {
+        msg += `. Available ranges of blocks are:: ${JSON.stringify(
+          availableRanges,
+        )}`;
+      }
+
+      throw new Error(msg);
     }
 
     throw err;
