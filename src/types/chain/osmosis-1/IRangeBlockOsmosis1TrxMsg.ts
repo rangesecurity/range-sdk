@@ -546,29 +546,28 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket {
+  type: string;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight?: string;
-        revisionNumber?: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      timeoutTimestamp?: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+    };
+    proofCommitment?: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
     signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-    proofCommitment: string;
   };
 }
 
