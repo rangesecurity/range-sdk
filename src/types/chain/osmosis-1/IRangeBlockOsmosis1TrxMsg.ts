@@ -435,26 +435,23 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
 export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
-    type: string;
-    data: Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferData;
-}
-interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferData {
+  type: string;
+  data: {
     sourcePort: string;
     sourceChannel: string;
-    token: Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferToken;
+    token: {
+      denom: string;
+      amount: string;
+    };
     sender: string;
     receiver: string;
-    timeoutHeight: Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight;
+    timeoutHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    timeoutTimestamp?: string;
+  };
 }
-interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferToken {
-    denom: string;
-    amount: string;
-}
-interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
