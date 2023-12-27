@@ -9,14 +9,20 @@ export enum NetworkEnum {
   Osmosis1 = 'osmosis-1',
   OsmoTest5 = 'osmo-test-5',
   Stride1 = 'stride-1',
+  Celestia = 'celestia',
 }
 
 export const NetworkValidator = z.union(
   Object.values(NetworkEnum).map((networkId) => z.literal(networkId)) as [
     ZodLiteral<'cosmoshub-4'>,
-    ZodLiteral<'mocha-3'>,
+    ZodLiteral<'grand-1'>,
+    ZodLiteral<'mocha-4'>,
+    ZodLiteral<'neutron-1'>,
+    ZodLiteral<'noble-1'>,
     ZodLiteral<'osmosis-1'>,
     ZodLiteral<'osmo-test-5'>,
+    ZodLiteral<'stride-1'>,
+    ZodLiteral<'celestia'>,
   ],
 );
 

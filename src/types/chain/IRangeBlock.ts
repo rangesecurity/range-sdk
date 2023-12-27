@@ -8,6 +8,7 @@ import { Neutron1Trx } from './neutron-1/IRangeBlockNeutron1Trx';
 import { Noble1Trx } from './noble-1/IRangeBlockNoble1Trx';
 import { Stride1Trx } from './stride-1/IRangeBlockStride1Trx';
 import { OsmoTest5Trx } from './osmo-test-5/IRangeBlockOsmoTest5Trx';
+import { CelestiaTrx } from './celestia/IRangeBlockCelestiaTrx';
 
 interface BlockBase {
   hash: string;
@@ -69,6 +70,11 @@ export interface OsmoTest5Block extends BlockBase {
   network: NetworkEnum.OsmoTest5;
 }
 
+export interface CelestiaBlock extends BlockBase {
+  transactions: CelestiaTrx[];
+  network: NetworkEnum.Celestia;
+}
+
 export type IRangeBlock =
   | Osmosis1Block
   | Grand1Block
@@ -77,4 +83,5 @@ export type IRangeBlock =
   | Neutron1Block
   | Noble1Block
   | Stride1Block
-  | OsmoTest5Block;
+  | OsmoTest5Block
+  | CelestiaBlock;

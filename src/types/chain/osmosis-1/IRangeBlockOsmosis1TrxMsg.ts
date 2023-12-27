@@ -168,20 +168,11 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
+  type: string;
   data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      };
-      delegator_address: string;
-      validator_address: string;
-    }[];
-    '@type': string;
     grantee: string;
+    msgs: unknown[];
   };
 }
 
@@ -397,13 +388,13 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
-    funds: {
+    sender: string;
+    contract: string;
+    msg: unknown;
+    funds?: {
       denom: string;
       amount: string;
     }[];
-    sender: string;
-    contract: string;
   };
 }
 
@@ -412,10 +403,11 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
-    label: string;
-    codeId: string;
     sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: unknown;
   };
 }
 
@@ -551,29 +543,28 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket {
+  type: string;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight?: string;
-        revisionNumber?: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      timeoutTimestamp?: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+    };
+    proofCommitment?: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
     signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-    proofCommitment: string;
   };
 }
 
@@ -583,25 +574,24 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight?: string;
-        revisionNumber?: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
@@ -670,98 +660,9 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
+    clientId: string;
+    clientMessage: unknown;
     signer: string;
-    client_id: string;
-    client_message: {
-      '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
-          height: string;
-          block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          signatures: {
-            signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
-          }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
-      };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-    };
   };
 }
 
