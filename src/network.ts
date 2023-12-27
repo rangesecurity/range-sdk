@@ -10,6 +10,7 @@ export enum NetworkEnum {
   OsmoTest5 = 'osmo-test-5',
   Stride1 = 'stride-1',
   Celestia = 'celestia',
+  DydxMainnet1 = 'dydx-mainnet-1',
 }
 
 export const NetworkValidator = z.union(
@@ -23,6 +24,7 @@ export const NetworkValidator = z.union(
     ZodLiteral<'osmo-test-5'>,
     ZodLiteral<'stride-1'>,
     ZodLiteral<'celestia'>,
+    ZodLiteral<'dydx-mainnet-1'>,
   ],
 );
 
