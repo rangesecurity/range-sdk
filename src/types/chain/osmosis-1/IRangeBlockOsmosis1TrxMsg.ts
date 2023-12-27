@@ -168,7 +168,7 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     grantee: string;
@@ -177,7 +177,8 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
     granter: string;
@@ -425,7 +426,8 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
+export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
     sourcePort: string;
@@ -445,7 +447,8 @@ export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
@@ -530,7 +533,8 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
