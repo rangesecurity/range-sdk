@@ -434,19 +434,22 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
+export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
+  type: string;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutTimestamp: string;
+    timeoutHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    timeoutTimestamp?: string;
   };
 }
 
