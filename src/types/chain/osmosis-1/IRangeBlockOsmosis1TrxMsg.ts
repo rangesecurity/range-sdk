@@ -169,7 +169,7 @@ export type Osmosis1TrxMsg =
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
-  type: string;
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     grantee: string;
     msgs: unknown[];
@@ -178,28 +178,16 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
-    type: string;
-    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+  data: {
     granter: string;
     grantee: string;
-    grant: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
+    grant: {
+      authorization: unknown;
+      expiration: string;
+    };
+  };
 }
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
-    authorization: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
-    expiration: string;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
-    '@type': string;
-    allowList?: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList;
-    authorizationType?: string;
-    msg?: string;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList {
-    address: string[];
-}
-
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgRevoke
@@ -438,7 +426,7 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
 export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
-  type: string;
+  type: Osmosis1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
     sourcePort: string;
     sourceChannel: string;
@@ -458,7 +446,7 @@ export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer {
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
-  type: string;
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
       sequence: string;
@@ -543,7 +531,7 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket {
-  type: string;
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
       sequence: string;
