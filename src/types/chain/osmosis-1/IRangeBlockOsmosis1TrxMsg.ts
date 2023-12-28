@@ -1161,38 +1161,32 @@ export interface Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewa
   };
 }
 
-// types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator {
-    type: string;
-    data: Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorData;
-}
-interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorData {
-    description: Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorDescription;
-    commission: Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorCommission;
+// types for mgs type:: /cosmos.staking.v1beta1.MsgCreateValidator
+export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
+  data: {
+    description: {
+      details?: string;
+      moniker: string;
+      identity?: string;
+      securityContact?: string;
+    };
+    commission: {
+      rate: string;
+      maxRate: string;
+      maxChangeRate: string;
+    };
     minSelfDelegation: string;
     delegatorAddress: string;
     validatorAddress: string;
-    pubkey: Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorPubkey;
-    value: Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorValue;
+    pubkey: {
+      key: string;
+      '@type': string;
+    };
+    value: { denom: string; amount: string };
+  };
 }
-interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorDescription {
-    moniker: string;
-    securityContact: string;
-}
-interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorCommission {
-    rate: string;
-    maxRate: string;
-    maxChangeRate: string;
-}
-interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorPubkey {
-    '@type': string;
-    key: string;
-}
-interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidatorValue {
-    denom: string;
-    amount: string;
-}
-
 
 // types for mgs type:: /cosmos.distribution.v1beta1.MsgFundCommunityPool
 export interface Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
