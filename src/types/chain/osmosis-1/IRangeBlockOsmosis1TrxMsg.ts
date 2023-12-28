@@ -438,11 +438,12 @@ export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
     };
     sender: string;
     receiver: string;
-    timeoutHeight: {
-      revisionNumber: string;
-      revisionHeight: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
     timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
