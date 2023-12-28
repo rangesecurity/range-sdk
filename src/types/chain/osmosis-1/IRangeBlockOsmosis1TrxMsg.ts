@@ -1412,3 +1412,22 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePosition {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionData;
+}
+interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionData {
+    poolId: string;
+    sender: string;
+    lowerTick: string;
+    tokensProvided: Osmosis1TrxMsgOsmosisConcentratedliquidityV1Beta1MsgCreatePositionTokensProvidedItem[];
+    tokenMinAmount0: string;
+    tokenMinAmount1: string;
+}
+interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionTokensProvidedItem {
+    denom: string;
+    amount: string;
+}
