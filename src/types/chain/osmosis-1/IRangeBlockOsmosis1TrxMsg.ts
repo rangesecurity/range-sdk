@@ -459,7 +459,7 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
       destinationPort: string;
       destinationChannel: string;
       data: string;
-      timeoutHeight: {
+      timeoutHeight?: {
         revisionNumber?: string;
         revisionHeight?: string;
       };
@@ -467,11 +467,11 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgAcknowledgement
     };
     acknowledgement?: string;
     proofAcked: string;
-    proofHeight: {
-      revisionNumber: string;
-      revisionHeight: string;
+    proofHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
-    signer: string;
+    signer?: string;
   };
 }
 
