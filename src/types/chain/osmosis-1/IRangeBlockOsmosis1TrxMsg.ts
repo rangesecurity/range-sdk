@@ -115,13 +115,13 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
   | Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
   | Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
-  | Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgAddToPosition
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCollectIncentives
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCollectSpreadRewards
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePosition
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgFungifyChargedPositions
+  | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgWithdrawPosition
   | Osmosis1TrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
   | Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
   | Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
@@ -672,7 +672,7 @@ export interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.poolmodel.concentrated.v1beta1.MsgCreateConcentratedPool
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool;
   data: {
@@ -685,7 +685,7 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityPoolModelConcentrated
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgAddToPosition
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPosition
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgAddToPosition
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgAddToPosition;
   data: {
@@ -699,7 +699,7 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgAddToPositi
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCollectIncentives
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectIncentives
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCollectIncentives
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectIncentives;
   data: {
@@ -709,7 +709,7 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectInce
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCollectSpreadRewards
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCollectSpreadRewards
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCollectSpreadRewards;
   data: {
@@ -719,14 +719,14 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCollectSpre
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgCreatePosition
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosition
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePosition
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgCreatePosition;
   data: {
     poolId: string;
     sender: string;
-    lowerTick: string;
-    upperTick: string;
+    lowerTick?: string;
+    upperTick?: string;
     tokensProvided: {
       denom: string;
       amount: string;
@@ -737,7 +737,7 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgCreatePosit
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgFungifyChargedPositions
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgFungifyChargedPositions
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions;
   data: {
@@ -751,7 +751,7 @@ export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgFungifyChar
 }
 
 // types for mgs type:: /osmosis.concentratedliquidity.v1beta1.MsgWithdrawPosition
-export interface Osmosis1TrxMsgOsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition
+export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgWithdrawPosition
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition;
   data: {
@@ -1411,23 +1411,4 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
       uri_hash: string;
     };
   };
-}
-
-
-
-export interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePosition {
-    type: string;
-    data: Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionData;
-}
-interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionData {
-    poolId: string;
-    sender: string;
-    lowerTick: string;
-    tokensProvided: Osmosis1TrxMsgOsmosisConcentratedliquidityV1Beta1MsgCreatePositionTokensProvidedItem[];
-    tokenMinAmount0: string;
-    tokenMinAmount1: string;
-}
-interface Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgCreatePositionTokensProvidedItem {
-    denom: string;
-    amount: string;
 }
