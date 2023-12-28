@@ -572,15 +572,15 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
       destinationPort: string;
       destinationChannel: string;
       data: string;
-      timeoutHeight: {
-        revisionNumber: string;
-        revisionHeight: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
     };
     proofUnreceived: string;
-    proofHeight: {
-      revisionNumber: string;
-      revisionHeight: string;
+    proofHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
     nextSequenceRecv: string;
     signer: string;
