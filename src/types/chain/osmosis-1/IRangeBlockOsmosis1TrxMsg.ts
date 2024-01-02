@@ -588,64 +588,65 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-export interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
-  data: {
-    '@type': string;
-    signer: string;
-    client_state: {
-      '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: any;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
-        numerator: string;
-        denominator: string;
-      };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehaviour: boolean;
-    };
-    consensus_state: {
-      root: {
-        hash: string;
-      };
-      '@type': string;
-      timestamp: string;
-      next_validators_hash: string;
-    };
-  };
+export interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient {
+    type: string;
+    data: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientData;
 }
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientData {
+    clientState: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientClientState;
+    consensusState: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+    signer: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
+    latestHeight: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
+    proofSpecs: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
+    upgradePath: string[];
+    allowUpdateAfterExpiry: boolean;
+    allowUpdateAfterMisbehaviour: boolean;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
+    revisionHeight: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
+    leafSpec: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
+    innerSpec: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
+    hash: string;
+    prehashValue: string;
+    length: string;
+    prefix: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    hash: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
+    '@type': string;
+    timestamp: string;
+    root: Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientRoot;
+    nextValidatorsHash: string;
+}
+interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClientRoot {
+    hash: string;
+}
+
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
