@@ -391,17 +391,21 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
-  data: {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+    type: string;
+    data: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData;
+}
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData {
     sender: string;
-    admin: string;
     codeId: string;
     label: string;
-    msg: unknown;
-  };
+    msg: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg;
 }
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg {
+    owner: string;
+    vesting_code_id: number;
+}
+
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgMigrateContract
 export interface Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract
