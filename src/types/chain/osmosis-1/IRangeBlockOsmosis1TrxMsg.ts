@@ -1214,15 +1214,16 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseInit
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgUpdateAdmin
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgUpdateAdmin;
-  data: {
-    sender: string;
-    new_admin: string;
-    contract: string;
-  };
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin {
+    type: string;
+    data: Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdminData;
 }
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdminData {
+    sender: string;
+    newAdmin: string;
+    contract: string;
+}
+
 
 // types for msg type:: /cosmos.auth.v1beta1.MsgUpdateParams
 export interface Osmosis1TrxMsgCosmosAuthV1beta1MsgUpdateParams
