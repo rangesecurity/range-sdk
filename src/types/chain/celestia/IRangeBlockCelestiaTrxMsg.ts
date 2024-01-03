@@ -624,7 +624,6 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
       '@type': string;
       signedHeader: {
         commit: {
-          round: number;
           height: string;
           blockId: {
             hash: string;
@@ -646,7 +645,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           appHash: string;
           chainId: string;
           version: {
-            app: string;
+            app?: string;
             block: string;
           };
           dataHash: string;
@@ -681,7 +680,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
         revisionHeight: string;
@@ -702,7 +701,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
   };
