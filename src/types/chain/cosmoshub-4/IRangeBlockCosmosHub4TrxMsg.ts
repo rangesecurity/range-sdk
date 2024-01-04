@@ -780,101 +780,94 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
-  data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
-      '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
-          height: string;
-          block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          signatures: {
-            signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
-          }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
-      };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-    };
-  };
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientData;
 }
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientData {
+    clientId: string;
+    clientMessage: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    signer: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
+    '@type': string;
+    signedHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
+    validatorSet: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
+    trustedHeight: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
+    trustedValidators: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
+    header: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
+    commit: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
+    version: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
+    chainId: string;
+    height: string;
+    time: string;
+    lastBlockId: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
+    lastCommitHash: string;
+    dataHash: string;
+    validatorsHash: string;
+    nextValidatorsHash: string;
+    consensusHash: string;
+    appHash: string;
+    lastResultsHash: string;
+    evidenceHash: string;
+    proposerAddress: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
+    block: string;
+    app: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
+    hash: string;
+    partSetHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
+    total: number;
+    hash: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
+    height: string;
+    blockId: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
+    signatures: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
+    hash: string;
+    partSetHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
+    blockIdFlag: string;
+    validatorAddress?: string;
+    timestamp: string;
+    signature?: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
+    validators: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
+    address: string;
+    pubKey: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
+    ed25519: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
+    address: string;
+    pubKey: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
+    validators: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+
