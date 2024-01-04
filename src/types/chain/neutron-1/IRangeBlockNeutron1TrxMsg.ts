@@ -104,24 +104,26 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
-  data: {
-    token: {
-      denom: string;
-      amount: string;
-    };
-    sender: string;
-    receiver: string;
+export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer {
+    type: string;
+    data: Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferData;
+}
+interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferData {
     sourcePort: string;
     sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-  };
+    token: Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferToken;
+    sender: string;
+    receiver: string;
+    timeoutHeight: Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight;
 }
+interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferToken {
+    denom: string;
+    amount: string;
+}
+interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight {
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
