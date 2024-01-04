@@ -467,101 +467,93 @@ export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
   };
 }
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
-  extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
-  data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
-      '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
-          height: string;
-          block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          signatures: {
-            signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
-          }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
-      };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-    };
-  };
+export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient {
+    type: string;
+    data: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientData;
 }
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientData {
+    clientId: string;
+    clientMessage: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    signer: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
+    '@type': string;
+    signedHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
+    validatorSet: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
+    trustedHeight: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
+    trustedValidators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
+    header: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
+    commit: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
+    version: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
+    chainId: string;
+    height: string;
+    time: string;
+    lastBlockId: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
+    lastCommitHash: string;
+    dataHash: string;
+    validatorsHash: string;
+    nextValidatorsHash: string;
+    consensusHash: string;
+    appHash: string;
+    lastResultsHash: string;
+    evidenceHash: string;
+    proposerAddress: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
+    block: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
+    hash: string;
+    partSetHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
+    total: number;
+    hash: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
+    height: string;
+    blockId: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
+    signatures: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
+    hash: string;
+    partSetHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
+    blockIdFlag: string;
+    validatorAddress?: string;
+    timestamp: string;
+    signature?: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
+    validators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
+    address: string;
+    pubKey: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
+    ed25519: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
+    address: string;
+    pubKey: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
+    validators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+
