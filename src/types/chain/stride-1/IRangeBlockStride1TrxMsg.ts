@@ -565,3 +565,33 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout {
+    type: string;
+    data: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData;
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData {
+    packet: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket;
+    proofUnreceived: string;
+    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight;
+    nextSequenceRecv: string;
+    signer: string;
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight;
+    timeoutTimestamp: string;
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight {
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
