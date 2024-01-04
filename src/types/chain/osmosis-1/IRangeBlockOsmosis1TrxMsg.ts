@@ -534,31 +534,30 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
-  data: {
-    packet: {
-      sequence: string;
-      sourcePort: string;
-      sourceChannel: string;
-      destinationPort: string;
-      destinationChannel: string;
-      timeoutTimestamp?: string;
-      data: string;
-      timeoutHeight: {
-        revisionNumber?: string;
-        revisionHeight?: string;
-      };
-    };
-    proofCommitment?: string;
-    proofHeight: {
-      revisionNumber?: string;
-      revisionHeight?: string;
-    };
-    signer: string;
-  };
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket {
+    type: string;
+    data: Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketData;
 }
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketData {
+    packet: Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket;
+    proofCommitment: string;
+    proofHeight: Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight;
+    signer: string;
+}
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutTimestamp: string;
+}
+interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
