@@ -394,32 +394,35 @@ export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
-  data: {
-    packet: {
-      data: string;
-      sequence: string;
-      sourcePort: string;
-      sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
-      destinationPort: string;
-      timeoutTimestamp: string;
-      destinationChannel: string;
-    };
-    signer: string;
-    proofAcked: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-    acknowledgement: string;
-  };
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
 }
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
+    packet: CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
+    acknowledgement: string;
+    proofAcked: string;
+    proofHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
+    signer: string;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
