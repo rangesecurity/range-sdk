@@ -66,23 +66,25 @@ enum CosmosHub4TrxMsgTypes {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
-  data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      };
-      delegator_address: string;
-      validator_address: string;
-    }[];
-    '@type': string;
-    grantee: string;
-  };
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecData;
 }
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecData {
+    grantee: string;
+    msgs: CosmosHub4TrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+}
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
+    '@type': string;
+    delegatorAddress: string;
+    validatorAddress: string;
+    amount: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecAmount;
+}
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecAmount {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
 export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
