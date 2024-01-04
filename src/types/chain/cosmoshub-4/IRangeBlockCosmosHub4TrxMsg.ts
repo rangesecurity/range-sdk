@@ -183,20 +183,19 @@ export interface CosmosHub4TrxMsgWithdrawValidatorCommission
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
-  data: {
-    '@type': string;
-    grantee: string;
-    granter: string;
-    allowance: {
-      '@type': string;
-      expiration: string | null;
-      spend_limit: unknown[]; //todo: fine other data to figure out exact type
-    };
-  };
+export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData;
 }
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData {
+    granter: string;
+    grantee: string;
+    allowance: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance;
+}
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance {
+    '@type': string;
+}
+
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgDeposit
 export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit
