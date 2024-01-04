@@ -565,3 +565,25 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse {
+    type: string;
+    data: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseData;
+}
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseData {
+    chainId: string;
+    queryId: string;
+    proofOps: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseProofOps;
+    height: string;
+    fromAddress: string;
+}
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseProofOps {
+    ops: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseOpsItem[];
+}
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseOpsItem {
+    type: string;
+    key: string;
+    data: string;
+}
