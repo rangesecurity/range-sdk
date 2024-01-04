@@ -261,104 +261,97 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
 }
 
 // types for mgs type:: ibc.core.client.v1.MsgUpdateClient
-export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
-  data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
-      '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
-          height: string;
-          block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          signatures: {
-            signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
-          }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
-      };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
-        validators: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        }[];
-        total_voting_power: string;
-      };
-    };
-  };
+export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient {
+    type: string;
+    data: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientData;
 }
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientData {
+    clientId: string;
+    clientMessage: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    signer: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
+    '@type': string;
+    signedHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
+    validatorSet: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
+    trustedHeight: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
+    trustedValidators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
+    header: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
+    commit: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
+    version: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
+    chainId: string;
+    height: string;
+    time: string;
+    lastBlockId: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
+    lastCommitHash: string;
+    dataHash: string;
+    validatorsHash: string;
+    nextValidatorsHash: string;
+    consensusHash: string;
+    appHash: string;
+    lastResultsHash: string;
+    evidenceHash: string;
+    proposerAddress: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
+    block: string;
+    app: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
+    hash: string;
+    partSetHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
+    total: number;
+    hash: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
+    height: string;
+    blockId: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
+    signatures: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
+    hash: string;
+    partSetHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
+    blockIdFlag: string;
+    validatorAddress?: string;
+    timestamp: string;
+    signature?: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
+    validators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
+    address: string;
+    pubKey: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
+    ed25519: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
+    address: string;
+    pubKey: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
+    validators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower: string;
+}
+
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
 export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
