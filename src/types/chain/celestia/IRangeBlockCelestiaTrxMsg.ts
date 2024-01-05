@@ -82,36 +82,25 @@ export interface CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
-  data: {
-    msgs: (
-      | {
-          '@type': string;
-          amount?: {
-            denom: string;
-            amount: string;
-          };
-          delegatorAddress?: string;
-          validatorAddress?: string;
-          withdrawAddress?: string;
-        }
-      | {
-          '@type': string;
-          grant: {
-            expiration: string;
-            authorization: {
-              msg: string;
-              '@type': string;
-            };
-          };
-          grantee: string;
-          granter: string;
-        }
-    )[];
-    grantee: string;
-  };
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec {
+    type: string;
+    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData;
 }
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData {
+    grantee: string;
+    msgs: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
+    '@type': string;
+    fromAddress: string;
+    toAddress: string;
+    amount: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecAmountItem[];
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecAmountItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
