@@ -305,7 +305,7 @@ class RangeSDK implements IRangeSDK {
             block,
             rule,
           );
-          const ruleResults = ruleSubResults.map((subResult) => ({
+          const ruleResults = ruleSubResults?.map((subResult) => ({
             ...subResult,
             workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
