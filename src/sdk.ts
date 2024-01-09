@@ -301,10 +301,8 @@ class RangeSDK implements IRangeSDK {
             return [];
           }
 
-          const ruleSubResults = await this.initOpts.onBlock.callback(
-            block,
-            rule,
-          );
+          const ruleSubResults =
+            (await this.initOpts.onBlock.callback(block, rule)) || [];
           const ruleResults = ruleSubResults.map((subResult) => ({
             ...subResult,
             workspaceId: rule.workspaceId || null,
