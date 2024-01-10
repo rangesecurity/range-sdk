@@ -282,14 +282,15 @@ export interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
-export interface Osmosis1TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgVote;
-  data: {
+export interface Osmosis1TrxMsgCosmosGovV1beta1MsgVote {
+    type: string;
+    data: Osmosis1TrxMsgCosmosGovV1beta1MsgVoteData;
+}
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgVoteData {
     voter: string;
     option: string;
-    proposalId: string;
-  };
 }
+
 
 // types for mgs type:: /cosmos.slashing.v1beta1.MsgUnjail
 export interface Osmosis1TrxMsgCosmosSlashingV1beta1MsgUnjail
