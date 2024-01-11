@@ -330,20 +330,19 @@ export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgDelegate
 }
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgEditValidator
-export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidator
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
-  data: {
-    description: {
-      details: string;
-      moniker: string;
-      website: string;
-      identity: string;
-      securityContact: string;
-    };
-    validatorAddress: string;
-  };
+export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidator {
+    type: string;
+    data: Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidatorData;
 }
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidatorData {
+    description: Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidatorDescription;
+    validatorAddress: string;
+}
+interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidatorDescription {
+    moniker: string;
+    securityContact: string;
+}
+
 
 // types for mgs type:: /cosmos.staking.v1beta1.MsgUndelegate
 export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgUndelegate
