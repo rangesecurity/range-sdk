@@ -1414,3 +1414,27 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolData;
+}
+interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolData {
+    sender: string;
+    poolParams: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolParams;
+    poolAssets: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1Beta1MsgCreateBalancerPoolPoolAssetsItem[];
+}
+interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolParams {
+    swapFee: string;
+    exitFee: string;
+}
+interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolAssetsItem {
+    token: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolToken;
+    weight: string;
+}
+interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolToken {
+    denom: string;
+    amount: string;
+}
