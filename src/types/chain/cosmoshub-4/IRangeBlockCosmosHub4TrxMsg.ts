@@ -295,36 +295,39 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCancelUnbondingDelegatio
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgCreateValidator
-export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
-  data: {
-    '@type': string;
-    value: {
-      denom: string;
-      amount: string;
-    };
-    pubkey: {
-      key: string;
-      '@type': string;
-    };
-    commission: {
-      rate: string;
-      max_rate: string;
-      max_change_rate: string;
-    };
-    description: {
-      details: string;
-      moniker: string;
-      website: string;
-      identity: string;
-      security_contact: string;
-    };
-    delegator_address: string;
-    validator_address: string;
-    min_self_delegation: string;
-  };
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorData;
 }
+interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorData {
+    description: CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorDescription;
+    commission: CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorCommission;
+    minSelfDelegation: string;
+    delegatorAddress: string;
+    validatorAddress: string;
+    pubkey: CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorPubkey;
+    value: CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorValue;
+}
+interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorDescription {
+    moniker: string;
+    identity: string;
+    website: string;
+    details: string;
+}
+interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorCommission {
+    rate: string;
+    maxRate: string;
+    maxChangeRate: string;
+}
+interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorPubkey {
+    '@type': string;
+    key: string;
+}
+interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidatorValue {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgDelegate
 export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgDelegate
