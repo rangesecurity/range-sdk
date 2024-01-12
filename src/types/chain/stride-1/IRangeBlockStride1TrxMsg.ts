@@ -565,3 +565,30 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal {
+    type: string;
+    data: Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalData;
+}
+interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalData {
+    content: Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalContent;
+    initialDeposit: Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposalInitialDepositItem[];
+    proposer: string;
+}
+interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalContent {
+    '@type': string;
+    title: string;
+    description: string;
+    plan: Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalPlan;
+}
+interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalPlan {
+    name: string;
+    time: string;
+    height: string;
+}
+interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposalInitialDepositItem {
+    denom: string;
+    amount: string;
+}
