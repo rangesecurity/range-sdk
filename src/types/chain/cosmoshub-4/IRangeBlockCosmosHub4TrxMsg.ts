@@ -213,23 +213,25 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
-  data: {
-    '@type': string;
-    content: {
-      '@type': string;
-      title: string;
-      description: string;
-    };
-    proposer: string;
-    initial_deposit: {
-      denom: string;
-      amount: string;
-    }[];
-  };
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalData;
 }
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalData {
+    content: CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalContent;
+    initialDeposit: CosmosHub4TrxMsgCosmosGovV1Beta1MsgSubmitProposalInitialDepositItem[];
+    proposer: string;
+}
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalContent {
+    '@type': string;
+    title: string;
+    description: string;
+}
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalInitialDepositItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
 export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
