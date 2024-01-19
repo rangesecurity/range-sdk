@@ -565,3 +565,15 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokens {
+    type: string;
+    data: Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokensData;
+}
+interface Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokensData {
+    creator: string;
+    hostZoneId: string;
+    epoch: string;
+}
