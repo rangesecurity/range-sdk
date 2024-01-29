@@ -870,22 +870,24 @@ export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountIn
-export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
-  data: {
-    routes: {
-      poolId: string;
-      tokenOutDenom: string;
-    }[];
-    sender: string;
-    tokenIn: {
-      denom: string;
-      amount: string;
-    };
-    tokenOutMinAmount: string;
-  };
+export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountInData;
 }
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountInData {
+    sender: string;
+    routes: Osmosis1TrxMsgOsmosisGammV1Beta1MsgSwapExactAmountInRoutesItem[];
+    tokenIn: Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountInTokenIn;
+    tokenOutMinAmount: string;
+}
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountInRoutesItem {
+    tokenOutDenom: string;
+}
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountInTokenIn {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgSwapExactAmountOut
 export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountOut
