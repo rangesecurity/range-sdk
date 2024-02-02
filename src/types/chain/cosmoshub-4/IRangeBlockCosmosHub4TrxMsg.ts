@@ -589,195 +589,106 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgSubmitMisbehaviour
-export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgSubmitMisbehaviour;
-  data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    misbehaviour: {
-      '@type': string;
-      header_1: {
-        signed_header: {
-          commit: {
-            round: number;
-            height: string;
-            block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            signatures: {
-              signature?: string;
-              timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
-            }[];
-          };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
-        };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
-          validators: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
-          validators: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          }[];
-          total_voting_power: string;
-        };
-      };
-      header_2: {
-        signed_header: {
-          commit: {
-            round: number;
-            height: string;
-            block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            signatures: {
-              signature?: string;
-              timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
-            }[];
-          };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
-        };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
-          validators: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
-          validators: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          }[];
-          total_voting_power: string;
-        };
-      };
-      client_id: string;
-    };
-  };
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourData;
 }
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourData {
+    clientId: string;
+    misbehaviour: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourMisbehaviour;
+    signer: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourMisbehaviour {
+    '@type': string;
+    clientId: string;
+    header1: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader1;
+    header2: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader2;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader1 {
+    signedHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourSignedHeader;
+    validatorSet: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorSet;
+    trustedHeight: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedHeight;
+    trustedValidators: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedValidators;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourSignedHeader {
+    header: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader;
+    commit: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourCommit;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader {
+    version: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourVersion;
+    chainId: string;
+    height: string;
+    time: string;
+    lastBlockId: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourLastBlockId;
+    lastCommitHash: string;
+    dataHash: string;
+    validatorsHash: string;
+    nextValidatorsHash: string;
+    consensusHash: string;
+    appHash: string;
+    lastResultsHash: string;
+    evidenceHash: string;
+    proposerAddress: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourVersion {
+    block: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourLastBlockId {
+    hash: string;
+    partSetHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPartSetHeader;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPartSetHeader {
+    total: number;
+    hash: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourCommit {
+    height: string;
+    blockId: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourBlockId;
+    signatures: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourSignaturesItem[];
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourBlockId {
+    hash: string;
+    partSetHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPartSetHeader;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourSignaturesItem {
+    blockIdFlag: string;
+    validatorAddress?: string;
+    timestamp: string;
+    signature?: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorSet {
+    validators: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorsItem[];
+    proposer: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourProposer;
+    totalVotingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorsItem {
+    address: string;
+    pubKey: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPubKey;
+    votingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPubKey {
+    ed25519: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourProposer {
+    address: string;
+    pubKey: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourPubKey;
+    votingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedHeight {
+    revisionHeight: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedValidators {
+    validators: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorsItem[];
+    proposer: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourProposer;
+    totalVotingPower: string;
+}
+interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourHeader2 {
+    signedHeader: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourSignedHeader;
+    validatorSet: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourValidatorSet;
+    trustedHeight: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedHeight;
+    trustedValidators: CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviourTrustedValidators;
+}
+
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
