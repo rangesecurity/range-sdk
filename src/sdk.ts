@@ -123,8 +123,9 @@ class RangeSDK implements IRangeSDK {
 
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
-  ): Promise<void> {
-    logger.info(taskPackage, `Received task package`);
+  ): Promise<void> { 
+    const start = dayjs()
+    logger.info(taskPackage, `Received task package, timestamp: ${start.toISOString()}`);
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -146,6 +147,8 @@ class RangeSDK implements IRangeSDK {
         throw err;
       }),
     ]);
+
+    logger.info(taskPackage, `block and alert rules fetched successfully, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
 
     // call the acknowledgement API and mark the package as done if block is not found or rule group is empty
     if (!block || rules.length === 0) {
@@ -171,6 +174,7 @@ class RangeSDK implements IRangeSDK {
           }
         : {}),
     });
+    logger.info(taskPackage, `block processed successfully, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
   }
 
   private async initErrorBlockRuleTaskQueue() {
@@ -265,6 +269,12 @@ class RangeSDK implements IRangeSDK {
     const events = await Promise.all(
       rules.map(async (rule) => {
         try {
+          const start = dayjs()
+          logger.info({
+            block: {network: block.network, height: block.height},
+            rule
+          }, `Process started for block with rule. timestamp: ${start.toISOString()}`);
+
           if (!this.initOpts) {
             throw new Error('SDK Init not called, onBlock missing');
           }
@@ -313,14 +323,10 @@ class RangeSDK implements IRangeSDK {
           }));
 
           if (!ruleResults.length) {
-            logger.warn(
-              {
-                ruleResults,
-                block: { network: block.network, height: block.height },
-                ruleId: rule.id,
-              },
-              'No alert rule events for task package',
-            );
+            logger.info({
+              block: {network: block.network, height: block.height},
+              rule
+            }, `block and alert rule processed successfully with zero alert events, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
             return [];
           }
 
@@ -330,6 +336,11 @@ class RangeSDK implements IRangeSDK {
             alertRuleId: rule.id,
             alerts: ruleResults,
           });
+          logger.info({
+            block: {network: block.network, height: block.height},
+            rule
+          }, `block and alert rule processed successfully with alert events, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
+
           return [];
         } catch (error) {
           let err = String(error);
