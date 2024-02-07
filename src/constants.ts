@@ -17,6 +17,10 @@ interface Constants {
   BLOCK_CACHE: {
     MAX: number;
   };
+
+  AXIOS: {
+    TIMEOUT: number
+  }
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -52,4 +56,7 @@ export const constants: Constants = {
   BLOCK_CACHE: {
     MAX: 100,
   },
+  AXIOS: {
+    TIMEOUT: 3000 // 3 seconds
+  }
 };

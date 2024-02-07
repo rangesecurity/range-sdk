@@ -25,6 +25,7 @@ export async function fetchBlocksByRange(args: {
       headers: {
         'X-API-KEY': token,
       },
+      timeout: constants.AXIOS.TIMEOUT
     });
 
     return blocks;

@@ -29,6 +29,7 @@ export async function taskAck(args: {
       headers: {
         'X-API-KEY': token,
       },
+      timeout: constants.AXIOS.TIMEOUT
     },
   );
 

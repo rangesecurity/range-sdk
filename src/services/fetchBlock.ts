@@ -37,6 +37,7 @@ export async function fetchBlock(args: {
       headers: {
         'X-API-KEY': token,
       },
+      timeout: constants.AXIOS.TIMEOUT
     });
 
     blockCache.set(`${network}-${height}`, block);

@@ -20,6 +20,7 @@ export async function fetchAlertRulesByRuleGroupID(args: {
       headers: {
         'X-API-KEY': token,
       },
+      timeout: constants.AXIOS.TIMEOUT
     });
 
     return rules;
