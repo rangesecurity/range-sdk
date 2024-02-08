@@ -17,7 +17,7 @@ export class CosmosClient {
 
   async balance(address: string, denom: string): Promise<QueryBalanceResponse> {
     const client = await this.getCosmosRpcClient();
-    return await client.cosmos.bank.v1beta1.balance({
+    return client.cosmos.bank.v1beta1.balance({
       address,
       denom,
     });
@@ -25,21 +25,21 @@ export class CosmosClient {
 
   async supply(denom: string): Promise<QuerySupplyOfResponse> {
     const client = await this.getCosmosRpcClient();
-    return await client.cosmos.bank.v1beta1.supplyOf({
+    return client.cosmos.bank.v1beta1.supplyOf({
       denom,
     });
   }
 
   async validator(validatorAddr: string): Promise<QueryValidatorResponse> {
     const client = await this.getCosmosRpcClient();
-    return await client.cosmos.staking.v1beta1.validator({
+    return client.cosmos.staking.v1beta1.validator({
       validatorAddr,
     });
   }
 
   async contractInfo(address: string): Promise<QueryContractInfoResponse> {
     const client = await this.getCosmwasmRpcClient();
-    return await client.cosmwasm.wasm.v1.contractInfo({
+    return client.cosmwasm.wasm.v1.contractInfo({
       address,
     });
   }
@@ -57,26 +57,26 @@ export class CosmosClient {
     return JSON.parse(Buffer.from(res.data).toString('utf8'));
   }
 
-  async getCosmosRpcClient() {
-    return await cosmos.ClientFactory.createRPCQueryClient({
+  getCosmosRpcClient() {
+    return cosmos.ClientFactory.createRPCQueryClient({
       rpcEndpoint: this.rpcEndpoint,
     });
   }
 
-  async getOsmosisRpcClient() {
-    return await osmosis.ClientFactory.createRPCQueryClient({
+  getOsmosisRpcClient() {
+    return osmosis.ClientFactory.createRPCQueryClient({
       rpcEndpoint: this.rpcEndpoint,
     });
   }
 
-  async getIbcRpcClient() {
-    return await ibc.ClientFactory.createRPCQueryClient({
+  getIbcRpcClient() {
+    return ibc.ClientFactory.createRPCQueryClient({
       rpcEndpoint: this.rpcEndpoint,
     });
   }
 
-  async getCosmwasmRpcClient() {
-    return await cosmwasm.ClientFactory.createRPCQueryClient({
+  getCosmwasmRpcClient() {
+    return cosmwasm.ClientFactory.createRPCQueryClient({
       rpcEndpoint: this.rpcEndpoint,
     });
   }
