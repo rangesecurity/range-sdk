@@ -565,3 +565,24 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance {
+    type: string;
+    data: Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData;
+}
+interface Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData {
+    granter: string;
+    grantee: string;
+    allowance: Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance;
+}
+interface Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance {
+    '@type': string;
+    spendLimit: Stride1TrxMsgCosmosFeegrantV1Beta1MsgGrantAllowanceSpendLimitItem[];
+    expiration: string;
+}
+interface Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceSpendLimitItem {
+    denom: string;
+    amount: string;
+}
