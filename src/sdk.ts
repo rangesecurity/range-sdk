@@ -374,6 +374,7 @@ class RangeSDK implements IRangeSDK {
             token: this.opts.token,
             workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
+            ruleGroupId: rule.ruleGroupId,
             alerts: ruleResults,
           });
           logger.info(
@@ -568,6 +569,7 @@ class RangeSDK implements IRangeSDK {
             token: this.opts.token,
             workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
+            ruleGroupId: rule.ruleGroupId,
             alerts: ruleResults,
           });
           logger.info(

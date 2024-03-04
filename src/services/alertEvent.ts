@@ -5,15 +5,17 @@ import { constants } from '../constants';
 export async function createAlertEvents(args: {
   token: string;
   workspaceId: string | null;
+  ruleGroupId: string;
   alertRuleId: string;
   alerts: IRangeEvent[];
 }): Promise<{ success: boolean }> {
-  const { token, workspaceId, alertRuleId, alerts } = args;
+  const { token, workspaceId, ruleGroupId, alertRuleId, alerts } = args;
 
   const { data } = await axios.post<{ success: boolean }>(
     `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.CREATE_ALERT_EVENT_PATH}`,
     {
       workspaceId,
+      ruleGroupId,
       alertRuleId,
       alerts,
     },

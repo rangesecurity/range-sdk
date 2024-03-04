@@ -41,7 +41,7 @@ export const constants: Constants = {
       'https://manager.range.org',
     ),
     FETCH_CONFIG_PATH: '/v1.0/range-sdk/config',
-    CREATE_ALERT_EVENT_PATH: '/v1.0/rule-group/block/alerts/by-rule-id',
+    CREATE_ALERT_EVENT_PATH: '/v1.0/alert-event',
     ACK_TASK_PATH: '/v1.0/rule-group/block/ack',
     ACK_TICK_TASK_PATH: '/v1.0/rule-group/tick/ack',
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: '/v1.0/rule-group/block',
