@@ -10,7 +10,7 @@ export async function fetchConfig(args: { token: string }) {
     headers: {
       'X-API-KEY': token,
     },
-    timeout: constants.AXIOS.TIMEOUT
+    timeout: constants.AXIOS.TIMEOUT,
   });
 
   return data;
