@@ -531,17 +531,6 @@ class RangeSDK implements IRangeSDK {
             throw new Error('Missing handler for tick based alert rules');
           }
 
-          if (dayjs().subtract(5, 'seconds').isAfter(timestamp)) {
-            logger.warn(
-              {
-                timestamp,
-                rule: rule,
-              },
-              `tick processing skipped as timestamp is in past at time of execution`,
-            );
-            return [];
-          }
-
           const ruleSubResults =
             (await this.initOpts.onTick.callback(timestamp, rule)) || [];
           const ruleResults = ruleSubResults.map((subResult) => ({
