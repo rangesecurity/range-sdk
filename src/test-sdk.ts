@@ -1,4 +1,9 @@
-import { IRangeSDK, RangeSDKInitOptions, RangeSDKOptions } from './sdk';
+import {
+  IRangeSDK,
+  OnBlock,
+  RangeSDKInitOptions,
+  RangeSDKOptions,
+} from './sdk';
 import { getLogger } from './logger';
 import { constants } from './constants';
 import { fetchBlock } from './services/fetchBlock';
@@ -7,10 +12,14 @@ import { IRangeBlock } from './types/chain/IRangeBlock';
 
 const logger = getLogger({ name: 'testRangeSDK' });
 
+export type RangeTestSDKInitOptions = Pick<RangeSDKInitOptions, 'onTick'> & {
+  onBlock?: OnBlock;
+};
+
 class TestRangeSDK implements IRangeSDK {
   private opts: RangeSDKOptions;
   public runnerId?: string;
-  private initOpts?: RangeSDKInitOptions;
+  private initOpts?: RangeTestSDKInitOptions;
 
   constructor(opts: RangeSDKOptions) {
     this.opts = opts;
@@ -22,7 +31,7 @@ class TestRangeSDK implements IRangeSDK {
     );
   }
 
-  async init(initOpts: RangeSDKInitOptions): Promise<void> {
+  async init(initOpts: RangeTestSDKInitOptions): Promise<void> {
     /**
      * Fetch config from the manager and setup task queues
      */
@@ -45,7 +54,7 @@ class TestRangeSDK implements IRangeSDK {
     blockInfo: { network: string; height: string },
     rule: IRangeAlertRule,
   ) {
-    if (!this.initOpts) {
+    if (!this.initOpts || !this.initOpts.onBlock) {
       throw new Error(
         'TestRangeSDK not Init, please provide with the onBlock Method to run block and rule against',
       );
@@ -62,13 +71,23 @@ class TestRangeSDK implements IRangeSDK {
   }
 
   async assertRuleWithBlock(block: IRangeBlock, rule: IRangeAlertRule) {
-    if (!this.initOpts) {
+    if (!this.initOpts || !this.initOpts.onBlock) {
       throw new Error(
         'TestRangeSDK not Init, please provide with the onBlock Method to run block and rule against',
       );
     }
 
     return this.initOpts.onBlock.callback(block, rule);
+  }
+
+  async assertRuleWithTick(timestamp: string, rule: IRangeAlertRule) {
+    if (!this.initOpts || !this.initOpts.onTick) {
+      throw new Error(
+        'TestRangeSDK not Init, please provide with the onTick Method to run block and rule against',
+      );
+    }
+
+    return this.initOpts.onTick.callback(timestamp, rule);
   }
 
   async gracefulCleanup(): Promise<void> {
