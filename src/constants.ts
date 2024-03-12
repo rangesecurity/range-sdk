@@ -4,6 +4,7 @@ interface Constants {
     FETCH_CONFIG_PATH: string;
     CREATE_ALERT_EVENT_PATH: string;
     ACK_TASK_PATH: string;
+    ACK_TICK_TASK_PATH: string;
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: string;
     FETCH_BLOCKS_BY_RANGE: string;
     FETCH_RULES_BY_RULE_GROUP_ID_PATH: (ruleGroupId: string) => string;
@@ -19,8 +20,8 @@ interface Constants {
   };
 
   AXIOS: {
-    TIMEOUT: number
-  }
+    TIMEOUT: number;
+  };
 }
 
 function getEnvVar(key: string, defaultValue?: string): string {
@@ -40,8 +41,9 @@ export const constants: Constants = {
       'https://manager.range.org',
     ),
     FETCH_CONFIG_PATH: '/v1.0/range-sdk/config',
-    CREATE_ALERT_EVENT_PATH: '/v1.0/rule-group/block/alerts/by-rule-id',
+    CREATE_ALERT_EVENT_PATH: '/v1.0/alert-event',
     ACK_TASK_PATH: '/v1.0/rule-group/block/ack',
+    ACK_TICK_TASK_PATH: '/v1.0/rule-group/tick/ack',
     FETCH_BLOCK_BY_NETWORK_AND_HEIGHT: '/v1.0/rule-group/block',
     FETCH_BLOCKS_BY_RANGE: '/v1.0/rule-group/block/by-range',
     FETCH_RULES_BY_RULE_GROUP_ID_PATH: (ruleGroupId: string) =>
@@ -57,6 +59,6 @@ export const constants: Constants = {
     MAX: 100,
   },
   AXIOS: {
-    TIMEOUT: 3000 // 3 seconds
-  }
+    TIMEOUT: 3000, // 3 seconds
+  },
 };

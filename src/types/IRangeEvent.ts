@@ -4,8 +4,8 @@ export interface IRangeEvent {
   alertRuleId: string;
   time: string;
   txHash: string;
-  blockNumber: string;
-  network: string;
+  blockNumber?: string;
+  network?: string;
   addressesInvolved: string[];
   severity?: string;
   caption: string;
