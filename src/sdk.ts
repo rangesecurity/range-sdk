@@ -6,6 +6,7 @@ import { IRangeAlertRule } from './types/IRangeAlertRule';
 import {
   BlockRuleGroupTaskPackage,
   ErrorBlockRuleTaskPackage,
+  TickRuleGroupTaskPackage,
 } from './types/IRangeTaskPackage';
 import { fetchBlock } from './services/fetchBlock';
 import {
@@ -19,11 +20,16 @@ import { IRangeConfig } from './types/IRangeConfig';
 import { fetchConfig } from './services/fetchConfig';
 import { getLogger } from './logger';
 import { constants } from './constants';
+import { tickTaskAck } from './services/tickTaskAck';
 
 const logger = getLogger({ name: 'rangeSDK' });
 
 export interface OnBlock {
   callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
+}
+
+export interface OnTick {
+  callback: (timestamp: string, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
 }
 
 export interface RangeSDKOptions {
@@ -32,6 +38,7 @@ export interface RangeSDKOptions {
 
 export interface RangeSDKInitOptions {
   onBlock: OnBlock;
+  onTick?: OnTick;
 }
 
 export interface IRangeSDK {
@@ -41,16 +48,16 @@ export interface IRangeSDK {
 
 class RangeSDK implements IRangeSDK {
   private opts: RangeSDKOptions;
-  private runnerId?: string;
   private initOpts?: RangeSDKInitOptions;
   private config?: IRangeConfig;
+
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
+  private tickRuleGroupTaskClient?: KafkaConsumerClient;
 
   constructor(opts: RangeSDKOptions) {
     this.opts = opts;
     const [runnerId] = this.opts.token.split('.');
-    this.runnerId = runnerId;
     logger.info(
       `Initiating rangeSDK for runnerID: ${runnerId}, manager: ${constants.MANAGER_SERVICE.DOMAIN}`,
     );
@@ -78,8 +85,17 @@ class RangeSDK implements IRangeSDK {
         retries: 0,
       },
     );
+    this.tickRuleGroupTaskClient = new KafkaConsumerClient(
+      kafka,
+      this.config.kafkaGroupIds.tickRuleGroupTasks,
+      {
+        retries: 0,
+      },
+    );
+
     await this.initBlockRuleGroupTaskQueue();
     await this.initErrorBlockRuleTaskQueue();
+    await this.initTickRuleGroupTaskQueue();
   }
 
   static async build(
@@ -123,9 +139,12 @@ class RangeSDK implements IRangeSDK {
 
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
-  ): Promise<void> { 
-    const start = dayjs()
-    logger.info(taskPackage, `Received task package, timestamp: ${start.toISOString()}`);
+  ): Promise<void> {
+    const start = dayjs();
+    logger.info(
+      taskPackage,
+      `Received task package, timestamp: ${start.toISOString()}`,
+    );
 
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
@@ -148,7 +167,13 @@ class RangeSDK implements IRangeSDK {
       }),
     ]);
 
-    logger.info(taskPackage, `block and alert rules fetched successfully, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
+    logger.info(
+      taskPackage,
+      `block and alert rules fetched successfully, time taken: ${dayjs().diff(
+        start,
+        'milliseconds',
+      )} ms`,
+    );
 
     // call the acknowledgement API and mark the package as done if block is not found or rule group is empty
     if (!block || rules.length === 0) {
@@ -174,7 +199,13 @@ class RangeSDK implements IRangeSDK {
           }
         : {}),
     });
-    logger.info(taskPackage, `block processed successfully, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
+    logger.info(
+      taskPackage,
+      `block processed successfully, time taken: ${dayjs().diff(
+        start,
+        'milliseconds',
+      )} ms`,
+    );
   }
 
   private async initErrorBlockRuleTaskQueue() {
@@ -269,11 +300,14 @@ class RangeSDK implements IRangeSDK {
     const events = await Promise.all(
       rules.map(async (rule) => {
         try {
-          const start = dayjs()
-          logger.info({
-            block: {network: block.network, height: block.height},
-            rule
-          }, `Process started for block with rule. timestamp: ${start.toISOString()}`);
+          const start = dayjs();
+          logger.info(
+            {
+              block: { network: block.network, height: block.height },
+              rule,
+            },
+            `Process started for block with rule. timestamp: ${start.toISOString()}`,
+          );
 
           if (!this.initOpts) {
             throw new Error('SDK Init not called, onBlock missing');
@@ -323,10 +357,16 @@ class RangeSDK implements IRangeSDK {
           }));
 
           if (!ruleResults.length) {
-            logger.info({
-              block: {network: block.network, height: block.height},
-              rule
-            }, `block and alert rule processed successfully with zero alert events, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
+            logger.info(
+              {
+                block: { network: block.network, height: block.height },
+                rule,
+              },
+              `block and alert rule processed successfully with zero alert events, time taken: ${dayjs().diff(
+                start,
+                'milliseconds',
+              )} ms`,
+            );
             return [];
           }
 
@@ -334,12 +374,203 @@ class RangeSDK implements IRangeSDK {
             token: this.opts.token,
             workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
+            ruleGroupId: rule.ruleGroupId,
             alerts: ruleResults,
           });
-          logger.info({
-            block: {network: block.network, height: block.height},
-            rule
-          }, `block and alert rule processed successfully with alert events, time taken: ${ dayjs().diff(start, 'milliseconds')} ms`)
+          logger.info(
+            {
+              block: { network: block.network, height: block.height },
+              rule,
+            },
+            `block and alert rule processed successfully with alert events, time taken: ${dayjs().diff(
+              start,
+              'milliseconds',
+            )} ms`,
+          );
+
+          return [];
+        } catch (error) {
+          let err = String(error);
+          if (error instanceof Error) {
+            err = error.message + error.stack ? `\n${error.stack}` : '';
+          }
+
+          return [
+            {
+              ruleId: rule.id,
+              error: err,
+            },
+          ];
+        }
+      }),
+    );
+    return events.flat().flat();
+  }
+
+  private async initTickRuleGroupTaskQueue() {
+    if (!this.config) {
+      throw new Error('SDK not initiated, config missing');
+    }
+    if (!this.tickRuleGroupTaskClient) {
+      throw new Error('SDK not initiated, tickRuleGroupTaskClient missing');
+    }
+    if (!this.initOpts) {
+      throw new Error('SDK init called without options');
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(this.initOpts, 'onTick') === false ||
+      this.initOpts.onTick === undefined ||
+      this.initOpts.onTick === null
+    ) {
+      logger.warn({ message: 'Missing handler for tick based alert rules' });
+      this.initOpts.onTick = {
+        callback: async () => {
+          return [];
+        },
+      };
+    }
+
+    const kafkaTopic = this.config.kafkaTopics.tickRuleGroupTasks;
+    const tickRuleGroupTaskClient =
+      await this.tickRuleGroupTaskClient.subscribeAndConsume(kafkaTopic);
+
+    await tickRuleGroupTaskClient.run({
+      autoCommit: true,
+      eachMessage: async ({ message }) => {
+        const rawMessage = message?.value?.toString();
+        if (!rawMessage) {
+          logger.error(`Error decoding incoming raw message: ${rawMessage}`);
+          return;
+        }
+
+        const parseMessage: TickRuleGroupTaskPackage = JSON.parse(rawMessage);
+        await this.tickRuleGroupTaskQueueHandler(parseMessage);
+      },
+    });
+    logger.info(
+      `Tick Rule Group Task Queue has started on topic: ${kafkaTopic}`,
+    );
+  }
+
+  private async tickRuleGroupTaskQueueHandler(
+    taskPackage: TickRuleGroupTaskPackage,
+  ): Promise<void> {
+    const start = dayjs();
+    logger.info(
+      taskPackage,
+      `Received task package, timestamp: ${start.toISOString()}`,
+    );
+
+    const rules = await fetchAlertRulesByRuleGroupID({
+      token: this.opts.token,
+      ruleGroupId: taskPackage.ruleGroupId,
+    });
+
+    logger.info(
+      taskPackage,
+      `alert rules fetched successfully, time taken: ${dayjs().diff(
+        start,
+        'milliseconds',
+      )} ms`,
+    );
+
+    // call the acknowledgement API and mark the package as done if rule group is empty
+    if (rules.length === 0) {
+      logger.warn({ rules }, 'Early task package ack');
+      await tickTaskAck({
+        token: this.opts.token,
+        timestamp: taskPackage.timestamp,
+        ruleGroupId: taskPackage.ruleGroupId,
+        runnerId: taskPackage.runnerId,
+      });
+      return;
+    }
+
+    const errors = await this.processTickTask(taskPackage.timestamp, rules);
+    await tickTaskAck({
+      token: this.opts.token,
+      timestamp: taskPackage.timestamp,
+      ruleGroupId: taskPackage.ruleGroupId,
+      runnerId: taskPackage.runnerId,
+      ...(errors?.length
+        ? {
+            errors,
+          }
+        : {}),
+    });
+    logger.info(
+      taskPackage,
+      `tick processed successfully, time taken: ${dayjs().diff(
+        start,
+        'milliseconds',
+      )} ms`,
+    );
+  }
+
+  private async processTickTask(
+    timestamp: string,
+    rules: IRangeAlertRule[],
+  ): Promise<IRangeError[]> {
+    const events = await Promise.all(
+      rules.map(async (rule) => {
+        try {
+          const start = dayjs();
+          logger.info(
+            {
+              timestamp,
+              rule,
+            },
+            `Process started for tick: ${timestamp} with rule. execution timestamp: ${start.toISOString()}`,
+          );
+
+          if (!this.initOpts) {
+            throw new Error('SDK Init not called, onBlock missing');
+          }
+          if (!this.initOpts.onTick) {
+            throw new Error('Missing handler for tick based alert rules');
+          }
+
+          const ruleSubResults =
+            (await this.initOpts.onTick.callback(timestamp, rule)) || [];
+          const ruleResults = ruleSubResults.map((subResult) => ({
+            ...subResult,
+            workspaceId: rule.workspaceId || null,
+            alertRuleId: rule.id,
+            time: timestamp,
+          }));
+
+          if (!ruleResults.length) {
+            logger.info(
+              {
+                timestamp,
+                rule,
+              },
+              `tick and alert rule processed successfully with zero alert events, time taken: ${dayjs().diff(
+                start,
+                'milliseconds',
+              )} ms`,
+            );
+            return [];
+          }
+
+          await createAlertEvents({
+            token: this.opts.token,
+            workspaceId: rule.workspaceId || null,
+            alertRuleId: rule.id,
+            ruleGroupId: rule.ruleGroupId,
+            alerts: ruleResults,
+          });
+          logger.info(
+            {
+              timestamp,
+              rule,
+            },
+            `tick and alert rule processed successfully with alert events, time taken: ${dayjs().diff(
+              start,
+              'milliseconds',
+            )} ms`,
+          );
 
           return [];
         } catch (error) {
