@@ -1,30 +1,31 @@
 import { CosmosClient } from '../src/cosmos/CosmosClient';
 
 async function main() {
-  const client = new CosmosClient('https://rpc.osmosis.zone');
+  const rpcEndpoint = '';
+  const client = new CosmosClient(rpcEndpoint);
 
-  console.log(
+  console.assert(
     await client.balance(
       'osmo1ql5dgyyeqnvljg0l8xl986j5zxwjaskg24nztq',
       'uosmo',
     ),
   );
 
-  console.log(
+  console.assert(
     await client.validator(
       'osmovaloper1clpqr4nrk4khgkxj78fcwwh6dl3uw4ep88n0y4',
     ),
   );
 
-  console.log(await client.supply('uosmo'));
+  console.assert(await client.supply('uosmo'));
 
-  console.log(
+  console.assert(
     await client.contractInfo(
       'osmo1mypljhatv0prfr9cjzzvamxdf2ctg34xkt50sudxads9zhqnyneqjuvy26',
     ),
   );
 
-  console.log(
+  console.assert(
     await client.fetchContractQuery(
       'osmo1lqyn9ncwkcqj8e0pnugu72tyyfehe2tre98c5qfzjg4d3vdw7n5q5a0x37',
       {
@@ -32,6 +33,6 @@ async function main() {
       },
     ),
   );
-  console.log(await client.fetchLatestHeight());
+  console.assert(await client.fetchLatestHeight());
 }
 main();

@@ -10,7 +10,9 @@ import axios from 'axios';
 
 export class CosmosClient {
   constructor(readonly rpcEndpoint: string) {
-    assert(rpcEndpoint, 'rpcEndpoint cannot be empty');
+    if (!rpcEndpoint) {
+      throw new Error('rpcEndpoint cannot be empty');
+    }
   }
 
   async balance(address: string, denom: string): Promise<QueryBalanceResponse> {
