@@ -32,5 +32,6 @@ async function main() {
       },
     ),
   );
+  console.log(await client.fetchLatestHeight());
 }
 main();

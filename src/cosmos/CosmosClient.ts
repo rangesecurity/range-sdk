@@ -54,7 +54,7 @@ export class CosmosClient {
 
   async fetchLatestHeight() {
     const res = await axios.get(`${this.rpcEndpoint}/status`);
-    return res.data?.sync_info.latest_block_height;
+    return res.data?.result.sync_info.latest_block_height;
   }
 
   getCosmosRpcClient() {
