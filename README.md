@@ -72,7 +72,7 @@ const myOnBlock: OnBlock = {
 ```
 
 ```typescript
-// Range Implementation of `todo: ` alert rule
+// Range Implementation of `rpc-status` alert rule
 import {
   RangeSDK,
   OnTick,
@@ -86,7 +86,28 @@ const myOnTick: OnTick = {
     timestamp: string,
     rule: IRangeAlertRule,
   ): Promise<ISubEvent[]> => {
-    // todo:
+    const parameters = rule.parameters;
+
+    // note: if p.ticker is set as 10, the rule will run on each 10 minutes
+    if (dayjs(timestamp).get('minute') % p.ticker !== 0) {
+      return [];
+    }
+
+    try {
+      await axios.get(`https://rpc.osmosis.zone/status`);
+      return [];
+    } catch (error) {
+      return [
+        {
+          details: {
+            message: `Osmosis public RPC is down: ${JSON.stringify(error).slice(0, 100)}...`,
+          },
+          txHash: '',
+          addressesInvolved: [],
+          caption: 'Osmosis public RPC down',
+        },
+      ];
+    }
   },
 };
 
