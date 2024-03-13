@@ -1,10 +1,7 @@
 import { cosmos, cosmwasm, ibc, osmosis } from 'osmojs';
 import { assert } from 'console';
 import { QueryValidatorResponse } from 'osmojs/types/codegen/cosmos/staking/v1beta1/query';
-import {
-  QueryContractInfoResponse,
-  QuerySmartContractStateResponse,
-} from 'osmojs/types/codegen/cosmwasm/wasm/v1/query';
+import { QueryContractInfoResponse } from 'osmojs/types/codegen/cosmwasm/wasm/v1/query';
 import {
   QueryBalanceResponse,
   QuerySupplyOfResponse,
@@ -44,10 +41,7 @@ export class CosmosClient {
     });
   }
 
-  async fetchContractQuery(
-    address: string,
-    queryData: object,
-  ): Promise<QuerySmartContractStateResponse> {
+  async fetchContractQuery(address: string, queryData: object) {
     const client = await this.getCosmwasmRpcClient();
     const res = await client.cosmwasm.wasm.v1.smartContractState({
       address,

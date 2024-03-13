@@ -37,7 +37,7 @@ export interface RangeSDKOptions {
 }
 
 export interface RangeSDKInitOptions {
-  onBlock: OnBlock;
+  onBlock?: OnBlock;
   onTick?: OnTick;
 }
 
@@ -64,6 +64,12 @@ class RangeSDK implements IRangeSDK {
   }
 
   async init(initOpts: RangeSDKInitOptions): Promise<void> {
+    if (!initOpts.onBlock && !initOpts.onTick) {
+      throw new Error(
+        'At least one of the callbacks (onBlock or onTick) are required to initialise the sdk',
+      );
+    }
+
     /**
      * Fetch config from the manager and setup task queues
      */
@@ -113,6 +119,26 @@ class RangeSDK implements IRangeSDK {
     }
     if (!this.blockRuleGroupTaskClient) {
       throw new Error('SDK not initiated, blockRuleGroupTaskClient missing');
+    }
+    if (!this.initOpts) {
+      throw new Error('SDK init called without options');
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(this.initOpts, 'onBlock') ===
+        false ||
+      this.initOpts.onBlock === undefined ||
+      this.initOpts.onBlock === null
+    ) {
+      logger.warn({ message: 'Missing handler for block based alert rules' });
+      this.initOpts.onBlock = {
+        callback: async (block, rule) => {
+          logger.error({
+            message: `Missing handler for block based alert rules. Block: network: ${block.network}, height: ${block.height}, Rule: type: ${rule.ruleType}, id: ${rule.id}`,
+          });
+          return [];
+        },
+      };
     }
 
     const kafkaTopic = this.config.kafkaTopics.blockRuleGroupTasks;
@@ -312,6 +338,9 @@ class RangeSDK implements IRangeSDK {
           if (!this.initOpts) {
             throw new Error('SDK Init not called, onBlock missing');
           }
+          if (!this.initOpts.onBlock) {
+            throw new Error('Missing handler for block based alert rules');
+          }
 
           const blockTimestamp = dayjs(block.timestamp);
           if (
@@ -425,7 +454,10 @@ class RangeSDK implements IRangeSDK {
     ) {
       logger.warn({ message: 'Missing handler for tick based alert rules' });
       this.initOpts.onTick = {
-        callback: async () => {
+        callback: async (timestamp, rule) => {
+          logger.error({
+            message: `Missing handler for tick based alert rules. Timestamp: ${timestamp}, Rule: type: ${rule.ruleType}, id: ${rule.id}`,
+          });
           return [];
         },
       };
@@ -605,6 +637,9 @@ class RangeSDK implements IRangeSDK {
 
     if (this.errorBlockRuleTaskClient) {
       await this.errorBlockRuleTaskClient.gracefulShutdown();
+    }
+    if (this.tickRuleGroupTaskClient) {
+      await this.tickRuleGroupTaskClient.gracefulShutdown();
     }
   }
 }

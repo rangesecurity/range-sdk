@@ -45,7 +45,7 @@ class TestRangeSDK implements IRangeSDK {
     blockInfo: { network: string; height: string },
     rule: IRangeAlertRule,
   ) {
-    if (!this.initOpts) {
+    if (!this.initOpts || !this.initOpts.onBlock) {
       throw new Error(
         'TestRangeSDK not Init, please provide with the onBlock Method to run block and rule against',
       );
@@ -62,13 +62,23 @@ class TestRangeSDK implements IRangeSDK {
   }
 
   async assertRuleWithBlock(block: IRangeBlock, rule: IRangeAlertRule) {
-    if (!this.initOpts) {
+    if (!this.initOpts || !this.initOpts.onBlock) {
       throw new Error(
         'TestRangeSDK not Init, please provide with the onBlock Method to run block and rule against',
       );
     }
 
     return this.initOpts.onBlock.callback(block, rule);
+  }
+
+  async assertRuleWithTick(timestamp: string, rule: IRangeAlertRule) {
+    if (!this.initOpts || !this.initOpts.onTick) {
+      throw new Error(
+        'TestRangeSDK not Init, please provide with the onTick Method to run block and rule against',
+      );
+    }
+
+    return this.initOpts.onTick.callback(timestamp, rule);
   }
 
   async gracefulCleanup(): Promise<void> {
