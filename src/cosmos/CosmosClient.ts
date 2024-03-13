@@ -6,6 +6,7 @@ import {
   QueryBalanceResponse,
   QuerySupplyOfResponse,
 } from 'osmojs/types/codegen/cosmos/bank/v1beta1/query';
+import axios from 'axios';
 
 export class CosmosClient {
   constructor(readonly rpcEndpoint: string) {
@@ -49,6 +50,11 @@ export class CosmosClient {
     });
 
     return JSON.parse(Buffer.from(res.data).toString('utf8'));
+  }
+
+  async fetchLatestHeight() {
+    const res = await axios.get(`${this.rpcEndpoint}/status`);
+    return res.data?.sync_info.latest_block_height;
   }
 
   getCosmosRpcClient() {
