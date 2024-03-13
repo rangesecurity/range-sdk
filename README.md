@@ -27,7 +27,13 @@ Here's a basic example to get you started:
 
 ```typescript
 // Range Implementation of `new-contract-code-stored` alert rule
-import { RangeSDK } from '@range-security/range-sdk';
+import {
+  RangeSDK,
+  OnBlock,
+  IRangeBlock,
+  IRangeAlertRule,
+  ISubEvent,
+} from '@range-security/range-sdk';
 
 // Define your OnBlock handler
 const myOnBlock: OnBlock = {
@@ -56,11 +62,44 @@ const myOnBlock: OnBlock = {
   // Defining the RangeSDK instance
   const range = new RangeSDK({
     token: env.RANGE_TOKEN,
-    onBlock: myOnBlock,
   });
 
   // Running the RangeSDK instance
-  await range.init();
+  await range.init({
+    onBlock: myOnBlock,
+  });
+})();
+```
+
+```typescript
+// Range Implementation of `todo: ` alert rule
+import {
+  RangeSDK,
+  OnTick,
+  IRangeAlertRule,
+  ISubEvent,
+} from '@range-security/range-sdk';
+
+// Define your OnTick handler
+const myOnTick: OnTick = {
+  callback: async (
+    timestamp: string,
+    rule: IRangeAlertRule,
+  ): Promise<ISubEvent[]> => {
+    // todo:
+  },
+};
+
+(async () => {
+  // Defining the RangeSDK instance
+  const range = new RangeSDK({
+    token: env.RANGE_TOKEN,
+  });
+
+  // Running the RangeSDK instance
+  await range.init({
+    onTick: myOnTick,
+  });
 })();
 ```
 

@@ -1,9 +1,4 @@
-import {
-  IRangeSDK,
-  OnBlock,
-  RangeSDKInitOptions,
-  RangeSDKOptions,
-} from './sdk';
+import { IRangeSDK, RangeSDKInitOptions, RangeSDKOptions } from './sdk';
 import { getLogger } from './logger';
 import { constants } from './constants';
 import { fetchBlock } from './services/fetchBlock';
@@ -12,14 +7,10 @@ import { IRangeBlock } from './types/chain/IRangeBlock';
 
 const logger = getLogger({ name: 'testRangeSDK' });
 
-export type RangeTestSDKInitOptions = Pick<RangeSDKInitOptions, 'onTick'> & {
-  onBlock?: OnBlock;
-};
-
 class TestRangeSDK implements IRangeSDK {
   private opts: RangeSDKOptions;
   public runnerId?: string;
-  private initOpts?: RangeTestSDKInitOptions;
+  private initOpts?: RangeSDKInitOptions;
 
   constructor(opts: RangeSDKOptions) {
     this.opts = opts;
@@ -31,7 +22,7 @@ class TestRangeSDK implements IRangeSDK {
     );
   }
 
-  async init(initOpts: RangeTestSDKInitOptions): Promise<void> {
+  async init(initOpts: RangeSDKInitOptions): Promise<void> {
     /**
      * Fetch config from the manager and setup task queues
      */
