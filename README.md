@@ -27,7 +27,13 @@ Here's a basic example to get you started:
 
 ```typescript
 // Range Implementation of `new-contract-code-stored` alert rule
-import { RangeSDK } from '@range-security/range-sdk';
+import {
+  RangeSDK,
+  OnBlock,
+  IRangeBlock,
+  IRangeAlertRule,
+  ISubEvent,
+} from '@range-security/range-sdk';
 
 // Define your OnBlock handler
 const myOnBlock: OnBlock = {
@@ -56,11 +62,65 @@ const myOnBlock: OnBlock = {
   // Defining the RangeSDK instance
   const range = new RangeSDK({
     token: env.RANGE_TOKEN,
-    onBlock: myOnBlock,
   });
 
   // Running the RangeSDK instance
-  await range.init();
+  await range.init({
+    onBlock: myOnBlock,
+  });
+})();
+```
+
+```typescript
+// Range Implementation of `rpc-status` alert rule
+import {
+  RangeSDK,
+  OnTick,
+  IRangeAlertRule,
+  ISubEvent,
+} from '@range-security/range-sdk';
+
+// Define your OnTick handler
+const myOnTick: OnTick = {
+  callback: async (
+    timestamp: string,
+    rule: IRangeAlertRule,
+  ): Promise<ISubEvent[]> => {
+    const parameters = rule.parameters;
+
+    // note: if p.ticker is set as 10, the rule will run on each 10 minutes
+    if (dayjs(timestamp).get('minute') % p.ticker !== 0) {
+      return [];
+    }
+
+    try {
+      await axios.get(`https://rpc.osmosis.zone/status`);
+      return [];
+    } catch (error) {
+      return [
+        {
+          details: {
+            message: `Osmosis public RPC is down: ${JSON.stringify(error).slice(0, 100)}...`,
+          },
+          txHash: '',
+          addressesInvolved: [],
+          caption: 'Osmosis public RPC down',
+        },
+      ];
+    }
+  },
+};
+
+(async () => {
+  // Defining the RangeSDK instance
+  const range = new RangeSDK({
+    token: env.RANGE_TOKEN,
+  });
+
+  // Running the RangeSDK instance
+  await range.init({
+    onTick: myOnTick,
+  });
 })();
 ```
 
