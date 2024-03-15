@@ -1,6 +1,6 @@
 {
   "name": "@range-security/range-sdk",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "SDK for easy custom alerts",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
@@ -36,7 +36,7 @@
     "dayjs": "^1.11.10",
     "kafkajs": "^2.2.4",
     "lru-cache": "^10.0.1",
-    "osmojs": "^15.2.1",
+    "osmojs": "^16.9.0",
     "pino": "^8.15.1",
     "zod": "^3.21.4"
   },
