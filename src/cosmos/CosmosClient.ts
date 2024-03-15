@@ -1,12 +1,11 @@
 import { cosmos, cosmwasm, ibc, osmosis } from 'osmojs';
-import { assert } from 'console';
-import { QueryValidatorResponse } from 'osmojs/types/codegen/cosmos/staking/v1beta1/query';
-import { QueryContractInfoResponse } from 'osmojs/types/codegen/cosmwasm/wasm/v1/query';
+import axios from 'axios';
 import {
   QueryBalanceResponse,
   QuerySupplyOfResponse,
-} from 'osmojs/types/codegen/cosmos/bank/v1beta1/query';
-import axios from 'axios';
+} from 'osmojs/dist/codegen/cosmos/bank/v1beta1/query';
+import { QueryValidatorResponse } from 'osmojs/dist/codegen/cosmos/staking/v1beta1/query';
+import { QueryContractInfoResponse } from 'osmojs/dist/codegen/cosmwasm/wasm/v1/query';
 
 export class CosmosClient {
   constructor(readonly rpcEndpoint: string) {

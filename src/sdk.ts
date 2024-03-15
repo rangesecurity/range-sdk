@@ -570,6 +570,7 @@ class RangeSDK implements IRangeSDK {
             workspaceId: rule.workspaceId || null,
             alertRuleId: rule.id,
             time: timestamp,
+            network: rule.network,
           }));
 
           if (!ruleResults.length) {
