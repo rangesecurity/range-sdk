@@ -1414,3 +1414,18 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMint {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMintData;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMintData {
+    sender: string;
+    amount: Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMintAmount;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMintAmount {
+    denom: string;
+    amount: string;
+}
