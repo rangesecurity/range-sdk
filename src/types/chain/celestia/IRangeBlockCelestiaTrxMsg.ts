@@ -782,24 +782,23 @@ export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for msg type: /ibc.core.connection.v1.MsgConnectionOpenInit
-export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
-  extends IRangeMessage {
-  type: CelestiaTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
-  data: {
-    signer: string;
-    version: {
-      features: string[];
-      identifier: string;
-    };
-    clientId: string;
-    counterparty: {
-      prefix: {
-        keyPrefix: string;
-      };
-      clientId: string;
-    };
-  };
+export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit {
+    type: string;
+    data: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData;
 }
+interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData {
+    clientId: string;
+    counterparty: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty;
+    signer: string;
+}
+interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty {
+    clientId: string;
+    prefix: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix;
+}
+interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix {
+    keyPrefix: string;
+}
+
 
 // types for msg type: /ibc.core.connection.v1.MsgConnectionOpenTry
 export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
