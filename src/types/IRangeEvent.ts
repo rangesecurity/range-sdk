@@ -11,10 +11,8 @@ export interface IRangeEvent {
   caption: string;
 }
 
-export type ISubEvent = Pick<
-  IRangeEvent,
-  'details' | 'txHash' | 'addressesInvolved' | 'severity' | 'caption'
->;
+export type ISubEvent = Pick<IRangeEvent, 'details' | 'severity' | 'caption'> &
+  Partial<Pick<IRangeEvent, 'txHash' | 'addressesInvolved'>>;
 
 export interface IRangeError {
   ruleId: string;

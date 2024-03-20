@@ -5,7 +5,7 @@ export function getLogger(args: { name: string }) {
     name: args.name,
     timestamp: stdTimeFunctions.isoTime,
     formatters: {
-      level: (label: string, number: number) => {
+      level: (label: string) => {
         return { level: label };
       },
       bindings: () => {

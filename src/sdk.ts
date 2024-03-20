@@ -383,6 +383,8 @@ class RangeSDK implements IRangeSDK {
             time: block.timestamp,
             blockNumber: String(block.height),
             network: block.network,
+            txHash: subResult.txHash || '',
+            addressesInvolved: subResult.addressesInvolved || [],
           }));
 
           if (!ruleResults.length) {
@@ -571,6 +573,8 @@ class RangeSDK implements IRangeSDK {
             alertRuleId: rule.id,
             time: timestamp,
             network: rule.network,
+            txHash: subResult.txHash || '',
+            addressesInvolved: subResult.addressesInvolved || [],
           }));
 
           if (!ruleResults.length) {
