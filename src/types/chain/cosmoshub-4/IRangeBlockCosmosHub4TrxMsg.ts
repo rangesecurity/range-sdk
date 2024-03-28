@@ -438,43 +438,21 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
-  data: {
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmData;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmData {
     portId: string;
-    signer: string;
+    channelId: string;
     proofAck: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-  };
-}
-// types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
-  data: {
-    portId: string;
+    proofHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmProofHeight;
     signer: string;
-    channel: {
-      state: string;
-      version: string;
-      ordering: string;
-      counterparty: {
-        portId: string;
-        channelId: string;
-      };
-      connectionHops: string[];
-    };
-    proofInit: string;
-    proofHeight: {
-      revisionHeight: string;
-    };
-    counterpartyVersion: string;
-  };
 }
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmProofHeight {
+    revisionHeight: string;
+}
+
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
