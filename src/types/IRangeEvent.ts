@@ -1,5 +1,5 @@
 export interface IRangeEvent {
-  details: { message: string };
+  details: { message: string } & Record<string, string>;
   workspaceId: string | null;
   alertRuleId: string;
   time: string;
