@@ -840,19 +840,20 @@ export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinPool
-export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgJoinPool;
-  data: {
-    poolId: string;
-    sender: string;
-    tokenInMaxs: {
-      denom: string;
-      amount: string;
-    }[];
-    shareOutAmount: string;
-  };
+export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPoolData;
 }
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPoolData {
+    sender: string;
+    shareOutAmount: string;
+    tokenInMaxs: Osmosis1TrxMsgOsmosisGammV1Beta1MsgJoinPoolTokenInMaxsItem[];
+}
+interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPoolTokenInMaxsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinSwapExternAmountIn
 export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinSwapExternAmountIn
