@@ -1414,3 +1414,26 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadata {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadataData;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadataData {
+    sender: string;
+    metadata: Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadataMetadata;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadataMetadata {
+    description: string;
+    denomUnits: Osmosis1TrxMsgOsmosisTokenfactoryV1Beta1MsgSetDenomMetadataDenomUnitsItem[];
+    base: string;
+    display: string;
+    name: string;
+    symbol: string;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadataDenomUnitsItem {
+    denom: string;
+    aliases: string[];
+}
