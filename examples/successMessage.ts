@@ -1,27 +1,16 @@
-import {
-  RangeSDK,
-  ISubEvent,
-  OnBlock,
-  IRangeBlock,
-  IRangeAlertRule,
-} from '../src';
+import { RangeSDK, ISubEvent, OnBlock, IRangeBlock } from '../src';
 
 const myOnBlock: OnBlock = {
-  callback: async (
-    block: IRangeBlock,
-    rule: IRangeAlertRule,
-  ): Promise<ISubEvent[]> => {
+  callback: async (block: IRangeBlock): Promise<ISubEvent[]> => {
     const successMessages = block.transactions
       .filter((tx) => tx.success)
-      .flatMap((tx) => tx.messages);
+      .flatMap((tx: any) => tx.messages);
 
     return successMessages.map((m) => ({
       details: {
         message: 'Success message of type: ' + m.type,
       },
-      workspaceId: rule.workspaceId || null,
-      txHash: m.tx_hash,
-      addressesInvolved: m.addresses,
+      caption: 'Success message',
     }));
   },
 };
