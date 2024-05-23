@@ -16,3 +16,9 @@ export interface ErrorBlockRuleTaskPackage {
   error: string;
   retryCount: number;
 }
+
+export interface TickRuleGroupTaskPackage {
+  timestamp: string;
+  ruleGroupId: string;
+  runnerId: string;
+}
