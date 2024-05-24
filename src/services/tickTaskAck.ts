@@ -6,12 +6,14 @@ export async function tickTaskAck(args: {
   timestamp: string;
   ruleGroupId: string;
   runnerId: string;
+  alertEventsCount: number;
   errors?: {
     ruleId: string;
     error: string;
   }[];
 }): Promise<{ ackId: string }> {
-  const { token, timestamp, ruleGroupId, runnerId, errors } = args;
+  const { token, timestamp, ruleGroupId, runnerId, errors, alertEventsCount } =
+    args;
   const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.ACK_TICK_TASK_PATH}`;
 
   const { data } = await axios.post<{ ackId: string }>(
@@ -20,6 +22,7 @@ export async function tickTaskAck(args: {
       timestamp,
       ruleGroupId,
       runnerId,
+      alertEventsCount,
       ...(errors?.length ? { errors } : {}),
     },
     {

@@ -1,19 +1,26 @@
 {
   "cSpell.words": [
     "Celestia",
+    "clob",
     "Concentratedliquidity",
     "cosmoshub",
     "Delegator",
+    "Dydx",
+    "Dydxprotocol",
     "Feegrant",
     "Fungify",
     "kafkajs",
     "osmo",
     "Redelegate",
     "SASL",
+    "Subaccount",
     "Unbonding",
     "Undelegate",
     "Unjail"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
