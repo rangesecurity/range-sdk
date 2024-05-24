@@ -2,16 +2,24 @@ import { RangeSDK, ISubEvent, OnBlock, IRangeBlock } from '../src';
 
 const myOnBlock: OnBlock = {
   callback: async (block: IRangeBlock): Promise<ISubEvent[]> => {
-    const successMessages = block.transactions
-      .filter((tx) => tx.success)
-      .flatMap((tx: any) => tx.messages);
+    const alerts: ISubEvent[] = [];
 
-    return successMessages.map((m) => ({
-      details: {
-        message: 'Success message of type: ' + m.type,
-      },
-      caption: 'Success message',
-    }));
+    for (const tx of block.transactions) {
+      if (!tx.success) {
+        continue;
+      }
+
+      for (const m of tx.messages) {
+        alerts.push({
+          details: {
+            message: 'Success message of type: ' + m.type,
+          },
+          caption: 'Success message',
+        });
+      }
+    }
+
+    return alerts;
   },
 };
 
