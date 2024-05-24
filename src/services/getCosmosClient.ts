@@ -11,6 +11,7 @@ const CELESTIA_PUBLIC_RPC = 'https://celestia-rpc.mesa.newmetric.xyz/';
 const NOBLE_RPC = 'https://noble-rpc.polkachu.com/';
 const NEUTRON_PUBLIC_RPC = 'https://neutron-rpc.publicnode.com/';
 const NOBLE_TESTNET_RPC = 'https://rpc.testnet.noble.strange.love/';
+const DYDX_RPC = 'https://dydx-rpc.publicnode.com:443';
 
 const networkToClients: Record<Network, CosmosClient> = {
   'osmosis-1': new CosmosClient(OSMOSIS_PUBLIC_RPC),
@@ -22,6 +23,7 @@ const networkToClients: Record<Network, CosmosClient> = {
   'noble-1': new CosmosClient(NOBLE_RPC),
   'neutron-1': new CosmosClient(NEUTRON_PUBLIC_RPC),
   'grand-1': new CosmosClient(NOBLE_TESTNET_RPC),
+  'dydx-mainnet-1': new CosmosClient(DYDX_RPC),
 };
 
 export function getCosmosClient(network: IRangeNetwork): CosmosClient {
