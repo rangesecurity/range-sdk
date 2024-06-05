@@ -577,3 +577,34 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
+    type: string;
+    data: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
+    packet: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
+    acknowledgement: string;
+    proofAcked: string;
+    proofHeight: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutHeight: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
