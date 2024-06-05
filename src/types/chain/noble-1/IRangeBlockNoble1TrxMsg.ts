@@ -577,3 +577,65 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Noble1TrxMsgIbcCoreClientV1MsgCreateClient {
+    type: string;
+    data: Noble1TrxMsgIbcCoreClientV1MsgCreateClientData;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientData {
+    clientState: Noble1TrxMsgIbcCoreClientV1MsgCreateClientClientState;
+    consensusState: Noble1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: Noble1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: Noble1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
+    latestHeight: Noble1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
+    proofSpecs: Noble1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
+    upgradePath: string[];
+    allowUpdateAfterExpiry: boolean;
+    allowUpdateAfterMisbehaviour: boolean;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
+    leafSpec: Noble1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
+    innerSpec: Noble1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
+    hash: string;
+    prehashValue: string;
+    length: string;
+    prefix: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    hash: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
+    '@type': string;
+    timestamp: string;
+    root: Noble1TrxMsgIbcCoreClientV1MsgCreateClientRoot;
+    nextValidatorsHash: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientRoot {
+    hash: string;
+}
