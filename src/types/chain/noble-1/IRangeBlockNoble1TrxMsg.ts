@@ -100,22 +100,25 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
-  data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      }[];
-      to_address: string;
-      from_address: string;
-    }[];
-    '@type': string;
-    grantee: string;
-  };
+export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec {
+    type: string;
+    data: Noble1TrxMsgCosmosAuthzV1beta1MsgExecData;
 }
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgExecData {
+    grantee: string;
+    msgs: Noble1TrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
+    '@type': string;
+    fromAddress: string;
+    toAddress: string;
+    amount: Noble1TrxMsgCosmosAuthzV1Beta1MsgExecAmountItem[];
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgExecAmountItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
