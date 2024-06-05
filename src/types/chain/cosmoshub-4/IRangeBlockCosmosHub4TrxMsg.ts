@@ -32,7 +32,7 @@ export type CosmosHub4TrxMsg =
   | CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
   | CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient;
 
-enum CosmosHub4TrxMsgTypes {
+export enum CosmosHub4TrxMsgTypes {
   CosmosAuthzV1beta1MsgExec = 'cosmos.authz.v1beta1.MsgExec',
   CosmosAuthzV1beta1MsgGrant = 'cosmos.authz.v1beta1.MsgGrant',
   CosmosAuthzV1beta1MsgRevoke = 'cosmos.authz.v1beta1.MsgRevoke',

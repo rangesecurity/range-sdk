@@ -1,6 +1,6 @@
 import { IRangeMessage } from '../IRangeMessage';
 
-enum Neutron1TrxMsgTypes {
+export enum Neutron1TrxMsgTypes {
   CosmosBankV1beta1MsgSend = 'cosmos.bank.v1beta1.MsgSend',
   CosmwasmWasmV1MsgExecuteContract = 'cosmwasm.wasm.v1.MsgExecuteContract',
   CosmwasmWasmV1MsgInstantiateContract = 'cosmwasm.wasm.v1.MsgInstantiateContract',
