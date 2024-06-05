@@ -11,6 +11,7 @@ export enum NetworkEnum {
   Stride1 = 'stride-1',
   Celestia = 'celestia',
   DydxMainnet1 = 'dydx-mainnet-1',
+  Dymension = 'dymension_1100-1',
 }
 
 export const NetworkValidator = z.union(
@@ -25,6 +26,7 @@ export const NetworkValidator = z.union(
     ZodLiteral<'stride-1'>,
     ZodLiteral<'celestia'>,
     ZodLiteral<'dydx-mainnet-1'>,
+    ZodLiteral<'dymension_1100-1'>,
   ],
 );
 

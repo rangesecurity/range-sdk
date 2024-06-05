@@ -34,5 +34,7 @@ async function main() {
     ),
   );
   console.assert(await client.fetchLatestHeight());
+
+  console.assert(await client.getValidators());
 }
 main();
