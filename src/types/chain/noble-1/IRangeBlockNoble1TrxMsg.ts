@@ -577,3 +577,22 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit {
+    type: string;
+    data: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData {
+    clientId: string;
+    counterparty: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty {
+    clientId: string;
+    prefix: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix {
+    keyPrefix: string;
+}
