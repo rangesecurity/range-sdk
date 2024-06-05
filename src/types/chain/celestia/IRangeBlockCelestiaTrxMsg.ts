@@ -84,17 +84,14 @@ export interface CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
 }
 
 // types for msg type:: /celestia.blob.v1.MsgPayForBlobs
-export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
-  extends IRangeMessage {
-  type: CelestiaTrxMsgTypes.CelestiaBlobV1MsgPayForBlobs;
-  data: {
-    signer: string;
-    namespaces: string[];
-    blobSizes: number[];
-    shareCommitments: string[];
-    shareVersions: number[];
-  };
+export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs {
+    type: string;
+    data: CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobsData;
 }
+interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobsData {
+    raw: string;
+}
+
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
