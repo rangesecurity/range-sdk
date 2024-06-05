@@ -577,3 +577,22 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer {
+    type: string;
+    data: Noble1TrxMsgIbcApplicationsTransferV1MsgTransferData;
+}
+interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransferData {
+    sourcePort: string;
+    sourceChannel: string;
+    token: Noble1TrxMsgIbcApplicationsTransferV1MsgTransferToken;
+    sender: string;
+    receiver: string;
+    timeoutTimestamp: string;
+}
+interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransferToken {
+    denom: string;
+    amount: string;
+}
