@@ -118,32 +118,34 @@ export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
-  extends IRangeMessage {
-  type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
-  data: {
-    packet: {
-      data: string;
-      sequence: string;
-      sourcePort: string;
-      sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
-      destinationPort: string;
-      timeoutTimestamp: string;
-      destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-    proofCommitment: string;
-  };
-  status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: unknown;
+export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket {
+    type: string;
+    data: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketData;
 }
+interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketData {
+    packet: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket;
+    proofCommitment: string;
+    proofHeight: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutHeight: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
 export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
