@@ -39,6 +39,7 @@ export enum CelestiaTrxMsgTypes {
 
 export type CelestiaTrxMsg =
   | CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
+  | CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgExec
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgRevoke

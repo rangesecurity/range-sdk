@@ -17,7 +17,8 @@ export interface ITransactionLog {
 export interface IRangeTransaction {
   data: unknown;
   hash: string;
-  logs?: ITransactionLog[] | null;
+  logs?: ITransactionLog[];
+  events?: ITransactionEvent[];
   index: number;
   height: string;
   status: string;
