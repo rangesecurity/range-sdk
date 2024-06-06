@@ -377,19 +377,19 @@ export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
-    timeoutTimestamp: string;
+    timeoutTimestamp?: string;
   };
 }
 
