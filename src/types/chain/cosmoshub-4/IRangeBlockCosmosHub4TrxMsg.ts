@@ -780,7 +780,8 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient {
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
     clientId: string;
