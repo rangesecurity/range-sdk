@@ -422,20 +422,21 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelCloseConfirm
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
-  data: {
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirmData;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirmData {
     portId: string;
-    signer: string;
     channelId: string;
     proofInit: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
-    };
-  };
+    proofHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirmProofHeight;
+    signer: string;
 }
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelCloseConfirmProofHeight {
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
