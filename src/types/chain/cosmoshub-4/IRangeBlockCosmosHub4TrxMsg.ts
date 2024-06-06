@@ -373,25 +373,27 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgUndelegate
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
-  data: {
+export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer {
+    type: string;
+    data: CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferData;
+}
+interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferData {
     sourcePort: string;
     sourceChannel: string;
-    token: {
-      denom: string;
-      amount: string;
-    };
+    token: CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferToken;
     sender: string;
     receiver: string;
-    timeoutHeight?: {
-      revisionNumber?: string;
-      revisionHeight?: string;
-    };
-    timeoutTimestamp?: string;
-  };
+    timeoutHeight: CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight;
 }
+interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferToken {
+    denom: string;
+    amount: string;
+}
+interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
