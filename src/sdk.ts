@@ -166,12 +166,6 @@ class RangeSDK implements IRangeSDK {
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
-    const start = dayjs();
-    logger.info(
-      taskPackage,
-      `Received task package, timestamp: ${start.toISOString()}`,
-    );
-
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
         token: this.opts.token,
@@ -193,14 +187,6 @@ class RangeSDK implements IRangeSDK {
       }),
     ]);
 
-    logger.info(
-      taskPackage,
-      `block and alert rules fetched successfully, time taken: ${dayjs().diff(
-        start,
-        'milliseconds',
-      )} ms`,
-    );
-
     // call the acknowledgement API and mark the package as done if block is not found or rule group is empty
     if (!block || rules.length === 0) {
       logger.warn({ block, rules }, 'Early task package ack');
@@ -209,29 +195,27 @@ class RangeSDK implements IRangeSDK {
         block: taskPackage.block,
         ruleGroupId: taskPackage.ruleGroupId,
         runnerId: taskPackage.runnerId,
+        alertEventsCount: 0,
       });
       return;
     }
 
-    const errors = await this.processBlockTask(block, rules);
+    const { errors, alertEventsCount } = await this.processBlockTask(
+      block,
+      rules,
+    );
     await taskAck({
       token: this.opts.token,
       block: taskPackage.block,
       ruleGroupId: taskPackage.ruleGroupId,
       runnerId: taskPackage.runnerId,
+      alertEventsCount,
       ...(errors?.length
         ? {
             errors,
           }
         : {}),
     });
-    logger.info(
-      taskPackage,
-      `block processed successfully, time taken: ${dayjs().diff(
-        start,
-        'milliseconds',
-      )} ms`,
-    );
   }
 
   private async initErrorBlockRuleTaskQueue() {
@@ -266,8 +250,6 @@ class RangeSDK implements IRangeSDK {
   private async errorBlockRuleTaskQueueHandler(
     taskPackage: ErrorBlockRuleTaskPackage,
   ) {
-    logger.info(taskPackage, `Error package`);
-
     const [rule, block] = await Promise.all([
       fetchAlertRuleByRuleGroupAndRuleID({
         token: this.opts.token,
@@ -304,13 +286,13 @@ class RangeSDK implements IRangeSDK {
       return;
     }
 
-    const [error] = await this.processBlockTask(block, [rule]);
+    const { errors } = await this.processBlockTask(block, [rule]);
     await errorTaskAck({
       token: this.opts.token,
       errorId: taskPackage.errorId,
-      ...(error
+      ...(errors.length
         ? {
-            error: error.error,
+            error: errors[0].error,
             retry: true,
           }
         : {
@@ -322,118 +304,104 @@ class RangeSDK implements IRangeSDK {
   private async processBlockTask(
     block: IRangeBlock,
     rules: IRangeAlertRule[],
-  ): Promise<IRangeError[]> {
+  ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> {
     const events = await Promise.all(
-      rules.map(async (rule) => {
-        try {
-          const start = dayjs();
-          logger.info(
-            {
-              block: { network: block.network, height: block.height },
-              rule,
-            },
-            `Process started for block with rule. timestamp: ${start.toISOString()}`,
-          );
+      rules.map(
+        async (
+          rule,
+        ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> => {
+          try {
+            if (!this.initOpts) {
+              throw new Error('SDK Init not called, onBlock missing');
+            }
+            if (!this.initOpts.onBlock) {
+              throw new Error('Missing handler for block based alert rules');
+            }
 
-          if (!this.initOpts) {
-            throw new Error('SDK Init not called, onBlock missing');
-          }
-          if (!this.initOpts.onBlock) {
-            throw new Error('Missing handler for block based alert rules');
-          }
-
-          const blockTimestamp = dayjs(block.timestamp);
-          if (
-            !(
-              (blockTimestamp.isAfter(rule.createdAt) ||
-                blockTimestamp.isSame(rule.createdAt)) &&
-              blockTimestamp.isBefore(
-                rule.deletedAt || '2100-01-01T00:00:00.000',
+            const blockTimestamp = dayjs(block.timestamp);
+            if (
+              !(
+                (blockTimestamp.isAfter(rule.createdAt) ||
+                  blockTimestamp.isSame(rule.createdAt)) &&
+                blockTimestamp.isBefore(
+                  rule.deletedAt || '2100-01-01T00:00:00.000',
+                )
               )
-            )
-          ) {
-            logger.warn(
-              {
-                block: {
-                  network: block.network,
-                  height: block.height,
-                  timestamp: block.timestamp,
+            ) {
+              logger.warn(
+                {
+                  block: {
+                    network: block.network,
+                    height: block.height,
+                    timestamp: block.timestamp,
+                  },
+                  rule: rule,
+                  condition: {
+                    blockYoungerOrSameThanRuleCreation:
+                      blockTimestamp.isAfter(rule.createdAt) ||
+                      blockTimestamp.isSame(rule.createdAt),
+                    blockOlderThanRuleDeletedAt: blockTimestamp.isBefore(
+                      rule.deletedAt || '2100-01-01T00:00:00.000',
+                    ),
+                  },
                 },
-                rule: rule,
-                condition: {
-                  blockYoungerOrSameThanRuleCreation:
-                    blockTimestamp.isAfter(rule.createdAt) ||
-                    blockTimestamp.isSame(rule.createdAt),
-                  blockOlderThanRuleDeletedAt: blockTimestamp.isBefore(
-                    rule.deletedAt || '2100-01-01T00:00:00.000',
-                  ),
+                `rule processing skipped as timestamp conditions fail`,
+              );
+              return { errors: [], alertEventsCount: 0 };
+            }
+
+            const ruleSubResults =
+              (await this.initOpts.onBlock.callback(block, rule)) || [];
+            const ruleResults = ruleSubResults.map((subResult) => ({
+              ...subResult,
+              workspaceId: rule.workspaceId || null,
+              alertRuleId: rule.id,
+              time: block.timestamp,
+              blockNumber: String(block.height),
+              network: block.network,
+              txHash: subResult.txHash || '',
+              addressesInvolved: subResult.addressesInvolved || [],
+            }));
+
+            if (!ruleResults.length) {
+              return { errors: [], alertEventsCount: 0 };
+            }
+
+            await createAlertEvents({
+              token: this.opts.token,
+              workspaceId: rule.workspaceId || null,
+              alertRuleId: rule.id,
+              ruleGroupId: rule.ruleGroupId,
+              alerts: ruleResults,
+            });
+
+            return { errors: [], alertEventsCount: ruleResults.length };
+          } catch (error) {
+            let err = String(error);
+            if (error instanceof Error) {
+              err = error.message + error.stack ? `\n${error.stack}` : '';
+            }
+
+            return {
+              errors: [
+                {
+                  ruleId: rule.id,
+                  error: err,
                 },
-              },
-              `rule processing skipped as timestamp conditions fail`,
-            );
-            return [];
+              ],
+              alertEventsCount: 0,
+            };
           }
-
-          const ruleSubResults =
-            (await this.initOpts.onBlock.callback(block, rule)) || [];
-          const ruleResults = ruleSubResults.map((subResult) => ({
-            ...subResult,
-            workspaceId: rule.workspaceId || null,
-            alertRuleId: rule.id,
-            time: block.timestamp,
-            blockNumber: String(block.height),
-            network: block.network,
-          }));
-
-          if (!ruleResults.length) {
-            logger.info(
-              {
-                block: { network: block.network, height: block.height },
-                rule,
-              },
-              `block and alert rule processed successfully with zero alert events, time taken: ${dayjs().diff(
-                start,
-                'milliseconds',
-              )} ms`,
-            );
-            return [];
-          }
-
-          await createAlertEvents({
-            token: this.opts.token,
-            workspaceId: rule.workspaceId || null,
-            alertRuleId: rule.id,
-            ruleGroupId: rule.ruleGroupId,
-            alerts: ruleResults,
-          });
-          logger.info(
-            {
-              block: { network: block.network, height: block.height },
-              rule,
-            },
-            `block and alert rule processed successfully with alert events, time taken: ${dayjs().diff(
-              start,
-              'milliseconds',
-            )} ms`,
-          );
-
-          return [];
-        } catch (error) {
-          let err = String(error);
-          if (error instanceof Error) {
-            err = error.message + error.stack ? `\n${error.stack}` : '';
-          }
-
-          return [
-            {
-              ruleId: rule.id,
-              error: err,
-            },
-          ];
-        }
-      }),
+        },
+      ),
     );
-    return events.flat().flat();
+
+    return {
+      errors: events.flat().flatMap((obj) => obj.errors),
+      alertEventsCount: events.flat().reduce((alertEventsCount, obj) => {
+        return obj.alertEventsCount + alertEventsCount;
+      }, 0),
+    };
   }
 
   private async initTickRuleGroupTaskQueue() {
@@ -488,24 +456,10 @@ class RangeSDK implements IRangeSDK {
   private async tickRuleGroupTaskQueueHandler(
     taskPackage: TickRuleGroupTaskPackage,
   ): Promise<void> {
-    const start = dayjs();
-    logger.info(
-      taskPackage,
-      `Received task package, timestamp: ${start.toISOString()}`,
-    );
-
     const rules = await fetchAlertRulesByRuleGroupID({
       token: this.opts.token,
       ruleGroupId: taskPackage.ruleGroupId,
     });
-
-    logger.info(
-      taskPackage,
-      `alert rules fetched successfully, time taken: ${dayjs().diff(
-        start,
-        'milliseconds',
-      )} ms`,
-    );
 
     // call the acknowledgement API and mark the package as done if rule group is empty
     if (rules.length === 0) {
@@ -515,113 +469,97 @@ class RangeSDK implements IRangeSDK {
         timestamp: taskPackage.timestamp,
         ruleGroupId: taskPackage.ruleGroupId,
         runnerId: taskPackage.runnerId,
+        alertEventsCount: 0,
       });
       return;
     }
 
-    const errors = await this.processTickTask(taskPackage.timestamp, rules);
+    const { errors, alertEventsCount } = await this.processTickTask(
+      taskPackage.timestamp,
+      rules,
+    );
     await tickTaskAck({
       token: this.opts.token,
       timestamp: taskPackage.timestamp,
       ruleGroupId: taskPackage.ruleGroupId,
       runnerId: taskPackage.runnerId,
+      alertEventsCount,
       ...(errors?.length
         ? {
             errors,
           }
         : {}),
     });
-    logger.info(
-      taskPackage,
-      `tick processed successfully, time taken: ${dayjs().diff(
-        start,
-        'milliseconds',
-      )} ms`,
-    );
   }
 
   private async processTickTask(
     timestamp: string,
     rules: IRangeAlertRule[],
-  ): Promise<IRangeError[]> {
+  ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> {
     const events = await Promise.all(
-      rules.map(async (rule) => {
-        try {
-          const start = dayjs();
-          logger.info(
-            {
-              timestamp,
-              rule,
-            },
-            `Process started for tick: ${timestamp} with rule. execution timestamp: ${start.toISOString()}`,
-          );
+      rules.map(
+        async (
+          rule,
+        ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> => {
+          try {
+            if (!this.initOpts) {
+              throw new Error('SDK Init not called, onBlock missing');
+            }
+            if (!this.initOpts.onTick) {
+              throw new Error('Missing handler for tick based alert rules');
+            }
 
-          if (!this.initOpts) {
-            throw new Error('SDK Init not called, onBlock missing');
+            const ruleSubResults =
+              (await this.initOpts.onTick.callback(timestamp, rule)) || [];
+            const ruleResults = ruleSubResults.map((subResult) => ({
+              ...subResult,
+              workspaceId: rule.workspaceId || null,
+              alertRuleId: rule.id,
+              time: timestamp,
+              network: rule.network,
+              txHash: subResult.txHash || '',
+              addressesInvolved: subResult.addressesInvolved || [],
+            }));
+
+            if (!ruleResults.length) {
+              return { errors: [], alertEventsCount: 0 };
+            }
+
+            await createAlertEvents({
+              token: this.opts.token,
+              workspaceId: rule.workspaceId || null,
+              alertRuleId: rule.id,
+              ruleGroupId: rule.ruleGroupId,
+              alerts: ruleResults,
+            });
+
+            return { errors: [], alertEventsCount: ruleResults.length };
+          } catch (error) {
+            let err = String(error);
+            if (error instanceof Error) {
+              err = error.message + error.stack ? `\n${error.stack}` : '';
+            }
+
+            return {
+              errors: [
+                {
+                  ruleId: rule.id,
+                  error: err,
+                },
+              ],
+              alertEventsCount: 0,
+            };
           }
-          if (!this.initOpts.onTick) {
-            throw new Error('Missing handler for tick based alert rules');
-          }
-
-          const ruleSubResults =
-            (await this.initOpts.onTick.callback(timestamp, rule)) || [];
-          const ruleResults = ruleSubResults.map((subResult) => ({
-            ...subResult,
-            workspaceId: rule.workspaceId || null,
-            alertRuleId: rule.id,
-            time: timestamp,
-            network: rule.network,
-          }));
-
-          if (!ruleResults.length) {
-            logger.info(
-              {
-                timestamp,
-                rule,
-              },
-              `tick and alert rule processed successfully with zero alert events, time taken: ${dayjs().diff(
-                start,
-                'milliseconds',
-              )} ms`,
-            );
-            return [];
-          }
-
-          await createAlertEvents({
-            token: this.opts.token,
-            workspaceId: rule.workspaceId || null,
-            alertRuleId: rule.id,
-            ruleGroupId: rule.ruleGroupId,
-            alerts: ruleResults,
-          });
-          logger.info(
-            {
-              timestamp,
-              rule,
-            },
-            `tick and alert rule processed successfully with alert events, time taken: ${dayjs().diff(
-              start,
-              'milliseconds',
-            )} ms`,
-          );
-
-          return [];
-        } catch (error) {
-          let err = String(error);
-          if (error instanceof Error) {
-            err = error.message + error.stack ? `\n${error.stack}` : '';
-          }
-
-          return [
-            {
-              ruleId: rule.id,
-              error: err,
-            },
-          ];
-        }
-      }),
+        },
+      ),
     );
-    return events.flat().flat();
+
+    return {
+      errors: events.flat().flatMap((obj) => obj.errors),
+      alertEventsCount: events.flat().reduce((alertEventsCount, obj) => {
+        return obj.alertEventsCount + alertEventsCount;
+      }, 0),
+    };
   }
 
   async gracefulCleanup() {

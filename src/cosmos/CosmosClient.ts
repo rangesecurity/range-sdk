@@ -3,12 +3,15 @@ import axios from 'axios';
 import {
   QueryBalanceResponse,
   QuerySupplyOfResponse,
-} from 'osmojs/dist/codegen/cosmos/bank/v1beta1/query';
-import { QueryValidatorResponse } from 'osmojs/dist/codegen/cosmos/staking/v1beta1/query';
-import { QueryContractInfoResponse } from 'osmojs/dist/codegen/cosmwasm/wasm/v1/query';
+} from 'osmojs/cosmos/bank/v1beta1/query';
+import { QueryValidatorResponse } from 'osmojs/cosmos/staking/v1beta1/query';
+import { QueryContractInfoResponse } from 'osmojs/cosmwasm/wasm/v1/query';
 
 export class CosmosClient {
-  constructor(readonly rpcEndpoint: string) {
+  constructor(
+    readonly rpcEndpoint: string,
+    readonly lcd?: string,
+  ) {
     if (!rpcEndpoint) {
       throw new Error('rpcEndpoint cannot be empty');
     }
@@ -80,5 +83,23 @@ export class CosmosClient {
     return cosmwasm.ClientFactory.createRPCQueryClient({
       rpcEndpoint: this.rpcEndpoint,
     });
+  }
+
+  async getValidators(): Promise<
+    | {
+        address: string;
+        start_height: string;
+        index_offset: string;
+        jailed_until: string;
+        tombstoned: boolean;
+        missed_blocks_counter: string;
+      }[]
+    | null
+  > {
+    if (!this.lcd) return Promise.resolve(null);
+    const res = await axios.get(
+      `${this.lcd}/cosmos/slashing/v1beta1/signing_infos?pagination.limit=1000000`,
+    );
+    return res.data.info;
   }
 }
