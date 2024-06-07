@@ -232,15 +232,14 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
-export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteData;
-}
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteData {
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgVote;
+  data: {
     voter: string;
     option: string;
+    proposalId?: string;
+  };
 }
-
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVoteWeighted
 export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVoteWeighted
