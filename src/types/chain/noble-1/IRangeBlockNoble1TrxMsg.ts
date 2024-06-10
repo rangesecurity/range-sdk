@@ -577,3 +577,83 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry {
+    type: string;
+    data: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryData;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryData {
+    clientId: string;
+    clientState: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryClientState;
+    counterparty: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterparty;
+    counterpartyVersions: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterpartyVersionsItem[];
+    proofHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofHeight;
+    proofInit: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryConsensusHeight;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryFrozenHeight;
+    latestHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLatestHeight;
+    proofSpecs: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofSpecsItem[];
+    upgradePath: string[];
+    allowUpdateAfterExpiry: boolean;
+    allowUpdateAfterMisbehaviour: boolean;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryFrozenHeight {
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLatestHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofSpecsItem {
+    leafSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLeafSpec;
+    innerSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryInnerSpec;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLeafSpec {
+    hash: string;
+    prehashValue: string;
+    length: string;
+    prefix: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    hash: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterparty {
+    clientId: string;
+    connectionId: string;
+    prefix: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryPrefix;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryPrefix {
+    keyPrefix: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterpartyVersionsItem {
+    identifier: string;
+    features: string[];
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryConsensusHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
