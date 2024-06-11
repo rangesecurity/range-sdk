@@ -477,34 +477,31 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket {
-    type: string;
-    data: CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketData;
-}
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketData {
-    packet: CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketPacket;
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
+  data: {
+    packet: {
+      sequence: string;
+      sourcePort: string;
+      sourceChannel: string;
+      destinationPort: string;
+      destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
+    };
     proofCommitment: string;
-    proofHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
     signer: string;
+  };
 }
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight;
-}
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout
