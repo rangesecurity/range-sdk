@@ -341,23 +341,22 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgDelegate
 }
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgEditValidator
-export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidatorData;
-}
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidatorData {
-    description: CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidatorDescription;
+export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
+  data: {
+    description: {
+      moniker: string;
+      identity?: string;
+      website?: string;
+      securityContact?: string;
+      details?: string;
+    };
     validatorAddress: string;
-    commissionRate: string;
+    commissionRate?: string;
+    minSelfDelegation?: string;
+  };
 }
-interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidatorDescription {
-    moniker: string;
-    identity: string;
-    website: string;
-    securityContact: string;
-    details: string;
-}
-
 
 // types for msg type:: /cosmos.staking.v1beta1.MsgUndelegate
 export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgUndelegate
