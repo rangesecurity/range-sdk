@@ -435,25 +435,25 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofAcked: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     acknowledgement: string;
+    proofAcked: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
+    signer: string;
   };
 }
 
