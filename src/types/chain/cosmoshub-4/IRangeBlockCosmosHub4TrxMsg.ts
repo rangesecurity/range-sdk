@@ -213,25 +213,37 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalData;
-}
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalData {
-    content: CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalContent;
-    initialDeposit: CosmosHub4TrxMsgCosmosGovV1Beta1MsgSubmitProposalInitialDepositItem[];
+export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
+  data: {
+    content:
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal;
+    initialDeposit: {
+      denom: string;
+      amount: string;
+    }[];
     proposer: string;
-}
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalContent {
-    '@type': string;
-    title: string;
-    description: string;
-}
-interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalInitialDepositItem {
-    denom: string;
-    amount: string;
+  };
 }
 
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal {
+  '@type': '/cosmos.gov.v1beta1.TextProposal';
+  title: string;
+  description: string;
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal {
+  '@type': '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal';
+  title: string;
+  description: string;
+  plan: {
+    info: string;
+    name: string;
+    height: string;
+  };
+}
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
 export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
