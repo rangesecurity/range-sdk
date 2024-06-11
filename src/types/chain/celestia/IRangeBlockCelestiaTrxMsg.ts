@@ -114,33 +114,46 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant {
-    type: string;
-    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantData;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantData {
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+  data: {
     granter: string;
     grantee: string;
-    grant: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantGrant;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantGrant {
-    authorization: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
-    '@type': string;
-    allocations: CelestiaTrxMsgCosmosAuthzV1Beta1MsgGrantAllocationsItem[];
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAllocationsItem {
-    sourcePort: string;
-    sourceChannel: string;
-    spendLimit: CelestiaTrxMsgCosmosAuthzV1Beta1MsgGrantSpendLimitItem[];
-    allowList: string[];
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantSpendLimitItem {
-    denom: string;
-    amount: string;
+    grant:
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+  };
 }
 
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: {
+      denom: string;
+      amount: string;
+    }[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
+  };
+}
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgRevoke
