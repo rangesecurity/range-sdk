@@ -105,7 +105,7 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization 
     };
     authorizationType: string;
   };
-  expiration: string;
+  expiration?: string;
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
