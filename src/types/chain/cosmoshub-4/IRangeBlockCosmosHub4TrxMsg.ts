@@ -183,19 +183,40 @@ export interface CosmosHub4TrxMsgWithdrawValidatorCommission
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData;
-}
-interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData {
+export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
+  data: {
     granter: string;
     grantee: string;
-    allowance: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance;
-}
-interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance {
-    '@type': string;
+    allowance:
+      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance
+      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataPeriodicAllowance;
+  };
 }
 
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.BasicAllowance';
+  expiration?: string;
+  spendLimit: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataPeriodicAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.PeriodicAllowance';
+  period: string;
+  periodSpendLimit: {
+    denom: string;
+    amount: string;
+  }[];
+  periodCanSpend: {
+    denom: string;
+    amount: string;
+  }[];
+  periodReset: string;
+}
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgDeposit
 export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgDeposit
