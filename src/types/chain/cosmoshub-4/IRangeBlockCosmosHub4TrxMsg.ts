@@ -89,21 +89,28 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
-    '@type': string;
-    grant: {
-      expiration: string;
-      authorization: {
-        '@type': string;
-        allow_list: {
-          address: string[];
-        };
-        max_tokens: null;
-        authorization_type: string;
-      };
-    };
-    grantee: string;
     granter: string;
+    grantee: string;
+    grant:
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+  msg: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
