@@ -2,6 +2,7 @@ import { IRangeMessage } from '../IRangeMessage';
 
 export enum CelestiaTrxMsgTypes {
   CelestiaQgbV1MsgRegisterEVMAddress = 'celestia.qgb.v1.MsgRegisterEVMAddress',
+  CelestiaBlobV1MsgPayForBlobs = 'celestia.blob.v1.MsgPayForBlobs',
   CosmosAuthzV1beta1MsgExec = 'cosmos.authz.v1beta1.MsgExec',
   CosmosAuthzV1beta1MsgGrant = 'cosmos.authz.v1beta1.MsgGrant',
   CosmosAuthzV1beta1MsgRevoke = 'cosmos.authz.v1beta1.MsgRevoke',
@@ -38,6 +39,7 @@ export enum CelestiaTrxMsgTypes {
 
 export type CelestiaTrxMsg =
   | CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
+  | CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgExec
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
   | CelestiaTrxMsgCosmosAuthzV1beta1MsgRevoke
@@ -78,6 +80,19 @@ export interface CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
   data: {
     evmAddress: string;
     validatorAddress: string;
+  };
+}
+
+// types for msg type:: /celestia.blob.v1.MsgPayForBlobs
+export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
+  extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.CelestiaBlobV1MsgPayForBlobs;
+  data: {
+    signer: string;
+    namespaces: string[];
+    blobSizes: number[];
+    shareCommitments: string[];
+    shareVersions: number[];
   };
 }
 
@@ -624,6 +639,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
       '@type': string;
       signedHeader: {
         commit: {
+          round?: number;
           height: string;
           blockId: {
             hash: string;

@@ -32,7 +32,7 @@ export type CosmosHub4TrxMsg =
   | CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
   | CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient;
 
-enum CosmosHub4TrxMsgTypes {
+export enum CosmosHub4TrxMsgTypes {
   CosmosAuthzV1beta1MsgExec = 'cosmos.authz.v1beta1.MsgExec',
   CosmosAuthzV1beta1MsgGrant = 'cosmos.authz.v1beta1.MsgGrant',
   CosmosAuthzV1beta1MsgRevoke = 'cosmos.authz.v1beta1.MsgRevoke',
@@ -89,21 +89,28 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
-    '@type': string;
-    grant: {
-      expiration: string;
-      authorization: {
-        '@type': string;
-        allow_list: {
-          address: string[];
-        };
-        max_tokens: null;
-        authorization_type: string;
-      };
-    };
-    grantee: string;
     granter: string;
+    grantee: string;
+    grant:
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration?: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+  msg: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
@@ -187,15 +194,35 @@ export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    '@type': string;
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      expiration: string | null;
-      spend_limit: unknown[]; //todo: fine other data to figure out exact type
-    };
+    grantee: string;
+    allowance:
+      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance
+      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataPeriodicAllowance;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.BasicAllowance';
+  expiration?: string;
+  spendLimit: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataPeriodicAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.PeriodicAllowance';
+  period: string;
+  periodSpendLimit: {
+    denom: string;
+    amount: string;
+  }[];
+  periodCanSpend: {
+    denom: string;
+    amount: string;
+  }[];
+  periodReset: string;
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgDeposit
@@ -217,17 +244,31 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
-    content: {
-      '@type': string;
-      title: string;
-      description: string;
-    };
-    proposer: string;
-    initial_deposit: {
+    content:
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal;
+    initialDeposit: {
       denom: string;
       amount: string;
     }[];
+    proposer: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal {
+  '@type': '/cosmos.gov.v1beta1.TextProposal';
+  title: string;
+  description: string;
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal {
+  '@type': '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal';
+  title: string;
+  description: string;
+  plan: {
+    info: string;
+    name: string;
+    height: string;
   };
 }
 
@@ -299,30 +340,25 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
-    '@type': string;
+    description: {
+      moniker: string;
+    };
+    commission: {
+      rate: string;
+      maxRate: string;
+      maxChangeRate: string;
+    };
+    minSelfDelegation: string;
+    delegatorAddress: string;
+    validatorAddress: string;
+    pubkey: {
+      '@type': string;
+      key: string;
+    };
     value: {
       denom: string;
       amount: string;
     };
-    pubkey: {
-      key: string;
-      '@type': string;
-    };
-    commission: {
-      rate: string;
-      max_rate: string;
-      max_change_rate: string;
-    };
-    description: {
-      details: string;
-      moniker: string;
-      website: string;
-      identity: string;
-      security_contact: string;
-    };
-    delegator_address: string;
-    validator_address: string;
-    min_self_delegation: string;
   };
 }
 
@@ -346,15 +382,15 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
     description: {
-      details: string;
       moniker: string;
-      website: string;
-      identity: string;
-      securityContact: string;
+      identity?: string;
+      website?: string;
+      securityContact?: string;
+      details?: string;
     };
-    commissionRate: string;
     validatorAddress: string;
-    minSelfDelegation: string;
+    commissionRate?: string;
+    minSelfDelegation?: string;
   };
 }
 
@@ -377,19 +413,19 @@ export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
-    timeoutTimestamp: string;
+    timeoutTimestamp?: string;
   };
 }
 
@@ -399,25 +435,25 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofAcked: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     acknowledgement: string;
+    proofAcked: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
+    signer: string;
   };
 }
 
@@ -443,14 +479,16 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
     portId: string;
-    signer: string;
+    channelId: string;
     proofAck: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
+    signer: string;
   };
 }
+
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
   extends IRangeMessage {
@@ -482,21 +520,24 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>;
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
+    signer: string;
   };
 }
 
@@ -506,25 +547,25 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
@@ -533,58 +574,52 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: unknown;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehaviour: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_state: {
+    consensusState: {
+      '@type': string;
+      timestamp: string;
       root: {
         hash: string;
       };
-      '@type': string;
-      timestamp: string;
-      next_validators_hash: string;
+      nextValidatorsHash: string;
     };
+    signer: string;
   };
 }
 
@@ -593,189 +628,149 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgSubmitMisbehaviour;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
+    clientId: string;
     misbehaviour: {
       '@type': string;
-      header_1: {
-        signed_header: {
-          commit: {
-            round: number;
+      clientId: string;
+      header1: {
+        signedHeader: {
+          header: {
+            version: {
+              block: string;
+            };
+            chainId: string;
             height: string;
-            block_id: {
+            time: string;
+            lastBlockId: {
               hash: string;
-              part_set_header: {
-                hash: string;
+              partSetHeader: {
                 total: number;
+                hash: string;
+              };
+            };
+            lastCommitHash: string;
+            dataHash: string;
+            validatorsHash: string;
+            nextValidatorsHash: string;
+            consensusHash: string;
+            appHash: string;
+            lastResultsHash: string;
+            evidenceHash: string;
+            proposerAddress: string;
+          };
+          commit: {
+            height: string;
+            blockId: {
+              hash: string;
+              partSetHeader: {
+                total: number;
+                hash: string;
               };
             };
             signatures: {
-              signature?: string;
+              blockIdFlag: string;
+              validatorAddress?: string;
               timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
+              signature?: string;
             }[];
           };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
         };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
+        validatorSet: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
           proposer: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           };
+          totalVotingPower: string;
+        };
+        trustedHeight: {
+          revisionHeight: string;
+        };
+        trustedValidators: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
         };
       };
-      header_2: {
-        signed_header: {
-          commit: {
-            round: number;
-            height: string;
-            block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            signatures: {
-              signature?: string;
-              timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
-            }[];
-          };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
-        };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
+      header2: {
+        signedHeader: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
           proposer: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           };
+          totalVotingPower: string;
+        };
+        validatorSet: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
+        };
+        trustedHeight: {
+          revisionHeight: string;
+        };
+        trustedValidators: {
+          validators: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          }[];
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
         };
       };
-      client_id: string;
     };
+    signer: string;
   };
 }
 
@@ -784,97 +779,91 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
+    clientId: string;
+    clientMessage: {
       '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
           height: string;
-          block_id: {
+          time: string;
+          lastBlockId: {
             hash: string;
-            part_set_header: {
-              hash: string;
+            partSetHeader: {
               total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
             };
           };
           signatures: {
+            blockIdFlag: string;
+            validatorAddress?: string;
+            timestamp?: string;
             signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
           }[];
         };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
       };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
+      validatorSet: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
         proposer: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         };
+        totalVotingPower: string;
+      };
+      trustedHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        };
+        totalVotingPower: string;
       };
     };
+    signer: string;
   };
 }

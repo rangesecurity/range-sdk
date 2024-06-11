@@ -23,7 +23,7 @@ export type Grand1TrxMsg =
   | Grand1TrxMsgNobleFiatTokenFactoryMsgMint
   | Grand1TrxMsgIbcCoreClientV1MsgCreateClient;
 
-enum Grand1TrxMsgTypes {
+export enum Grand1TrxMsgTypes {
   IbcCoreClientV1MsgUpdateClient = 'ibc.core.client.v1.MsgUpdateClient',
   IbcApplicationsTransferV1MsgTransfer = 'ibc.applications.transfer.v1.MsgTransfer',
   CircleCctpV1MsgReceiveMessage = 'circle.cctp.v1.MsgReceiveMessage',
