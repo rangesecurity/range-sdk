@@ -520,21 +520,24 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>;
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
+    signer: string;
   };
 }
 
