@@ -299,30 +299,25 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
-    '@type': string;
+    description: {
+      moniker: string;
+    };
+    commission: {
+      rate: string;
+      maxRate: string;
+      maxChangeRate: string;
+    };
+    minSelfDelegation: string;
+    delegatorAddress: string;
+    validatorAddress: string;
+    pubkey: {
+      '@type': string;
+      key: string;
+    };
     value: {
       denom: string;
       amount: string;
     };
-    pubkey: {
-      key: string;
-      '@type': string;
-    };
-    commission: {
-      rate: string;
-      max_rate: string;
-      max_change_rate: string;
-    };
-    description: {
-      details: string;
-      moniker: string;
-      website: string;
-      identity: string;
-      security_contact: string;
-    };
-    delegator_address: string;
-    validator_address: string;
-    min_self_delegation: string;
   };
 }
 
