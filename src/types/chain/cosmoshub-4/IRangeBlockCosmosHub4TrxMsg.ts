@@ -85,28 +85,33 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantData;
-}
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantData {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+  data: {
     granter: string;
     grantee: string;
-    grant: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
-}
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
-    authorization: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
-    expiration: string;
-}
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
-    '@type': string;
-    allowList: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAllowList;
-    authorizationType: string;
-}
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAllowList {
-    address: string[];
+    grant:
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+  };
 }
 
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+  msg: string;
+}
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
 export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgRevoke
