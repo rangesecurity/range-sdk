@@ -595,189 +595,149 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgSubmitMisbehaviour;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
+    clientId: string;
     misbehaviour: {
       '@type': string;
-      header_1: {
-        signed_header: {
-          commit: {
-            round: number;
+      clientId: string;
+      header1: {
+        signedHeader: {
+          header: {
+            version: {
+              block: string;
+            };
+            chainId: string;
             height: string;
-            block_id: {
+            time: string;
+            lastBlockId: {
               hash: string;
-              part_set_header: {
-                hash: string;
+              partSetHeader: {
                 total: number;
+                hash: string;
+              };
+            };
+            lastCommitHash: string;
+            dataHash: string;
+            validatorsHash: string;
+            nextValidatorsHash: string;
+            consensusHash: string;
+            appHash: string;
+            lastResultsHash: string;
+            evidenceHash: string;
+            proposerAddress: string;
+          };
+          commit: {
+            height: string;
+            blockId: {
+              hash: string;
+              partSetHeader: {
+                total: number;
+                hash: string;
               };
             };
             signatures: {
-              signature?: string;
+              blockIdFlag: string;
+              validatorAddress?: string;
               timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
+              signature?: string;
             }[];
           };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
         };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
+        validatorSet: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
           proposer: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           };
+          totalVotingPower: string;
+        };
+        trustedHeight: {
+          revisionHeight: string;
+        };
+        trustedValidators: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
         };
       };
-      header_2: {
-        signed_header: {
-          commit: {
-            round: number;
-            height: string;
-            block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            signatures: {
-              signature?: string;
-              timestamp: string;
-              block_id_flag: string;
-              validator_address?: string;
-            }[];
-          };
-          header: {
-            time: string;
-            height: string;
-            version: {
-              app: string;
-              block: string;
-            };
-            app_hash: string;
-            chain_id: string;
-            data_hash: string;
-            evidence_hash: string;
-            last_block_id: {
-              hash: string;
-              part_set_header: {
-                hash: string;
-                total: number;
-              };
-            };
-            consensus_hash: string;
-            validators_hash: string;
-            last_commit_hash: string;
-            proposer_address: string;
-            last_results_hash: string;
-            next_validators_hash: string;
-          };
-        };
-        validator_set: {
-          proposer: {
-            address: string;
-            pub_key: {
-              ed25519: string;
-            };
-            voting_power: string;
-            proposer_priority: string;
-          };
+      header2: {
+        signedHeader: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
-        };
-        trusted_height: {
-          revision_height: string;
-          revision_number: string;
-        };
-        trusted_validators: {
           proposer: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           };
+          totalVotingPower: string;
+        };
+        validatorSet: {
           validators: {
             address: string;
-            pub_key: {
+            pubKey: {
               ed25519: string;
             };
-            voting_power: string;
-            proposer_priority: string;
+            votingPower: string;
           }[];
-          total_voting_power: string;
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
+        };
+        trustedHeight: {
+          revisionHeight: string;
+        };
+        trustedValidators: {
+          validators: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          }[];
+          proposer: {
+            address: string;
+            pubKey: {
+              ed25519: string;
+            };
+            votingPower: string;
+          };
+          totalVotingPower: string;
         };
       };
-      client_id: string;
     };
+    signer: string;
   };
 }
 
