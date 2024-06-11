@@ -237,17 +237,31 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
-    content: {
-      '@type': string;
-      title: string;
-      description: string;
-    };
-    proposer: string;
-    initial_deposit: {
+    content:
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal;
+    initialDeposit: {
       denom: string;
       amount: string;
     }[];
+    proposer: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal {
+  '@type': '/cosmos.gov.v1beta1.TextProposal';
+  title: string;
+  description: string;
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal {
+  '@type': '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal';
+  title: string;
+  description: string;
+  plan: {
+    info: string;
+    name: string;
+    height: string;
   };
 }
 
