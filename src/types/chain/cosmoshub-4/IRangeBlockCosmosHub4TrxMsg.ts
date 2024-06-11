@@ -375,15 +375,15 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgEditValidator
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
     description: {
-      details: string;
       moniker: string;
-      website: string;
-      identity: string;
-      securityContact: string;
+      identity?: string;
+      website?: string;
+      securityContact?: string;
+      details?: string;
     };
-    commissionRate: string;
     validatorAddress: string;
-    minSelfDelegation: string;
+    commissionRate?: string;
+    minSelfDelegation?: string;
   };
 }
 
