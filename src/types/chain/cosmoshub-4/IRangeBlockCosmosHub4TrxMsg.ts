@@ -443,14 +443,16 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
     portId: string;
-    signer: string;
+    channelId: string;
     proofAck: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
+    signer: string;
   };
 }
+
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
   extends IRangeMessage {
