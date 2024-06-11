@@ -529,66 +529,58 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgTimeout
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-export interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient {
-    type: string;
-    data: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientData;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientData {
-    clientState: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientClientState;
-    consensusState: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+export interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
+  data: {
+    clientState: {
+      '@type': string;
+      chainId: string;
+      trustLevel: {
+        numerator: string;
+        denominator: string;
+      };
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
+    };
+    consensusState: {
+      '@type': string;
+      timestamp: string;
+      root: {
+        hash: string;
+      };
+      nextValidatorsHash: string;
+    };
     signer: string;
+  };
 }
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientClientState {
-    '@type': string;
-    chainId: string;
-    trustLevel: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
-    trustingPeriod: string;
-    unbondingPeriod: string;
-    maxClockDrift: string;
-    frozenHeight: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
-    latestHeight: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
-    proofSpecs: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
-    upgradePath: string[];
-    allowUpdateAfterExpiry: boolean;
-    allowUpdateAfterMisbehaviour: boolean;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
-    numerator: string;
-    denominator: string;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
-    leafSpec: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
-    innerSpec: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
-    hash: string;
-    prehashValue: string;
-    length: string;
-    prefix: string;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
-    childOrder: number[];
-    childSize: number;
-    minPrefixLength: number;
-    maxPrefixLength: number;
-    hash: string;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
-    '@type': string;
-    timestamp: string;
-    root: CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientRoot;
-    nextValidatorsHash: string;
-}
-interface CosmosHub4TrxMsgIbcCoreClientV1MsgCreateClientRoot {
-    hash: string;
-}
-
 
 // types for mgs type:: /ibc.core.client.v1.MsgSubmitMisbehaviour
 export interface CosmosHub4TrxMsgIbcCoreClientV1MsgSubmitMisbehaviour
