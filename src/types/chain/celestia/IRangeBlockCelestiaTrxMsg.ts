@@ -82,25 +82,59 @@ export interface CelestiaTrxMsgCelestiaQgbV1MsgRegisterEVMAddress
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec {
-    type: string;
-    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData {
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+  data: {
     grantee: string;
-    msgs: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
-    '@type': string;
-    fromAddress: string;
-    toAddress: string;
-    amount: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecAmountItem[];
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecAmountItem {
-    denom: string;
-    amount: string;
+    msgs: (
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+    )[];
+  };
 }
 
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
+  '@type': '/cosmos.authz.v1beta1.MsgGrant';
+  granter: string;
+  grantee: string;
+  grant: {
+    authorization: {
+      '@type': string;
+      msg: string;
+    };
+  }[];
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgGrantAllowance';
+  granter: string;
+  grantee: string;
+  allowance: {
+    '@type': string;
+    allowance: {
+      '@type': string;
+    };
+    allowedMessages: string[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
+  granter: string;
+  grantee: string;
+}
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
