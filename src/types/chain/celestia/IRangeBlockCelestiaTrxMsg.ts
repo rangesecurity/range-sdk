@@ -841,18 +841,18 @@ export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
-    signer: string;
-    version: {
-      features: string[];
-      identifier: string;
-    };
     clientId: string;
     counterparty: {
+      clientId: string;
       prefix: {
         keyPrefix: string;
       };
-      clientId: string;
     };
+    version?: {
+      features: string[];
+      identifier: string;
+    };
+    signer: string;
   };
 }
 
