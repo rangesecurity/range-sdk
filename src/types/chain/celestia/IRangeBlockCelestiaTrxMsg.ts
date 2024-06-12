@@ -696,7 +696,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
         revisionHeight: string;
@@ -717,7 +717,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
   };
