@@ -273,17 +273,18 @@ export interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      allowance?: {
-        '@type': string;
-        expiration: string;
-      };
-      allowedMessages?: string[];
-    };
+    grantee: string;
+    allowance: CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance;
   };
+}
+
+interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.AllowedMsgAllowance';
+  allowance: {
+    '@type': string;
+  };
+  allowedMessages: string[];
 }
 
 // types for msg type: /cosmos.gov.v1beta1.MsgVote
