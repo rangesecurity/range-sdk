@@ -490,29 +490,34 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
-  data: {
-    portId: string;
-    signer: string;
-    channel: {
-      state: string;
-      version: string;
-      ordering: string;
-      counterparty: {
-        portId: string;
-        channelId: string;
-      };
-      connectionHops: string[];
-    };
-    proofInit: string;
-    proofHeight: {
-      revisionHeight: string;
-    };
-    counterpartyVersion: string;
-  };
+export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry {
+    type: string;
+    data: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryData;
 }
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryData {
+    portId: string;
+    channel: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryChannel;
+    counterpartyVersion: string;
+    proofInit: string;
+    proofHeight: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryProofHeight;
+    signer: string;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryChannel {
+    state: string;
+    ordering: string;
+    counterparty: CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryCounterparty;
+    connectionHops: string[];
+    version: string;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryCounterparty {
+    portId: string;
+    channelId: string;
+}
+interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTryProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgRecvPacket
