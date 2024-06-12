@@ -100,32 +100,55 @@ export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: (
-      | {
-          '@type': string;
-          amount?: {
-            denom: string;
-            amount: string;
-          };
-          delegatorAddress?: string;
-          validatorAddress?: string;
-          withdrawAddress?: string;
-        }
-      | {
-          '@type': string;
-          grant: {
-            expiration: string;
-            authorization: {
-              msg: string;
-              '@type': string;
-            };
-          };
-          grantee: string;
-          granter: string;
-        }
-    )[];
     grantee: string;
+    msgs: (
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+    )[];
   };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
+  '@type': '/cosmos.authz.v1beta1.MsgGrant';
+  granter: string;
+  grantee: string;
+  grant: {
+    authorization: {
+      '@type': string;
+      msg: string;
+    };
+  }[];
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgGrantAllowance';
+  granter: string;
+  grantee: string;
+  allowance: {
+    '@type': string;
+    allowance: {
+      '@type': string;
+    };
+    allowedMessages: string[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
+  granter: string;
+  grantee: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
@@ -133,27 +156,40 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
-    grant: {
-      expiration?: string;
-      authorization:
-        | {
-            '@type': string;
-            allowList: {
-              address: string[];
-            };
-            maxTokens?: {
-              denom: string;
-              amount: string;
-            };
-            authorizationType: string;
-          }
-        | {
-            '@type': string;
-            msg: string;
-          };
-    };
-    grantee: string;
     granter: string;
+    grantee: string;
+    grant:
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: {
+      denom: string;
+      amount: string;
+    }[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
   };
 }
 
@@ -237,17 +273,18 @@ export interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      allowance?: {
-        '@type': string;
-        expiration: string;
-      };
-      allowedMessages?: string[];
-    };
+    grantee: string;
+    allowance: CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance;
   };
+}
+
+interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.AllowedMsgAllowance';
+  allowance: {
+    '@type': string;
+  };
+  allowedMessages: string[];
 }
 
 // types for msg type: /cosmos.gov.v1beta1.MsgVote
@@ -486,13 +523,16 @@ export interface CelestiaTrxMsgIbcCoreChannelV1MsgChannelOpenInit
   type: CelestiaTrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
     portId: string;
-    signer: string;
-    proofAck: string;
-    channelId: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    channel: {
+      state: string;
+      ordering: string;
+      counterparty: {
+        portId: string;
+      };
+      connectionHops: string[];
+      version: string;
     };
+    signer: string;
   };
 }
 
@@ -696,7 +736,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
         revisionHeight: string;
@@ -717,7 +757,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           address: string;
           votingPower: string;
         }[];
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
   };
@@ -801,18 +841,18 @@ export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
-    signer: string;
-    version: {
-      features: string[];
-      identifier: string;
-    };
     clientId: string;
     counterparty: {
+      clientId: string;
       prefix: {
         keyPrefix: string;
       };
-      clientId: string;
     };
+    version?: {
+      features: string[];
+      identifier: string;
+    };
+    signer: string;
   };
 }
 
