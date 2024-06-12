@@ -523,13 +523,16 @@ export interface CelestiaTrxMsgIbcCoreChannelV1MsgChannelOpenInit
   type: CelestiaTrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
     portId: string;
-    signer: string;
-    proofAck: string;
-    channelId: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    channel: {
+      state: string;
+      ordering: string;
+      counterparty: {
+        portId: string;
+      };
+      connectionHops: string[];
+      version: string;
     };
+    signer: string;
   };
 }
 
