@@ -156,27 +156,40 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
-    grant: {
-      expiration?: string;
-      authorization:
-        | {
-            '@type': string;
-            allowList: {
-              address: string[];
-            };
-            maxTokens?: {
-              denom: string;
-              amount: string;
-            };
-            authorizationType: string;
-          }
-        | {
-            '@type': string;
-            msg: string;
-          };
-    };
-    grantee: string;
     granter: string;
+    grantee: string;
+    grant:
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: {
+      denom: string;
+      amount: string;
+    }[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
   };
 }
 
