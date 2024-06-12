@@ -565,3 +565,21 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgStrideStakeibcMsgAddValidators {
+    type: string;
+    data: Stride1TrxMsgStrideStakeibcMsgAddValidatorsData;
+}
+interface Stride1TrxMsgStrideStakeibcMsgAddValidatorsData {
+    creator: string;
+    hostZone: string;
+    validators: Stride1TrxMsgStrideStakeibcMsgAddValidatorsValidatorsItem[];
+}
+interface Stride1TrxMsgStrideStakeibcMsgAddValidatorsValidatorsItem {
+    name: string;
+    address: string;
+    delegationAmt: string;
+    weight: string;
+}
