@@ -782,23 +782,24 @@ export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
 }
 
 // types for msg type: /ibc.core.connection.v1.MsgConnectionOpenInit
-export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit {
-    type: string;
-    data: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData;
-}
-interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData {
+export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+  extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
+  data: {
     clientId: string;
-    counterparty: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty;
+    counterparty: {
+      clientId: string;
+      prefix: {
+        keyPrefix: string;
+      };
+    };
+    version?: {
+      features: string[];
+      identifier: string;
+    };
     signer: string;
+  };
 }
-interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty {
-    clientId: string;
-    prefix: CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix;
-}
-interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix {
-    keyPrefix: string;
-}
-
 
 // types for msg type: /ibc.core.connection.v1.MsgConnectionOpenTry
 export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
