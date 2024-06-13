@@ -46,39 +46,19 @@ export interface Neutron1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgExecuteContract
-export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract {
-    type: string;
-    data: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractData;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractData {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
+  extends IRangeMessage {
+  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
+  data: {
     sender: string;
     contract: string;
-    msg: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractMsg;
-    funds: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractFundsItem[];
+    msg: Record<string | number | symbol, unknown>;
+    funds?: {
+      denom: string;
+      amount: string;
+    }[];
+  };
 }
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractMsg {
-    swap: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractSwap;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractSwap {
-    offer_asset: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractOffer_asset;
-    max_spread: string;
-    belief_price: string;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractOffer_asset {
-    info: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractInfo;
-    amount: string;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractInfo {
-    native_token: Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractNative_token;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractNative_token {
-    denom: string;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContractFundsItem {
-    denom: string;
-    amount: string;
-}
-
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract
 export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
