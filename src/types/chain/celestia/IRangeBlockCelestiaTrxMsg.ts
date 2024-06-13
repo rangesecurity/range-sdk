@@ -97,25 +97,19 @@ export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec {
-    type: string;
-    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData {
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+  data: {
     grantee: string;
-    msgs: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+    msgs: (
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate
+    )[];
+  };
 }
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
-    '@type': string;
-    delegatorAddress: string;
-    validatorAddress: string;
-    amount: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecAmount;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecAmount {
-    denom: string;
-    amount: string;
-}
-
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
   '@type': '/cosmos.bank.v1beta1.MsgSend';
@@ -136,7 +130,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
       '@type': string;
       msg: string;
     };
-  }[];
+  };
 }
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
@@ -156,6 +150,16 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
   '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
   granter: string;
   grantee: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
