@@ -94,14 +94,20 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgMigrateContract
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgStoreCode
-export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgStoreCode;
-  data: {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode {
+    type: string;
+    data: Neutron1TrxMsgCosmwasmWasmV1MsgStoreCodeData;
+}
+interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCodeData {
     sender: string;
     wasmByteCode: string;
-  };
+    instantiatePermission: Neutron1TrxMsgCosmwasmWasmV1MsgStoreCodeInstantiatePermission;
 }
+interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCodeInstantiatePermission {
+    permission: string;
+    addresses: string[];
+}
+
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
 export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
