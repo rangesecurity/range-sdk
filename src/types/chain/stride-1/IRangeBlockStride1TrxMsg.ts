@@ -466,94 +466,96 @@ export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
     valoper: string;
   };
 }
-// types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
-export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient {
-    type: string;
-    data: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientData;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientData {
-    clientId: string;
-    clientMessage: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
-    signer: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
-    '@type': string;
-    signedHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
-    validatorSet: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
-    trustedHeight: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
-    trustedValidators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
-    header: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
-    commit: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
-    version: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
-    chainId: string;
-    height: string;
-    time: string;
-    lastBlockId: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
-    lastCommitHash: string;
-    dataHash: string;
-    validatorsHash: string;
-    nextValidatorsHash: string;
-    consensusHash: string;
-    appHash: string;
-    lastResultsHash: string;
-    evidenceHash: string;
-    proposerAddress: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
-    block: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
-    hash: string;
-    partSetHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
-    total: number;
-    hash: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
-    height: string;
-    blockId: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
-    signatures: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
-    hash: string;
-    partSetHeader: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
-    blockIdFlag: string;
-    validatorAddress?: string;
-    timestamp: string;
-    signature?: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
-    validators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
-    address: string;
-    pubKey: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
-    ed25519: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
-    address: string;
-    pubKey: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
-    validators: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: Stride1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
 
+// types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
+export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
+  data: {
+    clientId: string;
+    clientMessage: {
+      '@type': string;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+          };
+          chainId: string;
+          height: string;
+          time: string;
+          lastBlockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          signatures: {
+            blockIdFlag: string;
+            timestamp: string;
+            validatorAddress?: string;
+            signature?: string;
+          }[];
+        };
+      };
+      validatorSet: {
+        validators: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        };
+        totalVotingPower: string;
+      };
+      trustedHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
+        validators: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        };
+        totalVotingPower: string;
+      };
+    };
+    signer: string;
+  };
+}
