@@ -242,27 +242,26 @@ export interface Stride1TrxMsgCosmosStakingV1Beta1MsgUndelegate
 }
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer {
-    type: string;
-    data: Stride1TrxMsgIbcApplicationsTransferV1MsgTransferData;
-}
-interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransferData {
+export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
+  extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
+  data: {
     sourcePort: string;
     sourceChannel: string;
-    token: Stride1TrxMsgIbcApplicationsTransferV1MsgTransferToken;
+    token: {
+      denom: string;
+      amount: string;
+    };
     sender: string;
     receiver: string;
-    timeoutHeight: Stride1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
+    };
+    timeoutTimestamp?: string;
+    memo?: string;
+  };
 }
-interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransferToken {
-    denom: string;
-    amount: string;
-}
-interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransferTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
 export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
