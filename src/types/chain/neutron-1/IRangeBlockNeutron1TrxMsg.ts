@@ -57,41 +57,17 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
-    type: string;
-    data: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractData;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractData {
-    sender: string;
-    admin: string;
-    codeId: string;
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
+  extends IRangeMessage {
+  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
+  data: {
+    admin?: string;
     label: string;
-    msg: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg;
+    codeId: string;
+    sender: string;
+    msg: Record<string | number | symbol, unknown>;
+  };
 }
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg {
-    pair_configs: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractPairConfigsItem[];
-    token_code_id: number;
-    owner: string;
-    whitelist_code_id: number;
-    coin_registry_address: string;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractPairConfigsItem {
-    code_id: number;
-    pair_type: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractPair_type;
-    total_fee_bps: number;
-    maker_fee_bps: number;
-    is_disabled: boolean;
-    is_generator_disabled: boolean;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractPair_type {
-    xyk?: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractXyk;
-    stable?: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractStable;
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractXyk {
-}
-interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractStable {
-}
-
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract2
 export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
