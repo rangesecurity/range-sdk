@@ -565,3 +565,26 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
     };
   };
 }
+
+
+
+export interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSend {
+    type: string;
+    data: Stride1TrxMsgCosmosBankV1beta1MsgMultiSendData;
+}
+interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendData {
+    inputs: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendInputsItem[];
+    outputs: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendOutputsItem[];
+}
+interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendInputsItem {
+    address: string;
+    coins: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendCoinsItem[];
+}
+interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendCoinsItem {
+    denom: string;
+    amount: string;
+}
+interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendOutputsItem {
+    address: string;
+    coins: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendCoinsItem[];
+}
