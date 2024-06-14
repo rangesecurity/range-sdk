@@ -18,7 +18,7 @@ enum Stride1TrxMsgTypes {
   IbcApplicationsTransferV1MsgTransfer = 'ibc.applications.transfer.v1.MsgTransfer',
   IbcCoreChannelV1MsgAcknowledgement = 'ibc.core.channel.v1.MsgAcknowledgement',
   IbcCoreChannelV1MsgChannelOpenAck = 'ibc.core.channel.v1.MsgChannelOpenAck',
-  IbcCoreChannelMsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
+  IbcCoreChannelV1MsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
   IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
   StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
@@ -50,7 +50,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
-  | Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+  | Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   | Stride1TrxMsgIbcCoreChannelMsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
   | Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
@@ -305,28 +305,29 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelMsgRecvPacket;
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
+    signer: string;
   };
 }
 
@@ -466,6 +467,7 @@ export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
     valoper: string;
   };
 }
+
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
@@ -564,33 +566,4 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket {
-    type: string;
-    data: Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketData;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketData {
-    packet: Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket;
-    proofCommitment: string;
-    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight;
-    signer: string;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight;
-    timeoutTimestamp: string;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight {
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
 }
