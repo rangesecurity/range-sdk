@@ -6,7 +6,7 @@ enum Stride1TrxMsgTypes {
   CosmosDistributionV1Beta1MsgSetWithdrawAddress = 'cosmos.distribution.v1beta1.MsgSetWithdrawAddress',
   CosmosDistributionV1Beta1MsgWithdrawDelegatorReward = 'cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
   CosmosDistributionV1Beta1MsgWithdrawValidatorCommission = 'cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission',
-  CosmosFeeGrantV1Beta1MsgGrantAllowance = 'cosmos.feegrant.v1beta1.MsgGrantAllowance',
+  CosmosFeegrantV1beta1MsgGrantAllowance = 'cosmos.feegrant.v1beta1.MsgGrantAllowance',
   CosmosGovV1beta1MsgSubmitProposal = 'cosmos.gov.v1beta1.MsgSubmitProposal',
   CosmosGovV1Beta1MsgVote = 'cosmos.gov.v1beta1.MsgVote',
   CosmosGovV1MsgVote = 'cosmos.gov.v1.MsgVote',
@@ -38,7 +38,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
-  | Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
+  | Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   | Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   | Stride1TrxMsgCosmosGovV1Beta1MsgVote
   | Stride1TrxMsgCosmosGovV1MsgVote
@@ -119,17 +119,19 @@ export interface Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommi
 }
 
 // types for mgs type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
+export interface Stride1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.CosmosFeeGrantV1Beta1MsgGrantAllowance;
+  type: Stride1TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    '@type': string;
-    grantee: string;
     granter: string;
+    grantee: string;
     allowance: {
       '@type': string;
-      expiration: null;
-      spend_limit: [];
+      spendLimit: {
+        denom: string;
+        amount: string;
+      }[];
+      expiration: string;
     };
   };
 }
