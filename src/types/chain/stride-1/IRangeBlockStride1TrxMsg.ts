@@ -494,6 +494,7 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
         header: {
           version: {
             block: string;
+            app?: string;
           };
           chainId: string;
           height: string;
@@ -517,6 +518,7 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: number;
           blockId: {
             hash: string;
             partSetHeader: {
@@ -526,7 +528,7 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
           };
           signatures: {
             blockIdFlag: string;
-            timestamp: string;
+            timestamp?: string;
             validatorAddress?: string;
             signature?: string;
           }[];
@@ -539,6 +541,7 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -546,11 +549,12 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
-        revisionNumber: string;
+        revisionNumber?: string;
         revisionHeight: string;
       };
       trustedValidators: {
@@ -560,6 +564,7 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -567,8 +572,9 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
     signer: string;
