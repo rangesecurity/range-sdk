@@ -71,13 +71,14 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
     grantee: string;
-    msgs:
+    msgs: (
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote;
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote
+    )[];
   };
 }
 
@@ -134,7 +135,8 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
     grantee: string;
     grant:
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization;
   };
 }
 
@@ -158,6 +160,14 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorizatio
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
+  expiration: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: { denom: string; amount: string };
+  }[];
   expiration: string;
 }
 

@@ -691,8 +691,8 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
       signedHeader: {
         header: {
           version: {
-            app?: string;
             block: string;
+            app?: string;
           };
           chainId: string;
           height: string;
@@ -700,8 +700,8 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           lastBlockId: {
             hash: string;
             partSetHeader: {
-              hash: string;
               total: number;
+              hash: string;
             };
           };
           lastCommitHash: string;
@@ -716,20 +716,20 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
-              hash: string;
               total: number;
+              hash: string;
             };
           };
           signatures: {
             blockIdFlag: string;
-            timestamp?: string;
             validatorAddress?: string;
+            timestamp?: string;
             signature?: string;
           }[];
-          round?: number;
         };
       };
       validatorSet: {
@@ -752,8 +752,8 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
         totalVotingPower?: string;
       };
       trustedHeight: {
+        revisionNumber?: string;
         revisionHeight: string;
-        revisionNumber: string;
       };
       trustedValidators: {
         validators: {
@@ -762,7 +762,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
-          proposerPriority: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;

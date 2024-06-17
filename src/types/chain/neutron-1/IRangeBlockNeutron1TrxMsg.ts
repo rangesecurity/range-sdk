@@ -143,7 +143,7 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
       destinationChannel: string;
       data: string;
       timeoutHeight?: {
-        revisionHeight: string;
+        revisionHeight?: string;
         revisionNumber?: string;
       };
       timeoutTimestamp?: string;
@@ -279,7 +279,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
         header: {
           version: {
             block: string;
-            app: string;
+            app?: string;
           };
           chainId: string;
           height: string;
@@ -303,6 +303,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
@@ -313,7 +314,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
           signatures: {
             blockIdFlag: string;
             validatorAddress?: string;
-            timestamp: string;
+            timestamp?: string;
             signature?: string;
           }[];
         };
@@ -325,6 +326,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -332,11 +334,12 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
         totalVotingPower: string;
       };
       trustedHeight: {
-        revisionNumber: string;
+        revisionNumber?: string;
         revisionHeight: string;
       };
       trustedValidators: {
@@ -346,6 +349,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -353,8 +357,9 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
     signer: string;
