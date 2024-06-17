@@ -390,6 +390,9 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   data: {
     description: {
       moniker: string;
+      identity?: string;
+      website?: string;
+      details?: string;
     };
     commission: {
       rate: string;
