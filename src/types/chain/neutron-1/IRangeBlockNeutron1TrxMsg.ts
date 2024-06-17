@@ -112,18 +112,20 @@ export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionHeight?: string;
+      revisionNumber?: string;
     };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
