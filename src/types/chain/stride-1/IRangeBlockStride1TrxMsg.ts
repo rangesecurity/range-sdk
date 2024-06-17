@@ -21,7 +21,7 @@ enum Stride1TrxMsgTypes {
   IbcCoreChannelMsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
   IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
-  StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
+  StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
   StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
@@ -53,7 +53,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreChannelMsgRecvPacket
   | Stride1TrxMsgIbcCoreChannelMsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
-  | Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+  | Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   | Stride1TrxMsgStrideStakeIBCMsgAddValidators
   | Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
   | Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
@@ -369,12 +369,10 @@ export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
 }
 
 // types for mgs type:: /stride.interchainquery.v1.MsgSubmitQueryResponse
-export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideInterchainQueryMsgSubmitQueryResponse;
+  type: Stride1TrxMsgTypes.StrideInterchainqueryV1MsgSubmitQueryResponse;
   data: {
-    height: string;
-    result: string;
     chainId: string;
     queryId: string;
     proofOps: {
@@ -384,6 +382,7 @@ export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
         type: string;
       }[];
     };
+    height: string;
     fromAddress: string;
   };
 }
