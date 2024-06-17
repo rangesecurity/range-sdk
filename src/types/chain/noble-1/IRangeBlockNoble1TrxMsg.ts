@@ -1,6 +1,6 @@
 import { IRangeMessage } from '../IRangeMessage';
 
-enum Noble1TrxMsgTypes {
+export enum Noble1TrxMsgTypes {
   IbcCoreConnectionV1MsgConnectionOpenConfirm = 'ibc.core.connection.v1.MsgConnectionOpenConfirm',
   NobleFiatTokenFactoryMsgBurn = 'noble.fiattokenfactory.MsgBurn',
   IbcCoreChannelV1MsgTimeout = 'ibc.core.channel.v1.MsgTimeout',

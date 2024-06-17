@@ -9,12 +9,14 @@ export async function taskAck(args: {
   };
   ruleGroupId: string;
   runnerId: string;
+  alertEventsCount: number;
   errors?: {
     ruleId: string;
     error: string;
   }[];
 }): Promise<{ ackId: string }> {
-  const { token, block, ruleGroupId, runnerId, errors } = args;
+  const { token, block, ruleGroupId, runnerId, errors, alertEventsCount } =
+    args;
   const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.ACK_TASK_PATH}`;
 
   const { data } = await axios.post<{ ackId: string }>(
@@ -23,13 +25,14 @@ export async function taskAck(args: {
       block: block,
       ruleGroupId: ruleGroupId,
       runnerId,
+      alertEventsCount,
       ...(errors?.length ? { errors } : {}),
     },
     {
       headers: {
         'X-API-KEY': token,
       },
-      timeout: constants.AXIOS.TIMEOUT
+      timeout: constants.AXIOS.TIMEOUT,
     },
   );
 
