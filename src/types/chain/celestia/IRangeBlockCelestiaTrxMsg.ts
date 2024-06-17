@@ -681,97 +681,103 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClient
 }
 
 // types for msg type: /ibc.core.client.v1.MsgUpdateClient
-export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient {
-    type: string;
-    data: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientData;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientData {
+export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
+  extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
+  data: {
     clientId: string;
-    clientMessage: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    clientMessage: {
+      '@type': string;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
+          height: string;
+          time: string;
+          lastBlockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          round?: number;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          signatures: {
+            blockIdFlag: string;
+            validatorAddress?: string;
+            timestamp?: string;
+            signature?: string;
+          }[];
+        };
+      };
+      validatorSet: {
+        validators: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
+      };
+      trustedHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
+        validators: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
+      };
+    };
     signer: string;
+  };
 }
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
-    '@type': string;
-    signedHeader: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
-    validatorSet: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
-    trustedHeight: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
-    trustedValidators: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
-    header: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientHeader;
-    commit: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientCommit;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientHeader {
-    version: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientVersion;
-    chainId: string;
-    height: string;
-    time: string;
-    lastBlockId: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
-    lastCommitHash: string;
-    dataHash: string;
-    validatorsHash: string;
-    nextValidatorsHash: string;
-    consensusHash: string;
-    appHash: string;
-    lastResultsHash: string;
-    evidenceHash: string;
-    proposerAddress: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientVersion {
-    block: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
-    hash: string;
-    partSetHeader: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
-    total: number;
-    hash: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientCommit {
-    height: string;
-    round: number;
-    blockId: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
-    signatures: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
-    hash: string;
-    partSetHeader: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
-    blockIdFlag: string;
-    validatorAddress?: string;
-    timestamp: string;
-    signature?: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
-    validators: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
-    address: string;
-    pubKey: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
-    ed25519: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientProposer {
-    address: string;
-    pubKey: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
-    votingPower: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
-    validators: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
-    proposer: CelestiaTrxMsgIbcCoreClientV1MsgUpdateClientProposer;
-    totalVotingPower: string;
-}
-
 
 // types for msg type: /ibc.core.connection.v1.MsgConnectionOpenAck
 export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
