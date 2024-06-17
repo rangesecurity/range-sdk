@@ -124,33 +124,32 @@ export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
-    type: string;
-    data: Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
-}
-interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
-    packet: Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
+export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  extends IRangeMessage {
+  type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
+  data: {
+    packet: {
+      sequence: string;
+      sourcePort: string;
+      sourceChannel: string;
+      destinationPort: string;
+      destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
+    };
     acknowledgement: string;
     proofAcked: string;
-    proofHeight: Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
     signer: string;
+  };
 }
-interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
-}
-interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
-    revisionHeight: string;
-}
-interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: ibc.core.channel.v1.MsgRecvPacket
 export interface Neutron1TrxMsgIbcCoreChannelV1MsgRecvPacket
