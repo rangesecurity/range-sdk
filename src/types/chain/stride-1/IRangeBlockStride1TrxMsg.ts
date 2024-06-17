@@ -7,7 +7,7 @@ enum Stride1TrxMsgTypes {
   CosmosDistributionV1Beta1MsgWithdrawDelegatorReward = 'cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
   CosmosDistributionV1Beta1MsgWithdrawValidatorCommission = 'cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission',
   CosmosFeeGrantV1Beta1MsgGrantAllowance = 'cosmos.feegrant.v1beta1.MsgGrantAllowance',
-  CosmosGovV1Beta1MsgSubmitProposal = 'cosmos.gov.v1beta1.MsgSubmitProposal',
+  CosmosGovV1beta1MsgSubmitProposal = 'cosmos.gov.v1beta1.MsgSubmitProposal',
   CosmosGovV1Beta1MsgVote = 'cosmos.gov.v1beta1.MsgVote',
   CosmosGovV1MsgVote = 'cosmos.gov.v1.MsgVote',
   CosmosGovV1MsgVoteWeighted = 'cosmos.gov.v1.MsgVoteWeighted',
@@ -39,7 +39,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
   | Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
-  | Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal
+  | Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   | Stride1TrxMsgCosmosGovV1Beta1MsgVote
   | Stride1TrxMsgCosmosGovV1MsgVote
   | Stride1TrxMsgCosmosGovV1MsgVoteWeighted
@@ -135,18 +135,25 @@ export interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-export interface Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal
+export interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.CosmosGovV1Beta1MsgSubmitProposal;
+  type: Stride1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
     content: {
       '@type': string;
       title: string;
       description: string;
+      plan?: {
+        name: string;
+        time: string;
+        height: string;
+      };
     };
+    initialDeposit: {
+      denom: string;
+      amount: string;
+    }[];
     proposer: string;
-    initial_deposit: { denom: string; amount: string }[];
   };
 }
 
