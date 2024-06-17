@@ -24,7 +24,7 @@ enum Stride1TrxMsgTypes {
   StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
-  StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
+  StrideStakeibcMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
   StrideStakeIBCMsgRedeemStake = 'stride.stakeibc.MsgRedeemStake',
   StrideStakeIBCMsgRestoreInterchainAccount = 'stride.stakeibc.MsgRestoreInterchainAccount',
@@ -414,12 +414,12 @@ export interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
 // types for mgs type:: /stride.stakeibc.MsgClaimUndelegatedTokens
 export interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgClaimUndelegatedTokens;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgClaimUndelegatedTokens;
   data: {
     epoch: string;
-    sender: string;
     creator: string;
     hostZoneId: string;
+    sender?: string;
   };
 }
 
@@ -564,16 +564,4 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokens {
-    type: string;
-    data: Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokensData;
-}
-interface Stride1TrxMsgStrideStakeibcMsgClaimUndelegatedTokensData {
-    creator: string;
-    hostZoneId: string;
-    epoch: string;
 }
