@@ -263,35 +263,32 @@ export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
-    type: string;
-    data: Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
-    packet: Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
+export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
+  extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
+  data: {
+    packet: {
+      sequence: string;
+      sourcePort: string;
+      sourceChannel: string;
+      destinationPort: string;
+      destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
+    };
     acknowledgement: string;
     proofAcked: string;
-    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
     signer: string;
+  };
 }
-interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenAck
 export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
