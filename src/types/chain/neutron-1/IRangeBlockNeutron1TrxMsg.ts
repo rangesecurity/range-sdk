@@ -268,98 +268,98 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
 }
 
 // types for mgs type:: ibc.core.client.v1.MsgUpdateClient
-export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
-  data: {
-    clientId: string;
-    clientMessage: {
-      '@type': string;
-      signedHeader: {
-        header: {
-          version: {
-            block: string;
-            app: string;
-          };
-          chainId: string;
-          height: string;
-          time: string;
-          lastBlockId: {
-            hash: string;
-            partSetHeader: {
-              total: number;
-              hash: string;
-            };
-          };
-          lastCommitHash: string;
-          dataHash: string;
-          validatorsHash: string;
-          nextValidatorsHash: string;
-          consensusHash: string;
-          appHash: string;
-          lastResultsHash: string;
-          evidenceHash: string;
-          proposerAddress: string;
-        };
-        commit: {
-          height: string;
-          blockId: {
-            hash: string;
-            partSetHeader: {
-              total: number;
-              hash: string;
-            };
-          };
-          signatures: {
-            blockIdFlag: string;
-            validatorAddress?: string;
-            timestamp: string;
-            signature?: string;
-          }[];
-        };
-      };
-      validatorSet: {
-        validators: {
-          address: string;
-          pubKey: {
-            ed25519: string;
-          };
-          votingPower: string;
-        }[];
-        proposer: {
-          address: string;
-          pubKey: {
-            ed25519: string;
-          };
-          votingPower: string;
-        };
-        totalVotingPower: string;
-      };
-      trustedHeight: {
-        revisionNumber: string;
-        revisionHeight: string;
-      };
-      trustedValidators: {
-        validators: {
-          address: string;
-          pubKey: {
-            ed25519: string;
-          };
-          votingPower: string;
-        }[];
-        proposer: {
-          address: string;
-          pubKey: {
-            ed25519: string;
-          };
-          votingPower: string;
-        };
-        totalVotingPower: string;
-      };
-    };
-    signer: string;
-  };
+export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient {
+    type: string;
+    data: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientData;
 }
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientData {
+    clientId: string;
+    clientMessage: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage;
+    signer: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientClientMessage {
+    '@type': string;
+    signedHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader;
+    validatorSet: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet;
+    trustedHeight: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight;
+    trustedValidators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignedHeader {
+    header: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientHeader;
+    commit: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientCommit;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientHeader {
+    version: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientVersion;
+    chainId: string;
+    height: string;
+    time: string;
+    lastBlockId: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId;
+    lastCommitHash: string;
+    dataHash: string;
+    validatorsHash: string;
+    nextValidatorsHash: string;
+    consensusHash: string;
+    appHash: string;
+    lastResultsHash: string;
+    evidenceHash: string;
+    proposerAddress: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientVersion {
+    block: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientLastBlockId {
+    hash: string;
+    partSetHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader {
+    total: number;
+    hash: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientCommit {
+    height: string;
+    blockId: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId;
+    signatures: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem[];
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientBlockId {
+    hash: string;
+    partSetHeader: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPartSetHeader;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientSignaturesItem {
+    blockIdFlag: string;
+    timestamp: string;
+    validatorAddress?: string;
+    signature?: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorSet {
+    validators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower?: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem {
+    address: string;
+    pubKey: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+    proposerPriority?: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey {
+    ed25519: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer {
+    address: string;
+    pubKey: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientPubKey;
+    votingPower: string;
+    proposerPriority?: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientTrustedValidators {
+    validators: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientValidatorsItem[];
+    proposer: Neutron1TrxMsgIbcCoreClientV1MsgUpdateClientProposer;
+    totalVotingPower?: string;
+}
+
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgCreateDenom
 export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
