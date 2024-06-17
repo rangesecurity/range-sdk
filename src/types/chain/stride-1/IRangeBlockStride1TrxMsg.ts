@@ -288,24 +288,22 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenAck
-export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck {
-    type: string;
-    data: Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAckData;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAckData {
+export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
+  extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
+  data: {
     portId: string;
     channelId: string;
     counterpartyChannelId: string;
     counterpartyVersion: string;
     proofTry: string;
-    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAckProofHeight;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     signer: string;
+  };
 }
-interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAckProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
