@@ -1,13 +1,13 @@
 import { IRangeMessage } from '../IRangeMessage';
 
 enum Stride1TrxMsgTypes {
-  CosmosBankV1Beta1MsgMultiSend = 'cosmos.bank.v1beta1.MsgMultiSend',
+  CosmosBankV1beta1MsgMultiSend = 'cosmos.bank.v1beta1.MsgMultiSend',
   CosmosBankV1Beta1MsgSend = 'cosmos.bank.v1beta1.MsgSend',
   CosmosDistributionV1Beta1MsgSetWithdrawAddress = 'cosmos.distribution.v1beta1.MsgSetWithdrawAddress',
   CosmosDistributionV1Beta1MsgWithdrawDelegatorReward = 'cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
   CosmosDistributionV1Beta1MsgWithdrawValidatorCommission = 'cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission',
   CosmosFeeGrantV1Beta1MsgGrantAllowance = 'cosmos.feegrant.v1beta1.MsgGrantAllowance',
-  CosmosGovV1Beta1MsgSubmitProposal = 'cosmos.gov.v1beta1.MsgSubmitProposal',
+  CosmosGovV1beta1MsgSubmitProposal = 'cosmos.gov.v1beta1.MsgSubmitProposal',
   CosmosGovV1Beta1MsgVote = 'cosmos.gov.v1beta1.MsgVote',
   CosmosGovV1MsgVote = 'cosmos.gov.v1.MsgVote',
   CosmosGovV1MsgVoteWeighted = 'cosmos.gov.v1.MsgVoteWeighted',
@@ -18,13 +18,13 @@ enum Stride1TrxMsgTypes {
   IbcApplicationsTransferV1MsgTransfer = 'ibc.applications.transfer.v1.MsgTransfer',
   IbcCoreChannelV1MsgAcknowledgement = 'ibc.core.channel.v1.MsgAcknowledgement',
   IbcCoreChannelV1MsgChannelOpenAck = 'ibc.core.channel.v1.MsgChannelOpenAck',
-  IbcCoreChannelMsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
+  IbcCoreChannelV1MsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
   IbcCoreChannelV1MsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
-  StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
-  StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
+  StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
+  StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
-  StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
+  StrideStakeibcMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
   StrideStakeIBCMsgRedeemStake = 'stride.stakeibc.MsgRedeemStake',
   StrideStakeIBCMsgRestoreInterchainAccount = 'stride.stakeibc.MsgRestoreInterchainAccount',
@@ -33,13 +33,13 @@ enum Stride1TrxMsgTypes {
 }
 
 export type Stride1TrxMsg =
-  | Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend
+  | Stride1TrxMsgCosmosBankV1beta1MsgMultiSend
   | Stride1TrxMsgCosmosBankV1Beta1MsgSend
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawValidatorCommission
   | Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
-  | Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal
+  | Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   | Stride1TrxMsgCosmosGovV1Beta1MsgVote
   | Stride1TrxMsgCosmosGovV1MsgVote
   | Stride1TrxMsgCosmosGovV1MsgVoteWeighted
@@ -50,10 +50,10 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
-  | Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+  | Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   | Stride1TrxMsgIbcCoreChannelV1MsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
-  | Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+  | Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   | Stride1TrxMsgStrideStakeIBCMsgAddValidators
   | Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
   | Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
@@ -64,19 +64,19 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreClientV1MsgUpdateClient;
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgMultiSend
-export interface Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend
+export interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSend
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.CosmosBankV1Beta1MsgMultiSend;
+  type: Stride1TrxMsgTypes.CosmosBankV1beta1MsgMultiSend;
   data: {
     inputs: {
       coins: { denom: string; amount: string }[];
       address: string;
     }[];
+    outputs: {
+      coins: { denom: string; amount: string }[];
+      address: string;
+    }[];
   };
-  outputs: {
-    coins: { denom: string; amount: string }[];
-    address: string;
-  }[];
 }
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
@@ -135,18 +135,25 @@ export interface Stride1TrxMsgCosmosFeeGrantV1Beta1MsgGrantAllowance
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-export interface Stride1TrxMsgCosmosGovV1Beta1MsgSubmitProposal
+export interface Stride1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.CosmosGovV1Beta1MsgSubmitProposal;
+  type: Stride1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
     content: {
       '@type': string;
       title: string;
       description: string;
+      plan?: {
+        name: string;
+        time: string;
+        height: string;
+      };
     };
+    initialDeposit: {
+      denom: string;
+      amount: string;
+    }[];
     proposer: string;
-    initial_deposit: { denom: string; amount: string }[];
   };
 }
 
@@ -246,19 +253,20 @@ export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
-    memo: string;
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
@@ -268,22 +276,25 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
-    signer: string;
+    acknowledgement: string;
     proofAcked: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
-    acknowledgement: string;
+    signer: string;
   };
 }
 
@@ -293,40 +304,42 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
     portId: string;
-    signer: string;
+    channelId: string;
+    counterpartyChannelId: string;
+    counterpartyVersion: string;
     proofTry: string;
     proofHeight: {
-      revisionHeight: string;
       revisionNumber: string;
+      revisionHeight: string;
     };
-    counterpartyVersion: string;
-    counterpartyChannelId: string;
+    signer: string;
   };
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelMsgRecvPacket;
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
+    signer: string;
   };
 }
 
@@ -367,12 +380,10 @@ export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
 }
 
 // types for mgs type:: /stride.interchainquery.v1.MsgSubmitQueryResponse
-export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideInterchainQueryMsgSubmitQueryResponse;
+  type: Stride1TrxMsgTypes.StrideInterchainqueryV1MsgSubmitQueryResponse;
   data: {
-    height: string;
-    result: string;
     chainId: string;
     queryId: string;
     proofOps: {
@@ -382,6 +393,7 @@ export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
         type: string;
       }[];
     };
+    height: string;
     fromAddress: string;
   };
 }
@@ -389,7 +401,7 @@ export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
 // types for mgs type:: /stride.stakeibc.MsgAddValidators
 export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgAddValidators;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgAddValidators;
   data: {
     creator: string;
     hostZone: string;
@@ -397,6 +409,7 @@ export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
       name: string;
       address: string;
       delegationAmt: string;
+      weight?: string;
     }[];
   };
 }
@@ -415,12 +428,12 @@ export interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
 // types for mgs type:: /stride.stakeibc.MsgClaimUndelegatedTokens
 export interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgClaimUndelegatedTokens;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgClaimUndelegatedTokens;
   data: {
     epoch: string;
-    sender: string;
     creator: string;
     hostZoneId: string;
+    sender?: string;
   };
 }
 
@@ -467,102 +480,96 @@ export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
     valoper: string;
   };
 }
+
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
+    clientId: string;
+    clientMessage: {
       '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+          };
+          chainId: string;
           height: string;
-          block_id: {
+          time: string;
+          lastBlockId: {
             hash: string;
-            part_set_header: {
-              hash: string;
+            partSetHeader: {
               total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
             };
           };
           signatures: {
-            signature?: string;
+            blockIdFlag: string;
             timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
+            validatorAddress?: string;
+            signature?: string;
           }[];
         };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
       };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
+      validatorSet: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
         proposer: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         };
+        totalVotingPower: string;
+      };
+      trustedHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        };
+        totalVotingPower: string;
       };
     };
+    signer: string;
   };
 }

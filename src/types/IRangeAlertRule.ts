@@ -3,7 +3,7 @@ export interface IRangeAlertRule {
   ruleType: string;
   workspaceId?: string | null;
   ruleGroupId: string;
-  network?: string;
+  network: string;
   parameters: Record<string, unknown> | null;
   createdAt: Date;
   deletedAt?: Date | null;
