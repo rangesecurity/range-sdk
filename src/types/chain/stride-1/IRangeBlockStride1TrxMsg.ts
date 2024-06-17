@@ -22,7 +22,7 @@ enum Stride1TrxMsgTypes {
   IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
   StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
-  StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
+  StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
   StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
@@ -388,7 +388,7 @@ export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
 // types for mgs type:: /stride.stakeibc.MsgAddValidators
 export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgAddValidators;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgAddValidators;
   data: {
     creator: string;
     hostZone: string;
@@ -396,6 +396,7 @@ export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
       name: string;
       address: string;
       delegationAmt: string;
+      weight?: string;
     }[];
   };
 }
@@ -564,22 +565,4 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Stride1TrxMsgStrideStakeibcMsgAddValidators {
-    type: string;
-    data: Stride1TrxMsgStrideStakeibcMsgAddValidatorsData;
-}
-interface Stride1TrxMsgStrideStakeibcMsgAddValidatorsData {
-    creator: string;
-    hostZone: string;
-    validators: Stride1TrxMsgStrideStakeibcMsgAddValidatorsValidatorsItem[];
-}
-interface Stride1TrxMsgStrideStakeibcMsgAddValidatorsValidatorsItem {
-    name: string;
-    address: string;
-    delegationAmt: string;
-    weight: string;
 }
