@@ -100,31 +100,65 @@ export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
 export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: (
-      | {
-          '@type': string;
-          amount?: {
-            denom: string;
-            amount: string;
-          };
-          delegatorAddress?: string;
-          validatorAddress?: string;
-          withdrawAddress?: string;
-        }
-      | {
-          '@type': string;
-          grant: {
-            expiration: string;
-            authorization: {
-              msg: string;
-              '@type': string;
-            };
-          };
-          grantee: string;
-          granter: string;
-        }
-    )[];
     grantee: string;
+    msgs: (
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate
+    )[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
+  '@type': '/cosmos.authz.v1beta1.MsgGrant';
+  granter: string;
+  grantee: string;
+  grant: {
+    authorization: {
+      '@type': string;
+      msg: string;
+    };
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgGrantAllowance';
+  granter: string;
+  grantee: string;
+  allowance: {
+    '@type': string;
+    allowance: {
+      '@type': string;
+    };
+    allowedMessages: string[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
+  granter: string;
+  grantee: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
   };
 }
 
@@ -133,28 +167,42 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
   data: {
-    grant: {
-      expiration?: string;
-      authorization:
-        | {
-            '@type': string;
-            allowList: {
-              address: string[];
-            };
-            maxTokens?: {
-              denom: string;
-              amount: string;
-            };
-            authorizationType: string;
-          }
-        | {
-            '@type': string;
-            msg: string;
-          };
-    };
-    grantee: string;
     granter: string;
+    grantee: string;
+    grant:
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
   };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: {
+      denom: string;
+      amount: string;
+    }[];
+  };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
+    authorizationType: string;
+  };
+  expiration: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
+  };
+  expiration?: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
@@ -237,17 +285,18 @@ export interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      allowance?: {
-        '@type': string;
-        expiration: string;
-      };
-      allowedMessages?: string[];
-    };
+    grantee: string;
+    allowance: CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance;
   };
+}
+
+interface CelestiaTrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.AllowedMsgAllowance';
+  allowance: {
+    '@type': string;
+  };
+  allowedMessages: string[];
 }
 
 // types for msg type: /cosmos.gov.v1beta1.MsgVote
@@ -486,13 +535,16 @@ export interface CelestiaTrxMsgIbcCoreChannelV1MsgChannelOpenInit
   type: CelestiaTrxMsgTypes.IbcCoreChannelV1MsgChannelOpenInit;
   data: {
     portId: string;
-    signer: string;
-    proofAck: string;
-    channelId: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    channel: {
+      state: string;
+      ordering: string;
+      counterparty: {
+        portId: string;
+      };
+      connectionHops: string[];
+      version: string;
     };
+    signer: string;
   };
 }
 
@@ -633,93 +685,97 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    signer: string;
     clientId: string;
     clientMessage: {
       '@type': string;
       signedHeader: {
-        commit: {
-          round?: number;
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
           height: string;
+          time: string;
+          lastBlockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
-              hash: string;
               total: number;
+              hash: string;
             };
           };
           signatures: {
             blockIdFlag: string;
-            signature?: string;
-            timestamp?: string;
             validatorAddress?: string;
+            timestamp?: string;
+            signature?: string;
           }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          appHash: string;
-          chainId: string;
-          version: {
-            app?: string;
-            block: string;
-          };
-          dataHash: string;
-          lastBlockId: {
-            hash: string;
-            partSetHeader: {
-              hash: string;
-              total: number;
-            };
-          };
-          evidenceHash: string;
-          consensusHash: string;
-          lastCommitHash: string;
-          validatorsHash: string;
-          lastResultsHash: string;
-          proposerAddress: string;
-          nextValidatorsHash: string;
         };
       };
       validatorSet: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority?: string;
         }[];
-        totalVotingPower: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
       };
       trustedHeight: {
+        revisionNumber?: string;
         revisionHeight: string;
-        revisionNumber: string;
       };
       trustedValidators: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority?: string;
         }[];
-        totalVotingPower: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
       };
     };
+    signer: string;
   };
 }
 
@@ -801,18 +857,18 @@ export interface CelestiaTrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
-    signer: string;
-    version: {
-      features: string[];
-      identifier: string;
-    };
     clientId: string;
     counterparty: {
+      clientId: string;
       prefix: {
         keyPrefix: string;
       };
-      clientId: string;
     };
+    version?: {
+      features: string[];
+      identifier: string;
+    };
+    signer: string;
   };
 }
 
