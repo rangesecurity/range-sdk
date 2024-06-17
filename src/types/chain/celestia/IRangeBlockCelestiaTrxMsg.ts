@@ -191,6 +191,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization 
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
+  expiration?: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
