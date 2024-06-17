@@ -268,22 +268,25 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
-    signer: string;
+    acknowledgement: string;
     proofAcked: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
-    acknowledgement: string;
+    signer: string;
   };
 }
 
