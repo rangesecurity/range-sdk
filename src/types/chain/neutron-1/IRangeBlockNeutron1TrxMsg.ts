@@ -143,7 +143,7 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
       destinationChannel: string;
       data: string;
       timeoutHeight?: {
-        revisionHeight: string;
+        revisionHeight?: string;
         revisionNumber?: string;
       };
       timeoutTimestamp?: string;
