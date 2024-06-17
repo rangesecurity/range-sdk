@@ -33,7 +33,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   | Noble1TrxMsgTypeMsgGrantAllowance
   | Noble1TrxMsgTypeMsgChannelOpenInit
-  | Noble1TrxMsgTypeMsgConnectionOpenTry
+  | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
   | Noble1TrxMsgTypeMsgConnectionOpenInit
   | Noble1TrxMsgTypeMsgTransfer
   | Noble1TrxMsgCosmosBankV1beta1MsgSend
@@ -251,31 +251,71 @@ export interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-export interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
-    signer: string;
-    client_id: string;
-    proof_init: string;
-    proof_height: {
-      revision_height: string;
-      revision_number: string;
+    clientId: string;
+    clientState: {
+      '@type': string;
+      chainId: string;
+      trustLevel: {
+        numerator: string;
+        denominator: string;
+      };
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      latestHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_height: {
-      revision_height: string;
-      revision_number: string;
-    };
-    connection_id: string;
     counterparty: {
-      client_id: string;
-      connection_id: string;
+      clientId: string;
+      connectionId: string;
+      prefix: {
+        keyPrefix: string;
+      };
     };
-    delay_period: string;
-    proof_client: string;
-    client_state: string;
-    counterparty_versions: { features: string[]; identifier: string }[];
-    previous_connection_id: string;
-    host_consensus_state_proof: string | null;
+    counterpartyVersions: {
+      identifier: string;
+      features: string[];
+    }[];
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    proofInit: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
 }
 
@@ -576,84 +616,4 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry {
-    type: string;
-    data: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryData;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryData {
-    clientId: string;
-    clientState: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryClientState;
-    counterparty: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterparty;
-    counterpartyVersions: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterpartyVersionsItem[];
-    proofHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofHeight;
-    proofInit: string;
-    proofClient: string;
-    proofConsensus: string;
-    consensusHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryConsensusHeight;
-    signer: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryClientState {
-    '@type': string;
-    chainId: string;
-    trustLevel: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryTrustLevel;
-    trustingPeriod: string;
-    unbondingPeriod: string;
-    maxClockDrift: string;
-    frozenHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryFrozenHeight;
-    latestHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLatestHeight;
-    proofSpecs: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofSpecsItem[];
-    upgradePath: string[];
-    allowUpdateAfterExpiry: boolean;
-    allowUpdateAfterMisbehaviour: boolean;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryTrustLevel {
-    numerator: string;
-    denominator: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryFrozenHeight {
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLatestHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofSpecsItem {
-    leafSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLeafSpec;
-    innerSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryInnerSpec;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryLeafSpec {
-    hash: string;
-    prehashValue: string;
-    length: string;
-    prefix: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryInnerSpec {
-    childOrder: number[];
-    childSize: number;
-    minPrefixLength: number;
-    maxPrefixLength: number;
-    hash: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterparty {
-    clientId: string;
-    connectionId: string;
-    prefix: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryPrefix;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryPrefix {
-    keyPrefix: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryCounterpartyVersionsItem {
-    identifier: string;
-    features: string[];
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTryConsensusHeight {
-    revisionNumber: string;
-    revisionHeight: string;
 }
