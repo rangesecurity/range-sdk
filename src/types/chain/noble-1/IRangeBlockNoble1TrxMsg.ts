@@ -146,76 +146,67 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
-export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck {
-    type: string;
-    data: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckData;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckData {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
+  extends IRangeMessage {
+  type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
+  data: {
     connectionId: string;
     counterpartyConnectionId: string;
-    version: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckVersion;
-    clientState: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckClientState;
-    proofHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckProofHeight;
+    version: {
+      identifier: string;
+      features: string[];
+    };
+    clientState: {
+      '@type': string;
+      chainId: string;
+      trustLevel: {
+        numerator: string;
+        denominator: string;
+      };
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
+      };
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
+    };
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     proofTry: string;
     proofClient: string;
     proofConsensus: string;
-    consensusHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckConsensusHeight;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     signer: string;
+  };
 }
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckVersion {
-    identifier: string;
-    features: string[];
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckClientState {
-    '@type': string;
-    chainId: string;
-    trustLevel: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckTrustLevel;
-    trustingPeriod: string;
-    unbondingPeriod: string;
-    maxClockDrift: string;
-    frozenHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckFrozenHeight;
-    latestHeight: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckLatestHeight;
-    proofSpecs: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckProofSpecsItem[];
-    upgradePath: string[];
-    allowUpdateAfterExpiry: boolean;
-    allowUpdateAfterMisbehaviour: boolean;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckTrustLevel {
-    numerator: string;
-    denominator: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckFrozenHeight {
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckLatestHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckProofSpecsItem {
-    leafSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckLeafSpec;
-    innerSpec: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckInnerSpec;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckLeafSpec {
-    hash: string;
-    prehashValue: string;
-    length: string;
-    prefix: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckInnerSpec {
-    childOrder: number[];
-    childSize: number;
-    minPrefixLength: number;
-    maxPrefixLength: number;
-    hash: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAckConsensusHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
 export interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
