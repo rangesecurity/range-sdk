@@ -246,19 +246,20 @@ export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
-    memo: string;
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
