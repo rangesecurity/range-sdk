@@ -134,7 +134,8 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
     grantee: string;
     grant:
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization;
   };
 }
 
@@ -158,6 +159,14 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorizatio
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
+  expiration: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: { denom: string; amount: string };
+  }[];
   expiration: string;
 }
 
