@@ -297,14 +297,15 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
   data: {
     portId: string;
-    signer: string;
+    channelId: string;
+    counterpartyChannelId: string;
+    counterpartyVersion: string;
     proofTry: string;
     proofHeight: {
-      revisionHeight: string;
       revisionNumber: string;
+      revisionHeight: string;
     };
-    counterpartyVersion: string;
-    counterpartyChannelId: string;
+    signer: string;
   };
 }
 
