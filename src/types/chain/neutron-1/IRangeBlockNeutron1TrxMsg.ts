@@ -100,6 +100,10 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode
   data: {
     sender: string;
     wasmByteCode: string;
+    instantiatePermission?: {
+      permission: string;
+      addresses: string[];
+    };
   };
 }
 
