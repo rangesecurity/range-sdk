@@ -186,13 +186,13 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
+      destinationPort: string;
+      destinationChannel: string;
+      timeoutHeight?: {
         revisionHeight?: string;
         revisionNumber?: string;
       };
-      destinationPort: string;
-      timeoutTimestamp: string;
-      destinationChannel: string;
+      timeoutTimestamp?: string;
     };
     signer: string;
     proofHeight: {
