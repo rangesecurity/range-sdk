@@ -18,11 +18,11 @@ enum Stride1TrxMsgTypes {
   IbcApplicationsTransferV1MsgTransfer = 'ibc.applications.transfer.v1.MsgTransfer',
   IbcCoreChannelV1MsgAcknowledgement = 'ibc.core.channel.v1.MsgAcknowledgement',
   IbcCoreChannelV1MsgChannelOpenAck = 'ibc.core.channel.v1.MsgChannelOpenAck',
-  IbcCoreChannelMsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
+  IbcCoreChannelV1MsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
   IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
-  StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
+  StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
   StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
@@ -50,10 +50,10 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
-  | Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+  | Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   | Stride1TrxMsgIbcCoreChannelMsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
-  | Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+  | Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   | Stride1TrxMsgStrideStakeIBCMsgAddValidators
   | Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
   | Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
@@ -246,19 +246,20 @@ export interface Stride1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
-    memo: string;
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionNumber?: string;
+      revisionHeight?: string;
     };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
@@ -268,22 +269,25 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
-    signer: string;
+    acknowledgement: string;
     proofAcked: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
-    acknowledgement: string;
+    signer: string;
   };
 }
 
@@ -305,28 +309,29 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
+export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelMsgRecvPacket;
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
+    signer: string;
   };
 }
 
@@ -366,12 +371,10 @@ export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
 }
 
 // types for mgs type:: /stride.interchainquery.v1.MsgSubmitQueryResponse
-export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
+export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideInterchainQueryMsgSubmitQueryResponse;
+  type: Stride1TrxMsgTypes.StrideInterchainqueryV1MsgSubmitQueryResponse;
   data: {
-    height: string;
-    result: string;
     chainId: string;
     queryId: string;
     proofOps: {
@@ -381,6 +384,7 @@ export interface Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
         type: string;
       }[];
     };
+    height: string;
     fromAddress: string;
   };
 }
@@ -467,102 +471,96 @@ export interface Stride1TrxMsgStrideStakeIBCMsgUpdateValidatorSharesExchRate
     valoper: string;
   };
 }
+
 // types for mgs type:: /ibc.core.client.v1.MsgUpdateClient
 export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Stride1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
+    clientId: string;
+    clientMessage: {
       '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+          };
+          chainId: string;
           height: string;
-          block_id: {
+          time: string;
+          lastBlockId: {
             hash: string;
-            part_set_header: {
-              hash: string;
+            partSetHeader: {
               total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
             };
           };
           signatures: {
-            signature?: string;
+            blockIdFlag: string;
             timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
+            validatorAddress?: string;
+            signature?: string;
           }[];
         };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
       };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
+      validatorSet: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
         proposer: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         };
+        totalVotingPower: string;
+      };
+      trustedHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
         }[];
-        total_voting_power: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+        };
+        totalVotingPower: string;
       };
     };
+    signer: string;
   };
 }
