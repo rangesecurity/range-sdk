@@ -19,7 +19,7 @@ enum Stride1TrxMsgTypes {
   IbcCoreChannelV1MsgAcknowledgement = 'ibc.core.channel.v1.MsgAcknowledgement',
   IbcCoreChannelV1MsgChannelOpenAck = 'ibc.core.channel.v1.MsgChannelOpenAck',
   IbcCoreChannelV1MsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
-  IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
+  IbcCoreChannelV1MsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
   StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
@@ -51,7 +51,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   | Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
-  | Stride1TrxMsgIbcCoreChannelMsgTimeout
+  | Stride1TrxMsgIbcCoreChannelV1MsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
   | Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
   | Stride1TrxMsgStrideStakeIBCMsgAddValidators
@@ -344,28 +344,29 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Stride1TrxMsgIbcCoreChannelMsgTimeout extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelMsgTimeout;
+export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
