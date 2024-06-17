@@ -509,6 +509,7 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
     proofInit: string;
     proofHeight: {
       revisionHeight: string;
+      revisionNumber?: string;
     };
     counterpartyVersion: string;
   };
