@@ -70,18 +70,59 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      };
-      delegator_address: string;
-      validator_address: string;
-    }[];
-    '@type': string;
     grantee: string;
+    msgs:
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress {
+  '@type': '/cosmos.distribution.v1beta1.MsgSetWithdrawAddress';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote {
+  '@type': '/cosmos.gov.v1beta1.MsgVote';
+  proposalId: string;
+  voter: string;
+  option: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
