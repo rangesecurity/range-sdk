@@ -24,7 +24,7 @@ enum Stride1TrxMsgTypes {
   StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
-  StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
+  StrideStakeibcMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
   StrideStakeIBCMsgRedeemStake = 'stride.stakeibc.MsgRedeemStake',
   StrideStakeIBCMsgRestoreInterchainAccount = 'stride.stakeibc.MsgRestoreInterchainAccount',
@@ -420,12 +420,12 @@ export interface Stride1TrxMsgStrideStakeIBCMsgChangeValidatorWeight
 // types for mgs type:: /stride.stakeibc.MsgClaimUndelegatedTokens
 export interface Stride1TrxMsgStrideStakeIBCMsgClaimUndelegatedTokens
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgClaimUndelegatedTokens;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgClaimUndelegatedTokens;
   data: {
     epoch: string;
-    sender: string;
     creator: string;
     hostZoneId: string;
+    sender?: string;
   };
 }
 
