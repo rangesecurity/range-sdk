@@ -1,7 +1,7 @@
 import { IRangeMessage } from '../IRangeMessage';
 
 enum Stride1TrxMsgTypes {
-  CosmosBankV1Beta1MsgMultiSend = 'cosmos.bank.v1beta1.MsgMultiSend',
+  CosmosBankV1beta1MsgMultiSend = 'cosmos.bank.v1beta1.MsgMultiSend',
   CosmosBankV1Beta1MsgSend = 'cosmos.bank.v1beta1.MsgSend',
   CosmosDistributionV1Beta1MsgSetWithdrawAddress = 'cosmos.distribution.v1beta1.MsgSetWithdrawAddress',
   CosmosDistributionV1Beta1MsgWithdrawDelegatorReward = 'cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward',
@@ -33,7 +33,7 @@ enum Stride1TrxMsgTypes {
 }
 
 export type Stride1TrxMsg =
-  | Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend
+  | Stride1TrxMsgCosmosBankV1beta1MsgMultiSend
   | Stride1TrxMsgCosmosBankV1Beta1MsgSend
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgSetWithdrawAddress
   | Stride1TrxMsgCosmosDistributionV1Beta1MsgWithdrawDelegatorReward
@@ -64,19 +64,19 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreClientV1MsgUpdateClient;
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgMultiSend
-export interface Stride1TrxMsgCosmosBankV1Beta1MsgMultiSend
+export interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSend
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.CosmosBankV1Beta1MsgMultiSend;
+  type: Stride1TrxMsgTypes.CosmosBankV1beta1MsgMultiSend;
   data: {
     inputs: {
       coins: { denom: string; amount: string }[];
       address: string;
     }[];
+    outputs: {
+      coins: { denom: string; amount: string }[];
+      address: string;
+    }[];
   };
-  outputs: {
-    coins: { denom: string; amount: string }[];
-    address: string;
-  }[];
 }
 
 // types for mgs type:: /cosmos.bank.v1beta1.MsgSend
@@ -564,27 +564,4 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSend {
-    type: string;
-    data: Stride1TrxMsgCosmosBankV1beta1MsgMultiSendData;
-}
-interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendData {
-    inputs: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendInputsItem[];
-    outputs: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendOutputsItem[];
-}
-interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendInputsItem {
-    address: string;
-    coins: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendCoinsItem[];
-}
-interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendCoinsItem {
-    denom: string;
-    amount: string;
-}
-interface Stride1TrxMsgCosmosBankV1beta1MsgMultiSendOutputsItem {
-    address: string;
-    coins: Stride1TrxMsgCosmosBankV1Beta1MsgMultiSendCoinsItem[];
 }
