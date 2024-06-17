@@ -106,6 +106,7 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate
     )[];
   };
 }
@@ -129,7 +130,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
       '@type': string;
       msg: string;
     };
-  }[];
+  };
 }
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
@@ -149,6 +150,16 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
   '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
   granter: string;
   grantee: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
@@ -191,6 +202,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization 
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
+  expiration?: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
@@ -673,93 +685,97 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    signer: string;
     clientId: string;
     clientMessage: {
       '@type': string;
       signedHeader: {
-        commit: {
-          round?: number;
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
           height: string;
+          time: string;
+          lastBlockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
-              hash: string;
               total: number;
+              hash: string;
             };
           };
           signatures: {
             blockIdFlag: string;
-            signature?: string;
-            timestamp?: string;
             validatorAddress?: string;
+            timestamp?: string;
+            signature?: string;
           }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          appHash: string;
-          chainId: string;
-          version: {
-            app?: string;
-            block: string;
-          };
-          dataHash: string;
-          lastBlockId: {
-            hash: string;
-            partSetHeader: {
-              hash: string;
-              total: number;
-            };
-          };
-          evidenceHash: string;
-          consensusHash: string;
-          lastCommitHash: string;
-          validatorsHash: string;
-          lastResultsHash: string;
-          proposerAddress: string;
-          nextValidatorsHash: string;
         };
       };
       validatorSet: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority?: string;
         }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
         totalVotingPower?: string;
       };
       trustedHeight: {
+        revisionNumber?: string;
         revisionHeight: string;
-        revisionNumber: string;
       };
       trustedValidators: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority?: string;
         }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
         totalVotingPower?: string;
       };
     };
+    signer: string;
   };
 }
 
