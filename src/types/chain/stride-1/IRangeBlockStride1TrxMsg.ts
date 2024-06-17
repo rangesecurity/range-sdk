@@ -21,8 +21,8 @@ enum Stride1TrxMsgTypes {
   IbcCoreChannelV1MsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
   IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
+  StrideStakeibcMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideInterchainqueryV1MsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
-  StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
   StrideStakeIBCMsgChangeValidatorWeight = 'stride.stakeibc.MsgChangeValidatorWeight',
   StrideStakeIBCMsgClaimUndelegatedTokens = 'stride.stakeibc.MsgClaimUndelegatedTokens',
   StrideStakeIBCMsgLiquidStake = 'stride.stakeibc.MsgLiquidStake',
@@ -392,7 +392,7 @@ export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
 // types for mgs type:: /stride.stakeibc.MsgAddValidators
 export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
   extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideStakeIBCMsgAddValidators;
+  type: Stride1TrxMsgTypes.StrideStakeibcMsgAddValidators;
   data: {
     creator: string;
     hostZone: string;
@@ -400,6 +400,7 @@ export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
       name: string;
       address: string;
       delegationAmt: string;
+      weight?: string;
     }[];
   };
 }
