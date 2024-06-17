@@ -19,7 +19,7 @@ enum Stride1TrxMsgTypes {
   IbcCoreChannelV1MsgAcknowledgement = 'ibc.core.channel.v1.MsgAcknowledgement',
   IbcCoreChannelV1MsgChannelOpenAck = 'ibc.core.channel.v1.MsgChannelOpenAck',
   IbcCoreChannelMsgRecvPacket = 'ibc.core.channel.v1.MsgRecvPacket',
-  IbcCoreChannelMsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
+  IbcCoreChannelV1MsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
   StrideClaimMsgClaimFreeAmount = 'stride.claim.MsgClaimFreeAmount',
   StrideInterchainQueryMsgSubmitQueryResponse = 'stride.interchainquery.v1.MsgSubmitQueryResponse',
   StrideStakeIBCMsgAddValidators = 'stride.stakeibc.MsgAddValidators',
@@ -51,7 +51,7 @@ export type Stride1TrxMsg =
   | Stride1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Stride1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   | Stride1TrxMsgIbcCoreChannelMsgRecvPacket
-  | Stride1TrxMsgIbcCoreChannelMsgTimeout
+  | Stride1TrxMsgIbcCoreChannelV1MsgTimeout
   | Stride1TrxMsgStrideClaimMsgClaimFreeAmount
   | Stride1TrxMsgStrideInterchainQueryMsgSubmitQueryResponse
   | Stride1TrxMsgStrideStakeIBCMsgAddValidators
@@ -331,28 +331,29 @@ export interface Stride1TrxMsgIbcCoreChannelMsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Stride1TrxMsgIbcCoreChannelMsgTimeout extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelMsgTimeout;
+export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
+  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
       destinationPort: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
@@ -564,34 +565,4 @@ export interface Stride1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout {
-    type: string;
-    data: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData {
-    packet: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket;
-    proofUnreceived: string;
-    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight;
-    nextSequenceRecv: string;
-    signer: string;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight;
-    timeoutTimestamp: string;
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight {
-}
-interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
 }
