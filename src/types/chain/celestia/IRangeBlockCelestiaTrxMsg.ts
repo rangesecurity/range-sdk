@@ -106,6 +106,7 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate
     )[];
   };
 }
@@ -129,7 +130,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant {
       '@type': string;
       msg: string;
     };
-  }[];
+  };
 }
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance {
@@ -149,6 +150,16 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
   '@type': '/cosmos.feegrant.v1beta1.MsgRevokeAllowance';
   granter: string;
   grantee: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
