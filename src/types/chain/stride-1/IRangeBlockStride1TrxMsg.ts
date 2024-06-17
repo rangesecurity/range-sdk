@@ -388,13 +388,14 @@ export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
     queryId: string;
     proofOps: {
       ops: {
+        type: string;
         key: string;
         data: string;
-        type: string;
       }[];
     };
     height: string;
     fromAddress: string;
+    result?: string;
   };
 }
 
