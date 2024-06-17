@@ -104,13 +104,20 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization 
       address: string[];
     };
     authorizationType: string;
+    maxTokens?: {
+      denom: string;
+      amount: string;
+    };
   };
   expiration?: string;
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
-  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
-  msg: string;
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
+  };
+  expiration: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
