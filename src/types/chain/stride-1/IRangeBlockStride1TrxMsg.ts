@@ -380,23 +380,27 @@ export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
 }
 
 // types for mgs type:: /stride.interchainquery.v1.MsgSubmitQueryResponse
-export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse
-  extends IRangeMessage {
-  type: Stride1TrxMsgTypes.StrideInterchainqueryV1MsgSubmitQueryResponse;
-  data: {
+export interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponse {
+    type: string;
+    data: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseData;
+}
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseData {
     chainId: string;
     queryId: string;
-    proofOps: {
-      ops: {
-        key: string;
-        data: string;
-        type: string;
-      }[];
-    };
+    result: string;
+    proofOps: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseProofOps;
     height: string;
     fromAddress: string;
-  };
 }
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseProofOps {
+    ops: Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseOpsItem[];
+}
+interface Stride1TrxMsgStrideInterchainqueryV1MsgSubmitQueryResponseOpsItem {
+    type: string;
+    key: string;
+    data: string;
+}
+
 
 // types for mgs type:: /stride.stakeibc.MsgAddValidators
 export interface Stride1TrxMsgStrideStakeIBCMsgAddValidators
