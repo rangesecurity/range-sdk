@@ -685,13 +685,36 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: CelestiaTrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    signer: string;
     clientId: string;
     clientMessage: {
       '@type': string;
       signedHeader: {
+        header: {
+          version: {
+            app?: string;
+            block: string;
+          };
+          chainId: string;
+          height: string;
+          time: string;
+          lastBlockId: {
+            hash: string;
+            partSetHeader: {
+              hash: string;
+              total: number;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
         commit: {
-          round?: number;
           height: string;
           blockId: {
             hash: string;
@@ -702,52 +725,30 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
           };
           signatures: {
             blockIdFlag: string;
-            signature?: string;
             timestamp?: string;
             validatorAddress?: string;
+            signature?: string;
           }[];
-        };
-        header: {
-          time: string;
-          height: string;
-          appHash: string;
-          chainId: string;
-          version: {
-            app?: string;
-            block: string;
-          };
-          dataHash: string;
-          lastBlockId: {
-            hash: string;
-            partSetHeader: {
-              hash: string;
-              total: number;
-            };
-          };
-          evidenceHash: string;
-          consensusHash: string;
-          lastCommitHash: string;
-          validatorsHash: string;
-          lastResultsHash: string;
-          proposerAddress: string;
-          nextValidatorsHash: string;
+          round?: number;
         };
       };
       validatorSet: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority?: string;
         }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
         totalVotingPower?: string;
       };
       trustedHeight: {
@@ -755,23 +756,26 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
         revisionNumber: string;
       };
       trustedValidators: {
-        proposer: {
-          pubKey: {
-            ed25519: string;
-          };
-          address: string;
-          votingPower: string;
-        };
         validators: {
+          address: string;
           pubKey: {
             ed25519: string;
           };
-          address: string;
           votingPower: string;
+          proposerPriority: string;
         }[];
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
         totalVotingPower?: string;
       };
     };
+    signer: string;
   };
 }
 
