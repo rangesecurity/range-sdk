@@ -70,18 +70,60 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
   extends IRangeMessage {
   type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      };
-      delegator_address: string;
-      validator_address: string;
-    }[];
-    '@type': string;
     grantee: string;
+    msgs: (
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote
+    )[];
   };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress {
+  '@type': '/cosmos.distribution.v1beta1.MsgSetWithdrawAddress';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
+  validatorAddress: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote {
+  '@type': '/cosmos.gov.v1beta1.MsgVote';
+  proposalId: string;
+  voter: string;
+  option: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
@@ -93,7 +135,8 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
     grantee: string;
     grant:
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization;
   };
 }
 
@@ -104,13 +147,28 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization 
       address: string[];
     };
     authorizationType: string;
+    maxTokens?: {
+      denom: string;
+      amount: string;
+    };
   };
   expiration?: string;
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
-  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
-  msg: string;
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
+  };
+  expiration: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: { denom: string; amount: string };
+  }[];
+  expiration: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgRevoke
@@ -342,6 +400,9 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   data: {
     description: {
       moniker: string;
+      identity?: string;
+      website?: string;
+      details?: string;
     };
     commission: {
       rate: string;
@@ -509,6 +570,7 @@ export interface CosmosHub4TrxMsgIbcCoreChannelV1MsgChannelOpenTry
     proofInit: string;
     proofHeight: {
       revisionHeight: string;
+      revisionNumber?: string;
     };
     counterpartyVersion: string;
   };
