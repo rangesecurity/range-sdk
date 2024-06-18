@@ -258,27 +258,26 @@ export interface Osmosis1TrxMsgCosmosGovV1beta1MsgDeposit
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgSubmitProposal
-export interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal {
-    type: string;
-    data: Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalData;
-}
-interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalData {
-    content: Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalContent;
-    initialDeposit: Osmosis1TrxMsgCosmosGovV1Beta1MsgSubmitProposalInitialDepositItem[];
+export interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
+  data: {
+    content: Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal;
+    initialDeposit: {
+      denom: string;
+      amount: string;
+    }[];
     proposer: string;
-}
-interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalContent {
-    '@type': string;
-    title: string;
-    description: string;
-    subjectClientId: string;
-    substituteClientId: string;
-}
-interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalInitialDepositItem {
-    denom: string;
-    amount: string;
+  };
 }
 
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal {
+  '@type': '/ibc.core.client.v1.ClientUpdateProposal';
+  title: string;
+  description: string;
+  subjectClientId: string;
+  substituteClientId: string;
+}
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
 export interface Osmosis1TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
