@@ -33,7 +33,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   | Noble1TrxMsgTypeMsgGrantAllowance
   | Noble1TrxMsgTypeMsgChannelOpenInit
-  | Noble1TrxMsgTypeMsgConnectionOpenTry
+  | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   | Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Noble1TrxMsgCosmosBankV1beta1MsgSend
@@ -246,31 +246,71 @@ export interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-export interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
-    signer: string;
-    client_id: string;
-    proof_init: string;
-    proof_height: {
-      revision_height: string;
-      revision_number: string;
+    clientId: string;
+    clientState: {
+      '@type': string;
+      chainId: string;
+      trustLevel: {
+        numerator: string;
+        denominator: string;
+      };
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      latestHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_height: {
-      revision_height: string;
-      revision_number: string;
-    };
-    connection_id: string;
     counterparty: {
-      client_id: string;
-      connection_id: string;
+      clientId: string;
+      connectionId: string;
+      prefix: {
+        keyPrefix: string;
+      };
     };
-    delay_period: string;
-    proof_client: string;
-    client_state: string;
-    counterparty_versions: { features: string[]; identifier: string }[];
-    previous_connection_id: string;
-    host_consensus_state_proof: string | null;
+    counterpartyVersions: {
+      identifier: string;
+      features: string[];
+    }[];
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    proofInit: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
 }
 
