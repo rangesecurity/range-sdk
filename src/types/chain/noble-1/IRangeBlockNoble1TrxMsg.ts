@@ -103,18 +103,19 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      }[];
-      to_address: string;
-      from_address: string;
-    }[];
-    '@type': string;
     grantee: string;
+    msgs: Noble1TrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend[];
   };
+}
+
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
