@@ -35,7 +35,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgTypeMsgChannelOpenInit
   | Noble1TrxMsgTypeMsgConnectionOpenTry
   | Noble1TrxMsgTypeMsgConnectionOpenInit
-  | Noble1TrxMsgTypeMsgTransfer
+  | Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Noble1TrxMsgCosmosBankV1beta1MsgSend
   | Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   | Noble1TrxMsgNobleFiatTokenFactoryMsgMint
@@ -295,19 +295,24 @@ export interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Noble1TrxMsgTypeMsgTransfer extends IRangeMessage {
+export interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: Record<string | number | symbol, unknown>; // todo
-    timeoutTimestamp: string;
+    timeoutHeight?: {
+      revisionHeight?: string;
+      revisionNumber?: string;
+    };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
