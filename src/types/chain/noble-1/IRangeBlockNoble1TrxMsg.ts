@@ -34,7 +34,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgTypeMsgGrantAllowance
   | Noble1TrxMsgTypeMsgChannelOpenInit
   | Noble1TrxMsgTypeMsgConnectionOpenTry
-  | Noble1TrxMsgTypeMsgConnectionOpenInit
+  | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
   | Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Noble1TrxMsgCosmosBankV1beta1MsgSend
   | Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
@@ -280,17 +280,18 @@ export interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-export interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
-    signer: string;
-    client_id: string;
+    clientId: string;
     counterparty: {
+      clientId: string;
       prefix: {
         keyPrefix: string;
       };
-      client_id: string;
     };
+    signer: string;
   };
 }
 
