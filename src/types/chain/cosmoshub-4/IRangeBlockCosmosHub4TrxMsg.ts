@@ -166,7 +166,7 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorizatio
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
   authorization: {
     '@type': '/cosmos.bank.v1beta1.SendAuthorization';
-    spendLimit: { denom: string; amount: string };
+    spendLimit: { denom: string; amount: string }[];
   }[];
   expiration: string;
 }
