@@ -41,7 +41,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgNobleFiatTokenFactoryMsgMint
   | Noble1TrxMsgIbcCoreChannelOpenTry
   | Noble1TrxMsgIbcCoreChannelOpenConfirm
-  | Noble1TrxMsgIbcCoreChannelAcknowledgement
+  | Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Noble1TrxMsgCosmosAuthzMsgGrant
   | Noble1TrxMsgIbcCoreClientCreateClient
   | Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
@@ -388,27 +388,30 @@ export interface Noble1TrxMsgIbcCoreChannelOpenConfirm extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface Noble1TrxMsgIbcCoreChannelAcknowledgement
+export interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo;
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofAcked: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     acknowledgement: string;
+    proofAcked: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
 }
 
@@ -576,35 +579,4 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
       };
     };
   };
-}
-
-
-
-export interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement {
-    type: string;
-    data: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementData;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementData {
-    packet: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket;
-    acknowledgement: string;
-    proofAcked: string;
-    proofHeight: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight;
-    signer: string;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgementProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
 }
