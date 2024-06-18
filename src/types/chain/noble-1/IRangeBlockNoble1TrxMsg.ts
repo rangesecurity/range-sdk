@@ -123,26 +123,25 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
-  status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: unknown;
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
