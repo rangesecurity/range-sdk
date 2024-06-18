@@ -150,67 +150,62 @@ export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
   data: {
-    '@type': string;
-    signer: string;
+    connectionId: string;
+    counterpartyConnectionId: string;
     version: {
-      features: string[];
       identifier: string;
+      features: string[];
     };
-    proof_try: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: unknown;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehavior: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    proof_client: string;
-    proof_height: {
-      revision_height: string;
-      revision_number: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
     };
-    connection_id: string;
-    proof_consensus: string;
+    proofTry: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
-  status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: unknown;
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
