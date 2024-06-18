@@ -80,22 +80,25 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
