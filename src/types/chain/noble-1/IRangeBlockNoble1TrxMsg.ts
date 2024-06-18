@@ -118,34 +118,31 @@ export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
-export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket {
-    type: string;
-    data: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketData;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketData {
-    packet: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket;
+export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
+  extends IRangeMessage {
+  type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
+  data: {
+    packet: {
+      sequence: string;
+      sourcePort: string;
+      sourceChannel: string;
+      destinationPort: string;
+      destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
+    };
     proofCommitment: string;
-    proofHeight: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
     signer: string;
+  };
 }
-interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketPacket {
-    sequence: string;
-    sourcePort: string;
-    sourceChannel: string;
-    destinationPort: string;
-    destinationChannel: string;
-    data: string;
-    timeoutHeight: Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacketProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
 export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
