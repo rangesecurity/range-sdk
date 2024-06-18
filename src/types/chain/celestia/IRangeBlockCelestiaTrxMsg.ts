@@ -716,7 +716,7 @@ export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
-          round?: string;
+          round?: number;
           blockId: {
             hash: string;
             partSetHeader: {
