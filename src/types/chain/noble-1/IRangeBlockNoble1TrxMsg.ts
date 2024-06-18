@@ -31,7 +31,7 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgCosmosAuthzV1beta1MsgExec
   | Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
-  | Noble1TrxMsgTypeMsgGrantAllowance
+  | Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   | Noble1TrxMsgTypeMsgChannelOpenInit
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
@@ -209,22 +209,22 @@ export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
+export interface Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    '@type': string;
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      allowance: {
-        '@type': string;
-        expiration: null;
-        spend_limit: string[];
-      };
-      allowed_messages: string[];
-    };
+    grantee: string;
+    allowance: Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance;
   };
+}
+
+interface Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.AllowedMsgAllowance';
+  allowance: {
+    '@type': string;
+  };
+  allowedMessages: string[];
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenInit
