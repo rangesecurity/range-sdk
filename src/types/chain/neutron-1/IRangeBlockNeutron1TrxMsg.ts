@@ -303,7 +303,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
-          round?: string;
+          round?: number;
           blockId: {
             hash: string;
             partSetHeader: {
@@ -336,7 +336,7 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
           votingPower: string;
           proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
         revisionNumber?: string;
