@@ -3,6 +3,7 @@ import { IRangeMessage } from './IRangeMessage';
 export interface IKeyValuePair {
   key: string;
   value: string;
+  binary?: boolean;
 }
 
 export interface ITransactionEvent {
