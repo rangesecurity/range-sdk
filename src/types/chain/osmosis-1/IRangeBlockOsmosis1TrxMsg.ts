@@ -395,11 +395,11 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
+    admin?: string;
     sender: string;
-    admin: string;
     codeId: string;
     label: string;
-    msg: unknown;
+    msg: Record<string | number | symbol, unknown>;
   };
 }
 
