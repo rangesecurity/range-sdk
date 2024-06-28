@@ -940,14 +940,20 @@ export interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
 }
 
 // types for mgs type:: /osmosis.lockup.MsgBeginUnlocking
-export interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisLockupMsgBeginUnlocking;
-  data: {
-    ID: string;
-    owner: string;
-  };
+export interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisLockupMsgBeginUnlockingData;
 }
+interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlockingData {
+    owner: string;
+    ID: string;
+    coins: Osmosis1TrxMsgOsmosisLockupMsgBeginUnlockingCoinsItem[];
+}
+interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlockingCoinsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /osmosis.lockup.MsgLockTokens
 export interface Osmosis1TrxMsgOsmosisLockupMsgLockTokens
