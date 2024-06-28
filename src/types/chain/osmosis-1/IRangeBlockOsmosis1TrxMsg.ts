@@ -1414,3 +1414,23 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInData;
+}
+interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInData {
+    sender: string;
+    routes: Osmosis1TrxMsgOsmosisPoolmanagerV1Beta1MsgSwapExactAmountInRoutesItem[];
+    tokenIn: Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInTokenIn;
+    tokenOutMinAmount: string;
+}
+interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInRoutesItem {
+    tokenOutDenom: string;
+}
+interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInTokenIn {
+    denom: string;
+    amount: string;
+}
