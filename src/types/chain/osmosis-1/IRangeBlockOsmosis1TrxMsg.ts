@@ -262,23 +262,21 @@ export interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
-    content: {
-      '@type': string;
-      title: string;
-      amount: {
-        denom: string;
-        amount: string;
-      }[];
-      recipient: string;
-      description: string;
-    };
-    proposer: string;
-    initial_deposit: {
+    content: Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal;
+    initialDeposit: {
       denom: string;
       amount: string;
     }[];
+    proposer: string;
   };
+}
+
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal {
+  '@type': '/ibc.core.client.v1.ClientUpdateProposal';
+  title: string;
+  description: string;
+  subjectClientId: string;
+  substituteClientId: string;
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
