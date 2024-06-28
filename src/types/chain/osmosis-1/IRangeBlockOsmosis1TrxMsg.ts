@@ -1414,3 +1414,15 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
     };
   };
 }
+
+
+
+export interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgChangeAdmin {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgChangeAdminData;
+}
+interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgChangeAdminData {
+    sender: string;
+    denom: string;
+    newAdmin: string;
+}
