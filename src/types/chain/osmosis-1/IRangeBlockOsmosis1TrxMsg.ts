@@ -920,24 +920,28 @@ export interface Osmosis1TrxMsgOsmosisIncentivesMsgAddToGauge
 }
 
 // types for mgs type:: /osmosis.incentives.MsgCreateGauge
-export interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisIncentivesMsgCreateGauge;
-  data: {
-    coins: {
-      denom: string;
-      amount: string;
-    }[];
-    owner: string;
-    startTime: string;
-    distributeTo: {
-      denom: string;
-      duration: string;
-      timestamp: string;
-    };
-    numEpochsPaidOver: string;
-  };
+export interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge {
+    type: string;
+    data: Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeData;
 }
+interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeData {
+    owner: string;
+    distributeTo: Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeDistributeTo;
+    coins: Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeCoinsItem[];
+    startTime: string;
+    numEpochsPaidOver: string;
+    poolId: string;
+}
+interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeDistributeTo {
+    lockQueryType: string;
+    duration: string;
+    timestamp: string;
+}
+interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGaugeCoinsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /osmosis.lockup.MsgBeginUnlocking
 export interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
