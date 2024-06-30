@@ -163,18 +163,33 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant
-  extends IRangeMessage {
-  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
-  data: {
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrant {
+    type: string;
+    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantData;
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantData {
     granter: string;
     grantee: string;
-    grant:
-      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
-      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
-      | CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization;
-  };
+    grant: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantGrant;
 }
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantGrant {
+    authorization: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+    expiration: string;
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
+    '@type': string;
+    maxTokens: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantMaxTokens;
+    allowList: CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAllowList;
+    authorizationType: string;
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantMaxTokens {
+    denom: string;
+    amount: string;
+}
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantAllowList {
+    address: string[];
+}
+
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
   authorization: {
