@@ -399,3 +399,19 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
     newAdmin: string;
   };
 }
+
+
+
+export interface Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMint {
+    type: string;
+    data: Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMintData;
+}
+interface Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMintData {
+    sender: string;
+    amount: Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMintAmount;
+    mintToAddress: string;
+}
+interface Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMintAmount {
+    denom: string;
+    amount: string;
+}
