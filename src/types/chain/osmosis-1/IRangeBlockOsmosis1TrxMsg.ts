@@ -168,13 +168,14 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
-  data: {
-    grantee: string;
-    msgs: unknown[];
-  };
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec {
+    type: string;
+    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecData;
 }
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExecData {
+    error: string;
+}
+
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
