@@ -366,19 +366,24 @@ export interface Noble1TrxMsgCosmosBankV1beta1MsgSend extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenAck
-export interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
-  extends IRangeMessage {
-  type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenAck;
-  data: {
-    portId: string;
-    signer: string;
-    proofTry: string;
-    channelId: string;
-    proofHeight: { revisionHeight: string };
-    counterpartyVersion: string;
-    counterpartyChannelId: string;
-  };
+export interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck {
+    type: string;
+    data: Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAckData;
 }
+interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAckData {
+    portId: string;
+    channelId: string;
+    counterpartyChannelId: string;
+    counterpartyVersion: string;
+    proofTry: string;
+    proofHeight: Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAckProofHeight;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAckProofHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+
 
 // types for msg type:: /noble.fiattokenfactory.MsgMint
 export interface Noble1TrxMsgNobleFiatTokenFactoryMsgMint
