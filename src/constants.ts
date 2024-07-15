@@ -59,6 +59,6 @@ export const constants: Constants = {
     MAX: 100,
   },
   AXIOS: {
-    TIMEOUT: 3000, // 3 seconds
+    TIMEOUT: 15000, // 15 seconds
   },
 };
