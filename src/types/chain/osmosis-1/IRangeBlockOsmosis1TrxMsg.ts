@@ -416,20 +416,18 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgStoreCode
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode {
-    type: string;
-    data: Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCodeData;
-}
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCodeData {
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCode
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgStoreCode;
+  data: {
     sender: string;
     wasmByteCode: string;
-    instantiatePermission: Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCodeInstantiatePermission;
+    instantiatePermission?: {
+      permission: string;
+      addresses: string[];
+    };
+  };
 }
-interface Osmosis1TrxMsgCosmwasmWasmV1MsgStoreCodeInstantiatePermission {
-    permission: string;
-    addresses: string[];
-}
-
 
 // types for mgs type:: /ibc.applications.transfer.v1.MsgTransfer
 export interface Osmosis1TrxMsgIbcApplicationsTransferV1MsgTransfer
