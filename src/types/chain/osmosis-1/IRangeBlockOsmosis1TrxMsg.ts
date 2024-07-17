@@ -333,13 +333,14 @@ export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgEditValidator
   type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgEditValidator;
   data: {
     description: {
-      details: string;
-      moniker: string;
-      website: string;
-      identity: string;
-      securityContact: string;
+      moniker?: string;
+      identity?: string;
+      website?: string;
+      securityContact?: string;
+      details?: string;
     };
     validatorAddress: string;
+    commissionRate?: string;
   };
 }
 
