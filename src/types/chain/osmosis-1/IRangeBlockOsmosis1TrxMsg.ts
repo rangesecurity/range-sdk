@@ -578,6 +578,7 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgTimeout
         revisionNumber?: string;
         revisionHeight?: string;
       };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
     proofHeight?: {
