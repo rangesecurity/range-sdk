@@ -483,13 +483,13 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelCloseConfirm;
   data: {
     portId: string;
-    signer: string;
     channelId: string;
     proofInit: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
+    signer: string;
   };
 }
 
