@@ -63,7 +63,7 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisSuperfluidMsgUnbondConvertAndStake = 'osmosis.superfluid.MsgUnbondConvertAndStake',
   OsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition = 'osmosis.superfluid.MsgUnlockAndMigrateSharesToFullRangeConcentratedPosition',
   OsmosisTokenFactoryV1beta1MsgCreateDenom = 'osmosis.tokenfactory.v1beta1.MsgCreateDenom',
-  OsmosisTokenFactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
+  OsmosisTokenfactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
   OsmosisValsetprefV1beta1MsgWithdrawDelegationRewards = 'osmosis.valsetpref.v1beta1.MsgWithdrawDelegationRewards',
   CosmosStakingV1beta1MsgCreateValidator = 'cosmos.staking.v1beta1.MsgCreateValidator',
   CosmosDistributionV1beta1MsgFundCommunityPool = 'cosmos.distribution.v1beta1.MsgFundCommunityPool',
@@ -147,7 +147,7 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisSuperfluidMsgUnbondConvertAndStake
   | Osmosis1TrxMsgOsmosisSuperfluidMsgUnlockAndMigrateSharesToFullRangeConcentratedPosition
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
-  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
+  | Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMint
   | Osmosis1TrxMsgOsmosisValsetprefV1beta1MsgWithdrawDelegationRewards
   | Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
   | Osmosis1TrxMsgCosmosDistributionV1beta1MsgFundCommunityPool
@@ -1143,16 +1143,16 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgMint
-export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgMint
+export interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgMint
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
+  type: Osmosis1TrxMsgTypes.OsmosisTokenfactoryV1beta1MsgMint;
   data: {
+    sender: string;
     amount: {
       denom: string;
       amount: string;
     };
-    sender: string;
-    mintToAddress: string;
+    mintToAddress?: string;
   };
 }
 
