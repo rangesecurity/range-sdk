@@ -942,8 +942,12 @@ export interface Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisLockupMsgBeginUnlocking;
   data: {
-    ID: string;
     owner: string;
+    ID: string;
+    coins?: {
+      denom: string;
+      amount: string;
+    }[];
   };
 }
 
