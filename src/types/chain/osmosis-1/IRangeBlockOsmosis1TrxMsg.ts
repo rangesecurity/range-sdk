@@ -52,7 +52,7 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisLockupMsgBeginUnlocking = 'osmosis.lockup.MsgBeginUnlocking',
   OsmosisLockupMsgLockTokens = 'osmosis.lockup.MsgLockTokens',
   OsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn',
-  OsmosisPoolManagerV1beta1MsgSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn',
+  OsmosisPoolmanagerV1beta1MsgSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn',
   OsmosisPoolManagerV1beta1MsgSwapExactAmountOut = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountOut',
   OsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition = 'osmosis.superfluid.MsgAddToConcentratedLiquiditySuperfluidPosition',
   OsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate = 'osmosis.superfluid.MsgCreateFullRangePositionAndSuperfluidDelegate',
@@ -136,7 +136,7 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
   | Osmosis1TrxMsgOsmosisLockupMsgLockTokens
   | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
-  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+  | Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn
   | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
   | Osmosis1TrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
   | Osmosis1TrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
@@ -982,15 +982,15 @@ export interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAm
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn
-export interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolmanagerV1beta1MsgSwapExactAmountIn;
   data: {
-    routes: {
-      poolId: string;
-      tokenOutDenom: string;
-    }[];
     sender: string;
+    routes: {
+      tokenOutDenom: string;
+      poolId?: string;
+    }[];
     tokenIn: {
       denom: string;
       amount: string;
@@ -1413,24 +1413,4 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
       uri_hash: string;
     };
   };
-}
-
-
-
-export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn {
-    type: string;
-    data: Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInData;
-}
-interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInData {
-    sender: string;
-    routes: Osmosis1TrxMsgOsmosisPoolmanagerV1Beta1MsgSwapExactAmountInRoutesItem[];
-    tokenIn: Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInTokenIn;
-    tokenOutMinAmount: string;
-}
-interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInRoutesItem {
-    tokenOutDenom: string;
-}
-interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountInTokenIn {
-    denom: string;
-    amount: string;
 }
