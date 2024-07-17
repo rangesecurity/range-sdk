@@ -924,18 +924,20 @@ export interface Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisIncentivesMsgCreateGauge;
   data: {
+    owner: string;
+    distributeTo: {
+      lockQueryType: string;
+      denom?: string;
+      duration: string;
+      timestamp: string;
+    };
     coins: {
       denom: string;
       amount: string;
     }[];
-    owner: string;
     startTime: string;
-    distributeTo: {
-      denom: string;
-      duration: string;
-      timestamp: string;
-    };
     numEpochsPaidOver: string;
+    poolId: string;
   };
 }
 
