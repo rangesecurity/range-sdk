@@ -184,10 +184,24 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
     granter: string;
     grantee: string;
     grant: {
-      authorization: unknown;
-      expiration: string;
+      authorization:
+        | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationGenericAuthorization
+        | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationSendAuthorization;
     };
   };
+}
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationGenericAuthorization {
+  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+  msg: string;
+}
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationSendAuthorization {
+  '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+  spendLimit: {
+    denom: string;
+    amount: string;
+  }[];
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
