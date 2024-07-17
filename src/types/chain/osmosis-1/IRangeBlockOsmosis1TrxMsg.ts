@@ -508,33 +508,30 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry {
-    type: string;
-    data: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryData;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryData {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
+  data: {
     portId: string;
-    channel: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryChannel;
+    channel: {
+      state: string;
+      ordering: string;
+      counterparty: {
+        portId: string;
+        channelId: string;
+      };
+      connectionHops: string[];
+      version: string;
+    };
     counterpartyVersion: string;
     proofInit: string;
-    proofHeight: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryProofHeight;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
     signer: string;
+  };
 }
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryChannel {
-    state: string;
-    ordering: string;
-    counterparty: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryCounterparty;
-    connectionHops: string[];
-    version: string;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryCounterparty {
-    portId: string;
-    channelId: string;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTryProofHeight {
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgRecvPacket
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
