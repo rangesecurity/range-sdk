@@ -1161,9 +1161,10 @@ export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
   type: Osmosis1TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
     description: {
-      details?: string;
-      moniker: string;
+      moniker?: string;
       identity?: string;
+      website?: string;
+      details?: string;
       securityContact?: string;
     };
     commission: {
@@ -1175,10 +1176,13 @@ export interface Osmosis1TrxMsgCosmosStakingV1beta1MsgCreateValidator
     delegatorAddress: string;
     validatorAddress: string;
     pubkey: {
-      key: string;
       '@type': string;
+      key: string;
     };
-    value: { denom: string; amount: string };
+    value: {
+      denom: string;
+      amount: string;
+    };
   };
 }
 
