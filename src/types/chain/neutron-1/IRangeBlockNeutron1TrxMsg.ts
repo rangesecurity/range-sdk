@@ -50,9 +50,13 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
     sender: string;
     contract: string;
+    msg: Record<string | number | symbol, unknown>;
+    funds?: {
+      denom: string;
+      amount: string;
+    }[];
   };
 }
 
