@@ -285,7 +285,7 @@ export interface Osmosis1TrxMsgCosmosGovV1beta1MsgVote extends IRangeMessage {
   data: {
     voter: string;
     option: string;
-    proposalId: string;
+    proposalId?: string;
   };
 }
 
