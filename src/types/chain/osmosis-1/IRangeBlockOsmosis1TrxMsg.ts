@@ -659,21 +659,19 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgUpdateClient
 }
 
 // types for mgs type:: /ibc.core.connection.v1.MsgConnectionOpenConfirm
-export interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm {
-    type: string;
-    data: Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirmData;
-}
-interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirmData {
+export interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
+  data: {
     connectionId: string;
     proofAck: string;
-    proofHeight: Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirmProofHeight;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
     signer: string;
+  };
 }
-interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirmProofHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /osmosis.concentratedliquidity.poolmodel.concentrated.v1beta1.MsgCreateConcentratedPool
 export interface Osmosis1TrxMsgOsmosisConcentratedliquidityPoolModelConcentratedV1beta1MsgCreateConcentratedPool
