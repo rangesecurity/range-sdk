@@ -39,7 +39,7 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisConcentratedLiquidityV1beta1MsgFungifyChargedPositions = 'osmosis.concentratedliquidity.v1beta1.MsgFungifyChargedPositions',
   OsmosisConcentratedLiquidityV1beta1MsgWithdrawPosition = 'osmosis.concentratedliquidity.v1beta1.MsgWithdrawPosition',
   OsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool = 'osmosis.cosmwasmpool.v1beta1.MsgCreateCosmWasmPool',
-  OsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool = 'osmosis.gamm.poolmodels.balancer.v1beta1.MsgCreateBalancerPool',
+  OsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool = 'osmosis.gamm.poolmodels.balancer.v1beta1.MsgCreateBalancerPool',
   OsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool = 'osmosis.gamm.poolmodels.stableswap.v1beta1.MsgCreateStableswapPool',
   OsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors = 'osmosis.gamm.poolmodels.stableswap.v1beta1.MsgStableSwapAdjustScalingFactors',
   OsmosisGammV1beta1MsgExitPool = 'osmosis.gamm.v1beta1.MsgExitPool',
@@ -123,7 +123,7 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgFungifyChargedPositions
   | Osmosis1TrxMsgOsmosisConcentratedliquidityV1beta1MsgWithdrawPosition
   | Osmosis1TrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
-  | Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
+  | Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool
   | Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgCreateStableSwapPool
   | Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSwapAdjustScalingFactors
   | Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool
@@ -774,11 +774,15 @@ export interface Osmosis1TrxMsgOsmosisCosmwasmPoolV1beta1MsgCreateCosmWasmPool
 }
 
 // types for mgs type:: /osmosis.gamm.poolmodels.balancer.v1beta1.MsgCreateBalancerPool
-export interface Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool
+export interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisGammPoolModelsBalancerV1beta1MsgCreateBalancerPool;
+  type: Osmosis1TrxMsgTypes.OsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool;
   data: {
     sender: string;
+    poolParams: {
+      swapFee: string;
+      exitFee: string;
+    };
     poolAssets: {
       token: {
         denom: string;
@@ -786,11 +790,7 @@ export interface Osmosis1TrxMsgOsmosisGammPoolModelsBalancerV1beta1MsgCreateBala
       };
       weight: string;
     }[];
-    poolParams: {
-      exitFee: string;
-      swapFee: string;
-    };
-    futurePoolGovernor: string;
+    futurePoolGovernor?: string;
   };
 }
 
@@ -1413,28 +1413,4 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
       uri_hash: string;
     };
   };
-}
-
-
-
-export interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPool {
-    type: string;
-    data: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolData;
-}
-interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolData {
-    sender: string;
-    poolParams: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolParams;
-    poolAssets: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1Beta1MsgCreateBalancerPoolPoolAssetsItem[];
-}
-interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolParams {
-    swapFee: string;
-    exitFee: string;
-}
-interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolPoolAssetsItem {
-    token: Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolToken;
-    weight: string;
-}
-interface Osmosis1TrxMsgOsmosisGammPoolmodelsBalancerV1beta1MsgCreateBalancerPoolToken {
-    denom: string;
-    amount: string;
 }
