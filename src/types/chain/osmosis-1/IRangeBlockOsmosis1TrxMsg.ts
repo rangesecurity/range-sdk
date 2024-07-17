@@ -514,13 +514,13 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
   data: {
     portId: string;
-    signer: string;
-    proofAck: string;
     channelId: string;
+    proofAck: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
+    signer: string;
   };
 }
 
