@@ -51,8 +51,8 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisIncentivesMsgCreateGauge = 'osmosis.incentives.MsgCreateGauge',
   OsmosisLockupMsgBeginUnlocking = 'osmosis.lockup.MsgBeginUnlocking',
   OsmosisLockupMsgLockTokens = 'osmosis.lockup.MsgLockTokens',
+  OsmosisPoolmanagerV1beta1MsgSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn',
   OsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn',
-  OsmosisPoolManagerV1beta1MsgSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn',
   OsmosisPoolManagerV1beta1MsgSwapExactAmountOut = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountOut',
   OsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition = 'osmosis.superfluid.MsgAddToConcentratedLiquiditySuperfluidPosition',
   OsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate = 'osmosis.superfluid.MsgCreateFullRangePositionAndSuperfluidDelegate',
@@ -135,8 +135,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
   | Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
   | Osmosis1TrxMsgOsmosisLockupMsgLockTokens
+  | Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn
   | Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn
-  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
   | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
   | Osmosis1TrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
   | Osmosis1TrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
@@ -985,15 +985,15 @@ export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAm
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn
-export interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountIn
+export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolmanagerV1beta1MsgSwapExactAmountIn;
   data: {
-    routes: {
-      poolId: string;
-      tokenOutDenom: string;
-    }[];
     sender: string;
+    routes: {
+      tokenOutDenom: string;
+      poolId?: string;
+    }[];
     tokenIn: {
       denom: string;
       amount: string;
