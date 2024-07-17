@@ -828,9 +828,9 @@ export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgExitPool;
   data: {
-    poolId: string;
     sender: string;
-    tokenOutMins: {
+    poolId: string;
+    tokenOutMins?: {
       denom: string;
       amount: string;
     }[];
