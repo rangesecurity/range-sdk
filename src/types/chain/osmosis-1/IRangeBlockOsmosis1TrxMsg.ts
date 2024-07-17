@@ -547,17 +547,17 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
       sourceChannel: string;
       destinationPort: string;
       destinationChannel: string;
-      timeoutTimestamp?: string;
       data: string;
-      timeoutHeight: {
+      timeoutTimestamp?: string;
+      timeoutHeight?: {
         revisionNumber?: string;
         revisionHeight?: string;
       };
     };
-    proofCommitment?: string;
+    proofCommitment: string;
     proofHeight: {
-      revisionNumber?: string;
-      revisionHeight?: string;
+      revisionNumber: string;
+      revisionHeight: string;
     };
     signer: string;
   };
