@@ -492,21 +492,20 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelCloseConfirm
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenConfirm
-export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm {
-    type: string;
-    data: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmData;
-}
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmData {
+export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirm
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenConfirm;
+  data: {
     portId: string;
     channelId: string;
     proofAck: string;
-    proofHeight: Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmProofHeight;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
     signer: string;
+  };
 }
-interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenConfirmProofHeight {
-    revisionHeight: string;
-}
-
 
 // types for mgs type:: /ibc.core.channel.v1.MsgChannelOpenTry
 export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
