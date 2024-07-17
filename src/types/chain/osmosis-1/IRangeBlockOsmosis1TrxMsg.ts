@@ -873,11 +873,11 @@ export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgSwapExactAmountIn
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgSwapExactAmountIn;
   data: {
-    routes: {
-      poolId: string;
-      tokenOutDenom: string;
-    }[];
     sender: string;
+    routes: {
+      tokenOutDenom: string;
+      poolId?: string;
+    }[];
     tokenIn: {
       denom: string;
       amount: string;
