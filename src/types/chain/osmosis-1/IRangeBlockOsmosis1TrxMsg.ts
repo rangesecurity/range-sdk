@@ -825,16 +825,19 @@ export interface Osmosis1TrxMsgOsmosisGammPoolModelsStableSwapV1beta1MsgStableSw
 }
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgExitPool
-export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool {
-    type: string;
-    data: Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPoolData;
-}
-interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPoolData {
+export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgExitPool
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgExitPool;
+  data: {
     sender: string;
     poolId: string;
+    tokenOutMins?: {
+      denom: string;
+      amount: string;
+    }[];
     shareInAmount: string;
+  };
 }
-
 
 // types for mgs type:: /osmosis.gamm.v1beta1.MsgJoinPool
 export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool
