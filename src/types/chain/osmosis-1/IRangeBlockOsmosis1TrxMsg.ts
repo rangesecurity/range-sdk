@@ -530,23 +530,23 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgChannelOpenTry
   type: Osmosis1TrxMsgTypes.IbcCoreChannelV1MsgChannelOpenTry;
   data: {
     portId: string;
-    signer: string;
     channel: {
       state: string;
-      version: string;
       ordering: string;
       counterparty: {
         portId: string;
         channelId: string;
       };
       connectionHops: string[];
+      version: string;
     };
+    counterpartyVersion: string;
     proofInit: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
-    counterpartyVersion: string;
+    signer: string;
   };
 }
 
