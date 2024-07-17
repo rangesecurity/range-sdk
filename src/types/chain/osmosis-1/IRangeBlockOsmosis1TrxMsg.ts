@@ -1243,7 +1243,7 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgUpdateAdmin
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgUpdateAdmin;
   data: {
     sender: string;
-    new_admin: string;
+    newAdmin: string;
     contract: string;
   };
 }
