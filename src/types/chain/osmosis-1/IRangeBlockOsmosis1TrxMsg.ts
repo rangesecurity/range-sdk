@@ -843,13 +843,13 @@ export interface Osmosis1TrxMsgOsmosisGammV1beta1MsgJoinPool
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.OsmosisGammV1beta1MsgJoinPool;
   data: {
-    poolId: string;
+    poolId?: string;
     sender: string;
-    tokenInMaxs: {
+    shareOutAmount: string;
+    tokenInMaxs?: {
       denom: string;
       amount: string;
     }[];
-    shareOutAmount: string;
   };
 }
 
