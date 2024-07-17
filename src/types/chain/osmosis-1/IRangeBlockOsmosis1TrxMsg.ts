@@ -659,12 +659,13 @@ export interface Osmosis1TrxMsgIbcCoreConnectionV1MsgConnectionOpenConfirm
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenConfirm;
   data: {
-    signer: string;
+    connectionId: string;
     proofAck: string;
     proofHeight: {
+      revisionNumber?: string;
       revisionHeight: string;
     };
-    connectionId: string;
+    signer: string;
   };
 }
 
