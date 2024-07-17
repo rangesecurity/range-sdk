@@ -3,6 +3,7 @@ import { IRangeMessage } from './IRangeMessage';
 export interface IKeyValuePair {
   key: string;
   value: string;
+  binary?: boolean;
 }
 
 export interface ITransactionEvent {
@@ -17,7 +18,8 @@ export interface ITransactionLog {
 export interface IRangeTransaction {
   data: unknown;
   hash: string;
-  logs: ITransactionLog[] | null;
+  logs?: ITransactionLog[];
+  events?: ITransactionEvent[];
   index: number;
   height: string;
   status: string;

@@ -51,8 +51,8 @@ export enum Osmosis1TrxMsgTypes {
   OsmosisIncentivesMsgCreateGauge = 'osmosis.incentives.MsgCreateGauge',
   OsmosisLockupMsgBeginUnlocking = 'osmosis.lockup.MsgBeginUnlocking',
   OsmosisLockupMsgLockTokens = 'osmosis.lockup.MsgLockTokens',
-  OsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn',
   OsmosisPoolmanagerV1beta1MsgSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountIn',
+  OsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn = 'osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn',
   OsmosisPoolManagerV1beta1MsgSwapExactAmountOut = 'osmosis.poolmanager.v1beta1.MsgSwapExactAmountOut',
   OsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition = 'osmosis.superfluid.MsgAddToConcentratedLiquiditySuperfluidPosition',
   OsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate = 'osmosis.superfluid.MsgCreateFullRangePositionAndSuperfluidDelegate',
@@ -135,8 +135,8 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgOsmosisIncentivesMsgCreateGauge
   | Osmosis1TrxMsgOsmosisLockupMsgBeginUnlocking
   | Osmosis1TrxMsgOsmosisLockupMsgLockTokens
-  | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
   | Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSwapExactAmountIn
+  | Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn
   | Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSwapExactAmountOut
   | Osmosis1TrxMsgOsmosisSuperfluidMsgAddToConcentratedLiquiditySuperfluidPosition
   | Osmosis1TrxMsgOsmosisSuperfluidMsgCreateFullRangePositionAndSuperfluidDelegate
@@ -262,23 +262,21 @@ export interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposal
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmosGovV1beta1MsgSubmitProposal;
   data: {
-    '@type': string;
-    content: {
-      '@type': string;
-      title: string;
-      amount: {
-        denom: string;
-        amount: string;
-      }[];
-      recipient: string;
-      description: string;
-    };
-    proposer: string;
-    initial_deposit: {
+    content: Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal;
+    initialDeposit: {
       denom: string;
       amount: string;
     }[];
+    proposer: string;
   };
+}
+
+interface Osmosis1TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal {
+  '@type': '/ibc.core.client.v1.ClientUpdateProposal';
+  title: string;
+  description: string;
+  subjectClientId: string;
+  substituteClientId: string;
 }
 
 // types for mgs type:: /cosmos.gov.v1beta1.MsgVote
@@ -395,11 +393,11 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
+    admin?: string;
     sender: string;
-    admin: string;
     codeId: string;
     label: string;
-    msg: unknown;
+    msg: Record<string | number | symbol, unknown>;
   };
 }
 
@@ -592,58 +590,52 @@ export interface Osmosis1TrxMsgIbcCoreClientV1MsgCreateClient
   extends IRangeMessage {
   type: Osmosis1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: any;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehaviour: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_state: {
+    consensusState: {
+      '@type': string;
+      timestamp: string;
       root: {
         hash: string;
       };
-      '@type': string;
-      timestamp: string;
-      next_validators_hash: string;
+      nextValidatorsHash: string;
     };
+    signer: string;
   };
 }
 
@@ -964,16 +956,16 @@ export interface Osmosis1TrxMsgOsmosisLockupMsgLockTokens
 }
 
 // types for mgs type:: /osmosis.poolmanager.v1beta1.MsgSplitRouteSwapExactAmountIn
-export interface Osmosis1TrxMsgOsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn
+export interface Osmosis1TrxMsgOsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisPoolManagerV1beta1MsgSplitRouteSwapExactAmountIn;
+  type: Osmosis1TrxMsgTypes.OsmosisPoolmanagerV1beta1MsgSplitRouteSwapExactAmountIn;
   data: {
     routes: {
       pools: {
         poolId: string;
         tokenOutDenom: string;
       }[];
-      tokenInAmount: string;
+      tokenInAmount?: string;
     }[];
     sender: string;
     tokenInDenom: string;

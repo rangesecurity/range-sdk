@@ -1,6 +1,6 @@
 import { IRangeMessage } from '../IRangeMessage';
 
-enum Neutron1TrxMsgTypes {
+export enum Neutron1TrxMsgTypes {
   CosmosBankV1beta1MsgSend = 'cosmos.bank.v1beta1.MsgSend',
   CosmwasmWasmV1MsgExecuteContract = 'cosmwasm.wasm.v1.MsgExecuteContract',
   CosmwasmWasmV1MsgInstantiateContract = 'cosmwasm.wasm.v1.MsgInstantiateContract',
@@ -50,9 +50,13 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgExecuteContract;
   data: {
-    msg: string;
     sender: string;
     contract: string;
+    msg: Record<string | number | symbol, unknown>;
+    funds?: {
+      denom: string;
+      amount: string;
+    }[];
   };
 }
 
@@ -61,10 +65,11 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
+    admin?: string;
     label: string;
     codeId: string;
     sender: string;
+    msg: Record<string | number | symbol, unknown>;
   };
 }
 
@@ -73,11 +78,12 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract2;
   data: {
+    sender: string;
+    admin?: string;
+    codeId: string;
+    label: string;
     msg: string;
     salt: string;
-    label: string;
-    codeId: string;
-    sender: string;
   };
 }
 
@@ -100,6 +106,10 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgStoreCode
   data: {
     sender: string;
     wasmByteCode: string;
+    instantiatePermission?: {
+      permission: string;
+      addresses: string[];
+    };
   };
 }
 
@@ -108,18 +118,20 @@ export interface Neutron1TrxMsgIbcApplicationsTransferV1MsgTransfer
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+    timeoutHeight?: {
+      revisionHeight?: string;
+      revisionNumber?: string;
     };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
@@ -129,22 +141,25 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo: find example in db
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
-    signer: string;
+    acknowledgement: string;
     proofAcked: string;
     proofHeight: {
       revisionHeight: string;
-      revisionNumber: string;
+      revisionNumber?: string;
     };
-    acknowledgement: string;
+    signer: string;
   };
 }
 
@@ -154,21 +169,24 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgRecvPacket
   type: Neutron1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo: find example in db
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
+    signer: string;
   };
 }
 
@@ -182,13 +200,13 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: {
+      destinationPort: string;
+      destinationChannel: string;
+      timeoutHeight?: {
         revisionHeight?: string;
         revisionNumber?: string;
       };
-      destinationPort: string;
-      timeoutTimestamp: string;
-      destinationChannel: string;
+      timeoutTimestamp?: string;
     };
     signer: string;
     proofHeight: {
@@ -205,58 +223,52 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: unknown;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight?: {
+        revisionHeight?: string;
+        revisionNumber?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehaviour: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_state: {
+    consensusState: {
+      '@type': string;
+      timestamp: string;
       root: {
         hash: string;
       };
-      '@type': string;
-      timestamp: string;
-      next_validators_hash: string;
+      nextValidatorsHash: string;
     };
+    signer: string;
   };
 }
 
@@ -265,98 +277,97 @@ export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
+    clientId: string;
+    clientMessage: {
       '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
           height: string;
-          block_id: {
+          time: string;
+          lastBlockId: {
             hash: string;
-            part_set_header: {
-              hash: string;
+            partSetHeader: {
               total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          round?: number;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
             };
           };
           signatures: {
+            blockIdFlag: string;
+            validatorAddress?: string;
+            timestamp?: string;
             signature?: string;
-            timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
           }[];
         };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
       };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
+      validatorSet: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
         proposer: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         };
+        totalVotingPower?: string;
+      };
+      trustedHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         }[];
-        total_voting_power: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
       };
     };
+    signer: string;
   };
 }
 

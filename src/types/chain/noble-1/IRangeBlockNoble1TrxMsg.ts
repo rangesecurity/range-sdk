@@ -1,6 +1,6 @@
 import { IRangeMessage } from '../IRangeMessage';
 
-enum Noble1TrxMsgTypes {
+export enum Noble1TrxMsgTypes {
   IbcCoreConnectionV1MsgConnectionOpenConfirm = 'ibc.core.connection.v1.MsgConnectionOpenConfirm',
   NobleFiatTokenFactoryMsgBurn = 'noble.fiattokenfactory.MsgBurn',
   IbcCoreChannelV1MsgTimeout = 'ibc.core.channel.v1.MsgTimeout',
@@ -31,19 +31,19 @@ export type Noble1TrxMsg =
   | Noble1TrxMsgCosmosAuthzV1beta1MsgExec
   | Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
   | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
-  | Noble1TrxMsgTypeMsgGrantAllowance
+  | Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
   | Noble1TrxMsgTypeMsgChannelOpenInit
-  | Noble1TrxMsgTypeMsgConnectionOpenTry
-  | Noble1TrxMsgTypeMsgConnectionOpenInit
-  | Noble1TrxMsgTypeMsgTransfer
+  | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
+  | Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+  | Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
   | Noble1TrxMsgCosmosBankV1beta1MsgSend
   | Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
   | Noble1TrxMsgNobleFiatTokenFactoryMsgMint
   | Noble1TrxMsgIbcCoreChannelOpenTry
   | Noble1TrxMsgIbcCoreChannelOpenConfirm
-  | Noble1TrxMsgIbcCoreChannelAcknowledgement
+  | Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   | Noble1TrxMsgCosmosAuthzMsgGrant
-  | Noble1TrxMsgIbcCoreClientCreateClient
+  | Noble1TrxMsgIbcCoreClientV1MsgCreateClient
   | Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
   | Noble1TrxMsgIbcCoreClientV1MsgUpdateClient;
 
@@ -80,22 +80,25 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofUnreceived: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
     nextSequenceRecv: string;
+    signer: string;
   };
 }
 
@@ -103,18 +106,19 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
 export interface Noble1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
   data: {
-    msgs: {
-      '@type': string;
-      amount: {
-        denom: string;
-        amount: string;
-      }[];
-      to_address: string;
-      from_address: string;
-    }[];
-    '@type': string;
     grantee: string;
+    msgs: Noble1TrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend[];
   };
+}
+
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
+  '@type': '/cosmos.bank.v1beta1.MsgSend';
+  fromAddress: string;
+  toAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  }[];
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgRecvPacket
@@ -123,26 +127,25 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgRecvPacket
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgRecvPacket;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     proofCommitment: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
-  status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: unknown;
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenAck
@@ -150,86 +153,81 @@ export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenAck
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenAck;
   data: {
-    '@type': string;
-    signer: string;
+    connectionId: string;
+    counterpartyConnectionId: string;
     version: {
-      features: string[];
       identifier: string;
+      features: string[];
     };
-    proof_try: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: {
-        leaf_spec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehash_key: string;
-          prehash_value: string;
-        };
-        max_depth: number;
-        min_depth: number;
-        inner_spec: {
-          hash: string;
-          child_size: number;
-          child_order: number[];
-          empty_child?: unknown;
-          max_prefix_length: number;
-          min_prefix_length: number;
-        };
-        prehash_key_before_comparison: boolean;
-      }[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehavior: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    proof_client: string;
-    proof_height: {
-      revision_height: string;
-      revision_number: string;
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
     };
-    connection_id: string;
-    proof_consensus: string;
+    proofTry: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
-  status: string;
-  block_number: string;
-  addresses: string[];
-  contract_addresses?: unknown;
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface Noble1TrxMsgTypeMsgGrantAllowance extends IRangeMessage {
+export interface Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
   data: {
-    '@type': string;
-    grantee: string;
     granter: string;
-    allowance: {
-      '@type': string;
-      allowance: {
-        '@type': string;
-        expiration: null;
-        spend_limit: string[];
-      };
-      allowed_messages: string[];
-    };
+    grantee: string;
+    allowance: Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance;
   };
+}
+
+interface Noble1TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowedMsgAllowance {
+  '@type': '/cosmos.feegrant.v1beta1.AllowedMsgAllowance';
+  allowance: {
+    '@type': string;
+  };
+  allowedMessages: string[];
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgChannelOpenInit
@@ -251,63 +249,109 @@ export interface Noble1TrxMsgTypeMsgChannelOpenInit extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenTry
-export interface Noble1TrxMsgTypeMsgConnectionOpenTry extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenTry;
   data: {
-    signer: string;
-    client_id: string;
-    proof_init: string;
-    proof_height: {
-      revision_height: string;
-      revision_number: string;
+    clientId: string;
+    clientState: {
+      '@type': string;
+      chainId: string;
+      trustLevel: {
+        numerator: string;
+        denominator: string;
+      };
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      latestHeight: {
+        revisionNumber: string;
+        revisionHeight: string;
+      };
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_height: {
-      revision_height: string;
-      revision_number: string;
-    };
-    connection_id: string;
     counterparty: {
-      client_id: string;
-      connection_id: string;
+      clientId: string;
+      connectionId: string;
+      prefix: {
+        keyPrefix: string;
+      };
     };
-    delay_period: string;
-    proof_client: string;
-    client_state: string;
-    counterparty_versions: { features: string[]; identifier: string }[];
-    previous_connection_id: string;
-    host_consensus_state_proof: string | null;
+    counterpartyVersions: {
+      identifier: string;
+      features: string[];
+    }[];
+    proofHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    proofInit: string;
+    proofClient: string;
+    proofConsensus: string;
+    consensusHeight: {
+      revisionNumber: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-export interface Noble1TrxMsgTypeMsgConnectionOpenInit extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
   data: {
-    signer: string;
-    client_id: string;
+    clientId: string;
     counterparty: {
+      clientId: string;
       prefix: {
         keyPrefix: string;
       };
-      client_id: string;
     };
+    signer: string;
   };
 }
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
-export interface Noble1TrxMsgTypeMsgTransfer extends IRangeMessage {
+export interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcApplicationsTransferV1MsgTransfer;
   data: {
+    sourcePort: string;
+    sourceChannel: string;
     token: {
       denom: string;
       amount: string;
     };
     sender: string;
     receiver: string;
-    sourcePort: string;
-    sourceChannel: string;
-    timeoutHeight: Record<string | number | symbol, unknown>; // todo
-    timeoutTimestamp: string;
+    timeoutHeight?: {
+      revisionHeight?: string;
+      revisionNumber?: string;
+    };
+    timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
@@ -388,27 +432,30 @@ export interface Noble1TrxMsgIbcCoreChannelOpenConfirm extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.channel.v1.MsgAcknowledgement
-export interface Noble1TrxMsgIbcCoreChannelAcknowledgement
+export interface Noble1TrxMsgIbcCoreChannelV1MsgAcknowledgement
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreChannelV1MsgAcknowledgement;
   data: {
     packet: {
-      data: string;
       sequence: string;
       sourcePort: string;
       sourceChannel: string;
-      timeoutHeight: Record<string | number | symbol, unknown>; // todo;
       destinationPort: string;
-      timeoutTimestamp: string;
       destinationChannel: string;
-    };
-    signer: string;
-    proofAcked: string;
-    proofHeight: {
-      revisionHeight: string;
-      revisionNumber: string;
+      data: string;
+      timeoutHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
+      };
+      timeoutTimestamp?: string;
     };
     acknowledgement: string;
+    proofAcked: string;
+    proofHeight: {
+      revisionNumber?: string;
+      revisionHeight: string;
+    };
+    signer: string;
   };
 }
 
@@ -430,44 +477,59 @@ export interface Noble1TrxMsgCosmosAuthzMsgGrant extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgCreateClient
-export interface Noble1TrxMsgIbcCoreClientCreateClient extends IRangeMessage {
+export interface Noble1TrxMsgIbcCoreClientV1MsgCreateClient
+  extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_state: {
+    clientState: {
       '@type': string;
-      chain_id: string;
-      proof_specs: any[];
-      trust_level: {
+      chainId: string;
+      trustLevel: {
         numerator: string;
         denominator: string;
       };
-      upgrade_path: string[];
-      frozen_height: {
-        revision_height: string;
-        revision_number: string;
+      trustingPeriod: string;
+      unbondingPeriod: string;
+      maxClockDrift: string;
+      frozenHeight?: {
+        revisionNumber?: string;
+        revisionHeight?: string;
       };
-      latest_height: {
-        revision_height: string;
-        revision_number: string;
+      latestHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
       };
-      max_clock_drift: string;
-      trusting_period: string;
-      unbonding_period: string;
-      allow_update_after_expiry: boolean;
-      allow_update_after_misbehaviour: boolean;
+      proofSpecs: {
+        leafSpec: {
+          hash: string;
+          prehashValue: string;
+          length: string;
+          prefix: string;
+        };
+        innerSpec: {
+          childOrder: number[];
+          childSize: number;
+          minPrefixLength: number;
+          maxPrefixLength: number;
+          hash: string;
+        };
+      }[];
+      upgradePath: string[];
+      allowUpdateAfterExpiry: boolean;
+      allowUpdateAfterMisbehaviour: boolean;
     };
-    consensus_state: {
+    consensusState: {
+      '@type': string;
+      timestamp: string;
       root: {
         hash: string;
       };
-      '@type': string;
-      timestamp: string;
-      next_validators_hash: string;
+      nextValidatorsHash: string;
     };
+    signer: string;
   };
 }
+
 // types for mgs type:: /cosmos.feegrant.v1beta1.MsgRevokeAllowance
 export interface Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
   extends IRangeMessage {
@@ -483,97 +545,95 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
   extends IRangeMessage {
   type: Noble1TrxMsgTypes.IbcCoreClientV1MsgUpdateClient;
   data: {
-    '@type': string;
-    signer: string;
-    client_id: string;
-    client_message: {
+    clientId: string;
+    clientMessage: {
       '@type': string;
-      signed_header: {
-        commit: {
-          round: number;
+      signedHeader: {
+        header: {
+          version: {
+            block: string;
+            app?: string;
+          };
+          chainId: string;
           height: string;
-          block_id: {
+          time: string;
+          lastBlockId: {
             hash: string;
-            part_set_header: {
-              hash: string;
+            partSetHeader: {
               total: number;
+              hash: string;
+            };
+          };
+          lastCommitHash: string;
+          dataHash: string;
+          validatorsHash: string;
+          nextValidatorsHash: string;
+          consensusHash: string;
+          appHash: string;
+          lastResultsHash: string;
+          evidenceHash: string;
+          proposerAddress: string;
+        };
+        commit: {
+          height: string;
+          blockId: {
+            hash: string;
+            partSetHeader: {
+              total: number;
+              hash: string;
             };
           };
           signatures: {
-            signature?: string;
+            blockIdFlag: string;
+            validatorAddress?: string;
             timestamp: string;
-            block_id_flag: string;
-            validator_address?: string;
+            signature?: string;
           }[];
         };
-        header: {
-          time: string;
-          height: string;
-          version: {
-            app: string;
-            block: string;
-          };
-          app_hash: string;
-          chain_id: string;
-          data_hash: string;
-          evidence_hash: string;
-          last_block_id: {
-            hash: string;
-            part_set_header: {
-              hash: string;
-              total: number;
-            };
-          };
-          consensus_hash: string;
-          validators_hash: string;
-          last_commit_hash: string;
-          proposer_address: string;
-          last_results_hash: string;
-          next_validators_hash: string;
-        };
       };
-      validator_set: {
-        proposer: {
-          address: string;
-          pub_key: {
-            ed25519: string;
-          };
-          voting_power: string;
-          proposer_priority: string;
-        };
+      validatorSet: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         }[];
-        total_voting_power: string;
-      };
-      trusted_height: {
-        revision_height: string;
-        revision_number: string;
-      };
-      trusted_validators: {
         proposer: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         };
+        totalVotingPower?: string;
+      };
+      trustedHeight: {
+        revisionNumber?: string;
+        revisionHeight: string;
+      };
+      trustedValidators: {
         validators: {
           address: string;
-          pub_key: {
+          pubKey: {
             ed25519: string;
           };
-          voting_power: string;
-          proposer_priority: string;
+          votingPower: string;
+          proposerPriority?: string;
         }[];
-        total_voting_power: string;
+        proposer: {
+          address: string;
+          pubKey: {
+            ed25519: string;
+          };
+          votingPower: string;
+          proposerPriority?: string;
+        };
+        totalVotingPower?: string;
       };
     };
+    signer: string;
   };
 }
