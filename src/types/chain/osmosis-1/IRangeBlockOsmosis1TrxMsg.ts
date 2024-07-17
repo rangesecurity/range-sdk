@@ -81,7 +81,7 @@ export enum Osmosis1TrxMsgTypes {
   CosmosBankV1beta1MsgUpdateParams = 'cosmos.bank.v1beta1.MsgUpdateParams',
   OsmosisTokenFactoryV1betaBurn = 'osmosis.tokenfactory.v1beta1.MsgBurn',
   OsmosisTokenFactoryV1beta1MsgChangeAdmin = 'osmosis.tokenfactory.v1beta1.MsgChangeAdmin',
-  OsmosisTokenFactoryV1beta1MsgSetDenomMetadata = 'osmosis.tokenfactory.v1beta1.MsgSetDenomMetadata',
+  OsmosisTokenfactoryV1beta1MsgSetDenomMetadata = 'osmosis.tokenfactory.v1beta1.MsgSetDenomMetadata',
 }
 
 export type Osmosis1TrxMsg =
@@ -165,7 +165,7 @@ export type Osmosis1TrxMsg =
   | Osmosis1TrxMsgCosmosBankV1beta1MsgUpdateParams
   | Osmosis1TrxMsgOsmosisTokenFactoryV1betaBurn
   | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgChangeAdmin
-  | Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
+  | Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadata;
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
@@ -1400,24 +1400,21 @@ export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgChangeAdmin
 }
 
 // types for msg type:: /osmosis.tokenfactory.v1beta1.MsgChangeAdmin
-export interface Osmosis1TrxMsgOsmosisTokenFactoryV1beta1MsgSetDenomMetadata
+export interface Osmosis1TrxMsgOsmosisTokenfactoryV1beta1MsgSetDenomMetadata
   extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgSetDenomMetadata;
+  type: Osmosis1TrxMsgTypes.OsmosisTokenfactoryV1beta1MsgSetDenomMetadata;
   data: {
     sender: string;
     metadata: {
       description: string;
-      denom_units: {
+      denomUnits: {
         denom: string;
-        exponent: number;
-        aliases: string;
+        aliases: string[];
       }[];
       base: string;
       display: string;
       name: string;
       symbol: string;
-      uri: string;
-      uri_hash: string;
     };
   };
 }
