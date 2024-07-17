@@ -177,23 +177,32 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
-    type: string;
-    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData {
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+  data: {
     granter: string;
     grantee: string;
-    grant: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
-    authorization: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
-    '@type': string;
-    msg: string;
+    grant: {
+      authorization:
+        | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationGenericAuthorization
+        | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationSendAuthorization;
+    };
+  };
 }
 
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationGenericAuthorization {
+  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+  msg: string;
+}
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationSendAuthorization {
+  '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+  spendLimit: {
+    denom: string;
+    amount: string;
+  }[];
+}
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
 export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgRevoke
