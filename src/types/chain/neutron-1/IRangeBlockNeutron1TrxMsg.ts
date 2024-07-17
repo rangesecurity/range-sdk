@@ -65,10 +65,11 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
   extends IRangeMessage {
   type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
   data: {
-    msg: string;
+    admin?: string;
     label: string;
     codeId: string;
     sender: string;
+    msg: Record<string | number | symbol, unknown>;
   };
 }
 
