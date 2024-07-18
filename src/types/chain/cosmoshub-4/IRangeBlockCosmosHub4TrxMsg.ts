@@ -487,6 +487,7 @@ export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
       revisionHeight?: string;
     };
     timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
