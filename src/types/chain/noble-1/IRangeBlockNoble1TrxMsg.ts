@@ -374,7 +374,10 @@ export interface Noble1TrxMsgIbcCoreChannelV1MsgChannelOpenAck
     signer: string;
     proofTry: string;
     channelId: string;
-    proofHeight: { revisionHeight: string };
+    proofHeight: {
+      revisionHeight: string;
+      revisionNumber?: string;
+    };
     counterpartyVersion: string;
     counterpartyChannelId: string;
   };
