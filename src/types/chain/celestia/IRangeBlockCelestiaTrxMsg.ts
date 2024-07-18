@@ -97,33 +97,22 @@ export interface CelestiaTrxMsgCelestiaBlobV1MsgPayForBlobs
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgExec
-export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec {
-    type: string;
-    data: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecData {
+export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
+  type: CelestiaTrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+  data: {
     grantee: string;
-    msgs: CelestiaTrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+    msgs: (
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgDelegate
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgTransfer
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgWithdrawDelegatorReward
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgWithdrawValidatorCommission
+    )[];
+  };
 }
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
-    '@type': string;
-    sourcePort: string;
-    sourceChannel: string;
-    token: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecToken;
-    sender: string;
-    receiver: string;
-    timeoutHeight: CelestiaTrxMsgCosmosAuthzV1beta1MsgExecTimeoutHeight;
-    memo: string;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecToken {
-    denom: string;
-    amount: string;
-}
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecTimeoutHeight {
-    revisionNumber: string;
-    revisionHeight: string;
-}
-
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgSend {
   '@type': '/cosmos.bank.v1beta1.MsgSend';
@@ -166,7 +155,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
   grantee: string;
 }
 
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgDelegate {
   '@type': '/cosmos.staking.v1beta1.MsgDelegate';
   delegatorAddress: string;
   validatorAddress: string;
@@ -174,6 +163,34 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
     denom: string;
     amount: string;
   };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgTransfer {
+  '@type': '/ibc.applications.transfer.v1.MsgTransfer';
+  sourcePort: string;
+  sourceChannel: string;
+  token: {
+    denom: string;
+    amount: string;
+  };
+  sender: string;
+  receiver: string;
+  timeoutHeight: {
+    revisionNumber: string;
+    revisionHeight: string;
+  };
+  memo: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgWithdrawDelegatorReward {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgWithdrawValidatorCommission {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
+  validatorAddress: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
