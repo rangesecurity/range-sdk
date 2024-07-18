@@ -408,10 +408,11 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
     description: {
-      moniker: string;
+      moniker?: string;
       identity?: string;
       website?: string;
       details?: string;
+      securityContact?: string;
     };
     commission: {
       rate: string;
