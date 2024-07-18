@@ -177,40 +177,51 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
-    type: string;
-    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData {
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
+  extends IRangeMessage {
+  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
+  data: {
     granter: string;
     grantee: string;
-    grant: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
+    grant:
+      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
+      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
+      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization;
+  };
 }
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
-    authorization: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
+  authorization: {
+    '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
+    msg: string;
+  };
+  expiration: string;
+}
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
+  authorization: {
+    '@type': '/cosmos.bank.v1beta1.SendAuthorization';
+    spendLimit: {
+      denom: string;
+      amount: string;
+    }[];
     expiration: string;
+  };
 }
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
-    '@type': string;
-    allowList: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList;
+
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
+  authorization: {
+    '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    allowList: {
+      address: string[];
+    };
     authorizationType: string;
-}
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAllowList {
-    address: string[];
-}
-
-
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationGenericAuthorization {
-  '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
-  msg: string;
-}
-
-interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorizationSendAuthorization {
-  '@type': '/cosmos.bank.v1beta1.SendAuthorization';
-  spendLimit: {
-    denom: string;
-    amount: string;
-  }[];
+    maxTokens?: {
+      denom: string;
+      amount: string;
+    };
+  };
+  expiration?: string;
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgRevoke
