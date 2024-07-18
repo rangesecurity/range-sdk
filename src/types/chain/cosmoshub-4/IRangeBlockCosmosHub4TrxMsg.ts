@@ -873,6 +873,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
@@ -882,8 +883,8 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
           };
           signatures: {
             blockIdFlag: string;
+            timestamp: string;
             validatorAddress?: string;
-            timestamp?: string;
             signature?: string;
           }[];
         };
@@ -895,6 +896,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -902,11 +904,12 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
-        revisionNumber: string;
+        revisionNumber?: string;
         revisionHeight: string;
       };
       trustedValidators: {
@@ -916,6 +919,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -923,8 +927,9 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
     signer: string;
