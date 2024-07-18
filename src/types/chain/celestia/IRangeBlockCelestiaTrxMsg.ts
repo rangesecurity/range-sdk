@@ -214,12 +214,17 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
       denom: string;
       amount: string;
     }[];
+    expiration?: string;
   };
 }
 
 interface CelestiaTrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
   authorization: {
     '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
+    maxTokens?: {
+      denom: string;
+      amount: string;
+    };
     allowList: {
       address: string[];
     };
