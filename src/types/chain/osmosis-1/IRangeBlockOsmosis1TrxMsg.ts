@@ -590,7 +590,7 @@ export interface Osmosis1TrxMsgIbcCoreChannelV1MsgRecvPacket
     };
     proofCommitment: string;
     proofHeight: {
-      revisionNumber: string;
+      revisionNumber?: string;
       revisionHeight: string;
     };
     signer: string;
