@@ -74,10 +74,13 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
     msgs: (
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgUndelegate
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission
       | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgGrant
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgRevoke
     )[];
   };
 }
@@ -94,6 +97,16 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend {
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate {
   '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgUndelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgUndelegate';
   delegatorAddress: string;
   validatorAddress: string;
   amount: {
@@ -120,10 +133,30 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawVal
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote {
-  '@type': '/cosmos.gov.v1beta1.MsgVote';
+  '@type': '/cosmos.gov.v1beta1.MsgVote' | '/cosmos.gov.v1.MsgVote';
   proposalId: string;
   voter: string;
   option: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgGrant {
+  '@type': '/cosmos.authz.v1beta1.MsgGrant';
+  granter: string;
+  grantee: string;
+  grant: {
+    authorization: {
+      '@type': string;
+      msg: string;
+    };
+    expiration: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgRevoke {
+  '@type': '/cosmos.authz.v1beta1.MsgRevoke';
+  granter: string;
+  grantee: string;
+  msgTypeUrl: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
@@ -143,10 +176,10 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
   authorization: {
     '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
-    allowList: {
+    authorizationType: string;
+    allowList?: {
       address: string[];
     };
-    authorizationType: string;
     maxTokens?: {
       denom: string;
       amount: string;
@@ -160,14 +193,14 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorizatio
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
-  expiration: string;
+  expiration?: string;
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
   authorization: {
     '@type': '/cosmos.bank.v1beta1.SendAuthorization';
     spendLimit: { denom: string; amount: string }[];
-  }[];
+  };
   expiration: string;
 }
 
@@ -304,7 +337,8 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
   data: {
     content:
       | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal
-      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal;
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal;
     initialDeposit: {
       denom: string;
       amount: string;
@@ -328,6 +362,14 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwa
     name: string;
     height: string;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal {
+  '@type': '/ibc.core.client.v1.ClientUpdateProposal';
+  title: string;
+  description: string;
+  subjectClientId: string;
+  substituteClientId: string;
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
@@ -399,10 +441,11 @@ export interface CosmosHub4TrxMsgCosmosStakingV1beta1MsgCreateValidator
   type: CosmosHub4TrxMsgTypes.CosmosStakingV1beta1MsgCreateValidator;
   data: {
     description: {
-      moniker: string;
+      moniker?: string;
       identity?: string;
       website?: string;
       details?: string;
+      securityContact?: string;
     };
     commission: {
       rate: string;
@@ -487,6 +530,7 @@ export interface CosmosHub4TrxMsgIbcApplicationsTransferV1MsgTransfer
       revisionHeight?: string;
     };
     timeoutTimestamp?: string;
+    memo?: string;
   };
 }
 
@@ -872,6 +916,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: string;
           blockId: {
             hash: string;
             partSetHeader: {
@@ -881,8 +926,8 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
           };
           signatures: {
             blockIdFlag: string;
+            timestamp: string;
             validatorAddress?: string;
-            timestamp?: string;
             signature?: string;
           }[];
         };
@@ -894,6 +939,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -901,11 +947,12 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
       trustedHeight: {
-        revisionNumber: string;
+        revisionNumber?: string;
         revisionHeight: string;
       };
       trustedValidators: {
@@ -915,6 +962,7 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         }[];
         proposer: {
           address: string;
@@ -922,8 +970,9 @@ export interface CosmosHub4TrxMsgIbcCoreClientV1MsgUpdateClient
             ed25519: string;
           };
           votingPower: string;
+          proposerPriority?: string;
         };
-        totalVotingPower: string;
+        totalVotingPower?: string;
       };
     };
     signer: string;
