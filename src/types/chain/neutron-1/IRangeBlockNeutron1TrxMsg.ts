@@ -14,7 +14,7 @@ export enum Neutron1TrxMsgTypes {
   IbcCoreClientV1MsgCreateClient = 'ibc.core.client.v1.MsgCreateClient',
   IbcCoreClientV1MsgUpdateClient = 'ibc.core.client.v1.MsgUpdateClient',
   OsmosisTokenFactoryV1beta1MsgCreateDenom = 'osmosis.tokenfactory.v1beta1.MsgCreateDenom',
-  OsmosisTokenFactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
+  OsmosisTokenfactoryV1beta1MsgMint = 'osmosis.tokenfactory.v1beta1.MsgMint',
   CosmwasmWasmV1MsgUpdateAdmin = 'cosmwasm.wasm.v1.MsgUpdateAdmin',
 }
 
@@ -32,7 +32,7 @@ export type Neutron1TrxMsg =
   | Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
   | Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
   | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
-  | Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
+  | Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMint
   | Neutron1TrxMsgCosmwasmWasmV1MsgUpdateAdmin;
 
 // types for msg type:: /cosmos.bank.v1beta1.MsgSend
@@ -382,15 +382,16 @@ export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgCreateDenom
 }
 
 // types for mgs type:: /osmosis.tokenfactory.v1beta1.MsgMint
-export interface Neutron1TrxMsgOsmosisTokenFactoryV1beta1MsgMintRootObject
+export interface Neutron1TrxMsgOsmosisTokenfactoryV1beta1MsgMint
   extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.OsmosisTokenFactoryV1beta1MsgMint;
+  type: Neutron1TrxMsgTypes.OsmosisTokenfactoryV1beta1MsgMint;
   data: {
+    sender: string;
     amount: {
       denom: string;
       amount: string;
     };
-    sender: string;
+    mintToAddress?: string;
   };
 }
 
