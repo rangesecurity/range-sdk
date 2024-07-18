@@ -106,7 +106,10 @@ export interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrant
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgGrantAllowance
       | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance
-      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgDelegate
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgTransfer
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgWithdrawDelegatorReward
+      | CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgWithdrawValidatorCommission
     )[];
   };
 }
@@ -152,7 +155,7 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgRevokeAllowance {
   grantee: string;
 }
 
-interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgDelegate {
   '@type': '/cosmos.staking.v1beta1.MsgDelegate';
   delegatorAddress: string;
   validatorAddress: string;
@@ -160,6 +163,34 @@ interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgDelegate {
     denom: string;
     amount: string;
   };
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgTransfer {
+  '@type': '/ibc.applications.transfer.v1.MsgTransfer';
+  sourcePort: string;
+  sourceChannel: string;
+  token: {
+    denom: string;
+    amount: string;
+  };
+  sender: string;
+  receiver: string;
+  timeoutHeight: {
+    revisionNumber: string;
+    revisionHeight: string;
+  };
+  memo: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgWithdrawDelegatorReward {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward';
+  delegatorAddress: string;
+  validatorAddress: string;
+}
+
+interface CelestiaTrxMsgCosmosAuthzV1beta1MsgExecDataMsgMsgWithdrawValidatorCommission {
+  '@type': '/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission';
+  validatorAddress: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
