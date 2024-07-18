@@ -66,21 +66,24 @@ export enum CosmosHub4TrxMsgTypes {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgExec
-export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec {
-    type: string;
-    data: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecData;
-}
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecData {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExec
+  extends IRangeMessage {
+  type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgExec;
+  data: {
     grantee: string;
-    msgs: CosmosHub4TrxMsgCosmosAuthzV1Beta1MsgExecMsgsItem[];
+    msgs: (
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgUndelegate
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgWithdrawDelegatorReward
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSetWithdrawAddress
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawValidatorCommission
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgGrant
+      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgRevoke
+    )[];
+  };
 }
-interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecMsgsItem {
-    '@type': string;
-    proposalId: string;
-    voter: string;
-    option: string;
-}
-
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend {
   '@type': '/cosmos.bank.v1beta1.MsgSend';
@@ -94,6 +97,16 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgSend {
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgDelegate {
   '@type': '/cosmos.staking.v1beta1.MsgDelegate';
+  delegatorAddress: string;
+  validatorAddress: string;
+  amount: {
+    denom: string;
+    amount: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgUndelegate {
+  '@type': '/cosmos.staking.v1beta1.MsgUndelegate';
   delegatorAddress: string;
   validatorAddress: string;
   amount: {
@@ -120,10 +133,30 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgMsgWithdrawVal
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgVote {
-  '@type': '/cosmos.gov.v1beta1.MsgVote';
+  '@type': '/cosmos.gov.v1beta1.MsgVote' | '/cosmos.gov.v1.MsgVote';
   proposalId: string;
   voter: string;
   option: string;
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgGrant {
+  '@type': '/cosmos.authz.v1beta1.MsgGrant';
+  granter: string;
+  grantee: string;
+  grant: {
+    authorization: {
+      '@type': string;
+      msg: string;
+    };
+    expiration: string;
+  };
+}
+
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgRevoke {
+  '@type': '/cosmos.authz.v1beta1.MsgRevoke';
+  granter: string;
+  grantee: string;
+  msgTypeUrl: string;
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
