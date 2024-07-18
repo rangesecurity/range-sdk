@@ -176,10 +176,10 @@ export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
   authorization: {
     '@type': '/cosmos.staking.v1beta1.StakeAuthorization';
-    allowList: {
+    authorizationType: string;
+    allowList?: {
       address: string[];
     };
-    authorizationType: string;
     maxTokens?: {
       denom: string;
       amount: string;
@@ -193,14 +193,14 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorizatio
     '@type': '/cosmos.authz.v1beta1.GenericAuthorization';
     msg: string;
   };
-  expiration: string;
+  expiration?: string;
 }
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization {
   authorization: {
     '@type': '/cosmos.bank.v1beta1.SendAuthorization';
     spendLimit: { denom: string; amount: string }[];
-  }[];
+  };
   expiration: string;
 }
 
