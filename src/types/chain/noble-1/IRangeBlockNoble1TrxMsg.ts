@@ -579,6 +579,7 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
         };
         commit: {
           height: string;
+          round?: number;
           blockId: {
             hash: string;
             partSetHeader: {
