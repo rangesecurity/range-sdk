@@ -304,7 +304,8 @@ export interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposal
   data: {
     content:
       | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeTextProposal
-      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal;
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwareUpgradeProposal
+      | CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal;
     initialDeposit: {
       denom: string;
       amount: string;
@@ -328,6 +329,14 @@ interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeSoftwa
     name: string;
     height: string;
   };
+}
+
+interface CosmosHub4TrxMsgCosmosGovV1beta1MsgSubmitProposalDataContentTypeClientUpdateProposal {
+  '@type': '/ibc.core.client.v1.ClientUpdateProposal';
+  title: string;
+  description: string;
+  subjectClientId: string;
+  substituteClientId: string;
 }
 
 // types for msg type:: /cosmos.gov.v1beta1.MsgVote
