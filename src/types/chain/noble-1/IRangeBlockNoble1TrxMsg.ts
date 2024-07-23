@@ -480,58 +480,69 @@ export interface Noble1TrxMsgCosmosAuthzMsgGrant extends IRangeMessage {
 }
 
 // types for msg type:: /ibc.core.client.v1.MsgCreateClient
-export interface Noble1TrxMsgIbcCoreClientV1MsgCreateClient
-  extends IRangeMessage {
-  type: Noble1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
-  data: {
-    clientState: {
-      '@type': string;
-      chainId: string;
-      trustLevel: {
-        numerator: string;
-        denominator: string;
-      };
-      trustingPeriod: string;
-      unbondingPeriod: string;
-      maxClockDrift: string;
-      frozenHeight?: {
-        revisionNumber?: string;
-        revisionHeight?: string;
-      };
-      latestHeight: {
-        revisionNumber?: string;
-        revisionHeight: string;
-      };
-      proofSpecs: {
-        leafSpec: {
-          hash: string;
-          prehashValue: string;
-          length: string;
-          prefix: string;
-        };
-        innerSpec: {
-          childOrder: number[];
-          childSize: number;
-          minPrefixLength: number;
-          maxPrefixLength: number;
-          hash: string;
-        };
-      }[];
-      upgradePath: string[];
-      allowUpdateAfterExpiry: boolean;
-      allowUpdateAfterMisbehaviour: boolean;
-    };
-    consensusState: {
-      '@type': string;
-      timestamp: string;
-      root: {
-        hash: string;
-      };
-      nextValidatorsHash: string;
-    };
-    signer: string;
-  };
+export interface Noble1TrxMsgIbcCoreClientV1MsgCreateClient {
+    type: string;
+    data: Noble1TrxMsgIbcCoreClientV1MsgCreateClientData;
 }
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientData {
+    clientState: Noble1TrxMsgIbcCoreClientV1MsgCreateClientClientState;
+    consensusState: Noble1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: Noble1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: Noble1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
+    latestHeight: Noble1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
+    proofSpecs: Noble1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
+    upgradePath: string[];
+    allowUpdateAfterExpiry: boolean;
+    allowUpdateAfterMisbehaviour: boolean;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
+    leafSpec: Noble1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
+    innerSpec: Noble1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
+    maxDepth: number;
+    prehashKeyBeforeComparison: boolean;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
+    hash: string;
+    prehashKey: string;
+    prehashValue: string;
+    prefix: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    emptyChild: string;
+    hash: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
+    '@type': string;
+    timestamp: string;
+    root: Noble1TrxMsgIbcCoreClientV1MsgCreateClientRoot;
+    nextValidatorsHash: string;
+}
+interface Noble1TrxMsgIbcCoreClientV1MsgCreateClientRoot {
+    hash: string;
+}
+
 
 // types for mgs type:: /cosmos.feegrant.v1beta1.MsgRevokeAllowance
 export interface Noble1TrxMsgCosmosFeegrantV1beta1MsgRevokeAllowance
