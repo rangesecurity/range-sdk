@@ -160,18 +160,27 @@ interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgExecDataMsgsTypeMsgRevoke {
 }
 
 // types for msg type:: /cosmos.authz.v1beta1.MsgGrant
-export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
-  data: {
+export interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrant {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantData;
+}
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantData {
     granter: string;
     grantee: string;
-    grant:
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
-      | CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization;
-  };
+    grant: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
 }
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
+    authorization: CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+}
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
+    '@type': string;
+    spendLimit: CosmosHub4TrxMsgCosmosAuthzV1Beta1MsgGrantSpendLimitItem[];
+}
+interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantSpendLimitItem {
+    denom: string;
+    amount: string;
+}
+
 
 interface CosmosHub4TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization {
   authorization: {
