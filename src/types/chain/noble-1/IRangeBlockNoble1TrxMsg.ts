@@ -318,20 +318,28 @@ export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenTry
 }
 
 // types for msg type:: /ibc.core.connection.v1.MsgConnectionOpenInit
-export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit
-  extends IRangeMessage {
-  type: Noble1TrxMsgTypes.IbcCoreConnectionV1MsgConnectionOpenInit;
-  data: {
-    clientId: string;
-    counterparty: {
-      clientId: string;
-      prefix: {
-        keyPrefix: string;
-      };
-    };
-    signer: string;
-  };
+export interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInit {
+    type: string;
+    data: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData;
 }
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitData {
+    clientId: string;
+    counterparty: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty;
+    version: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitVersion;
+    signer: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitCounterparty {
+    clientId: string;
+    prefix: Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitPrefix {
+    keyPrefix: string;
+}
+interface Noble1TrxMsgIbcCoreConnectionV1MsgConnectionOpenInitVersion {
+    identifier: string;
+    features: string[];
+}
+
 
 // types for msg type:: /ibc.applications.transfer.v1.MsgTransfer
 export interface Noble1TrxMsgIbcApplicationsTransferV1MsgTransfer
