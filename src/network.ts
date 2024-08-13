@@ -28,7 +28,6 @@ export const NetworkValidator = z.union(
     ZodLiteral<'celestia'>,
     ZodLiteral<'dydx-mainnet-1'>,
     ZodLiteral<'dymension_1100-1'>,
-    ZodLiteral<'solana'>,
   ],
 );
 
