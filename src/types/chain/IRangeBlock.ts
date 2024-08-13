@@ -1,5 +1,4 @@
 import { NetworkEnum } from '../IRangeNetwork';
-import { IRangeTransaction } from './IRangeTransaction';
 import { Osmosis1Trx } from './osmosis-1/IRangeBlockOsmosis1Trx';
 import { Grand1Trx } from './grand-1/IRangeBlockGrand1Trx';
 import { CosmosHub4Trx } from './cosmoshub-4/IRangeBlockCosmosHub4Trx';
@@ -10,11 +9,12 @@ import { Stride1Trx } from './stride-1/IRangeBlockStride1Trx';
 import { OsmoTest5Trx } from './osmo-test-5/IRangeBlockOsmoTest5Trx';
 import { CelestiaTrx } from './celestia/IRangeBlockCelestiaTrx';
 import { DydxMainnet1Trx } from './dydx-mainnet-1/IRangeBlockDydxMainnet1Trx';
+import { SolanaTrx } from './solana/IRangeBlockSolanaTrx';
 
 interface BlockBase {
   hash: string;
   height: string;
-  transactions: IRangeTransaction[];
+  transactions: unknown[];
   network: NetworkEnum;
   timestamp: string;
   block_data?: Record<string | number | symbol, unknown>;
@@ -79,6 +79,11 @@ export interface CelestiaBlock extends BlockBase {
 export interface DydxMainnet1Block extends BlockBase {
   transactions: DydxMainnet1Trx[];
   network: NetworkEnum.DydxMainnet1;
+}
+
+export interface SolanaBlock extends BlockBase {
+  transactions: SolanaTrx[];
+  network: NetworkEnum.Solana;
 }
 
 export type IRangeBlock =
