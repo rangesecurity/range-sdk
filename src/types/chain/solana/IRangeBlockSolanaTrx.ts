@@ -121,5 +121,5 @@ export interface SolanaTrxTrx {
 
 export interface SolanaTrx {
   meta: SolanaTrxMeta;
-  transaction: SolanaTrxTrx[];
+  transaction: SolanaTrxTrx;
 }
