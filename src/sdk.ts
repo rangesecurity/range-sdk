@@ -46,6 +46,39 @@ export interface IRangeSDK {
   gracefulCleanup(): Promise<void>;
 }
 
+export interface RuleMetrics {
+  type: string;
+
+  execCount: number;
+  execMinTimeMS: number;
+  execMaxTimeMS: number;
+  execTotalTimeMS: number;
+
+  alertEventCount: number;
+  alertEventMinTimeMS: number;
+  alertEventMaxTimeMS: number;
+  alertEventTotalTimeMS: number;
+}
+
+export interface RuleGroupProcessingMetrics {
+  endToEndCount: number;
+  endToEndMinTimeMS: number;
+  endToEndMaxTimeMS: number;
+  endToEndTotalTimeMS: number;
+
+  fetchRulesCount: number;
+  fetchRulesMinTimeMS: number;
+  fetchRulesMaxTimeMS: number;
+  fetchRulesTotalTimeMS: number;
+
+  fetchBlockCount: number;
+  fetchBlockMinTimeMS: number;
+  fetchBlockMaxTimeMS: number;
+  fetchBlockTotalTimeMS: number;
+
+  individualRuleStats: Record<string, RuleMetrics>;
+}
+
 class RangeSDK implements IRangeSDK {
   private opts: RangeSDKOptions;
   private initOpts?: RangeSDKInitOptions;
@@ -54,6 +87,9 @@ class RangeSDK implements IRangeSDK {
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
   private tickRuleGroupTaskClient?: KafkaConsumerClient;
+
+  private metricsByRuleGroup: Map<string, RuleGroupProcessingMetrics> =
+    new Map();
 
   constructor(opts: RangeSDKOptions) {
     this.opts = opts;
@@ -166,25 +202,37 @@ class RangeSDK implements IRangeSDK {
   private async blockRuleGroupTaskQueueHandler(
     taskPackage: BlockRuleGroupTaskPackage,
   ): Promise<void> {
+    const start = Date.now();
+    let rulesFetchedAt: number | null = null;
+    let blockFetchedAt: number | null = null;
+
     const [rules, block] = await Promise.all([
       fetchAlertRulesByRuleGroupID({
         token: this.opts.token,
         ruleGroupId: taskPackage.ruleGroupId,
+      }).then((data) => {
+        rulesFetchedAt = Date.now();
+        return data;
       }),
       fetchBlock({
         token: this.opts.token,
         height: taskPackage.block.height,
         network: taskPackage.block.network,
-      }).catch((err) => {
-        logger.error(
-          err,
-          `Error while fetching block: network:: ${taskPackage.block.network}, height:: ${taskPackage.block.height}`,
-        );
-        if (err?.response?.status === 404) {
-          return null;
-        }
-        throw err;
-      }),
+      })
+        .then((data) => {
+          blockFetchedAt = Date.now();
+          return data;
+        })
+        .catch((err) => {
+          logger.error(
+            err,
+            `Error while fetching block: network:: ${taskPackage.block.network}, height:: ${taskPackage.block.height}`,
+          );
+          if (err?.response?.status === 404) {
+            return null;
+          }
+          throw err;
+        }),
     ]);
 
     // call the acknowledgement API and mark the package as done if block is not found or rule group is empty
@@ -200,7 +248,7 @@ class RangeSDK implements IRangeSDK {
       return;
     }
 
-    const { errors, alertEventsCount } = await this.processBlockTask(
+    const { errors, alertEventsCount, ruleStats } = await this.processBlockTask(
       block,
       rules,
     );
@@ -216,6 +264,19 @@ class RangeSDK implements IRangeSDK {
           }
         : {}),
     });
+
+    if (
+      process.env['SDK_METRICS_ENABLED'] == 'true' &&
+      rulesFetchedAt &&
+      blockFetchedAt
+    ) {
+      this.setMetricStats(
+        taskPackage.ruleGroupId,
+        start,
+        { rulesFetchedAt, blockFetchedAt },
+        ruleStats,
+      );
+    }
   }
 
   private async initErrorBlockRuleTaskQueue() {
@@ -304,7 +365,19 @@ class RangeSDK implements IRangeSDK {
   private async processBlockTask(
     block: IRangeBlock,
     rules: IRangeAlertRule[],
-  ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> {
+  ): Promise<{
+    errors: IRangeError[];
+    alertEventsCount: number;
+    ruleStats: RuleGroupProcessingMetrics['individualRuleStats'];
+  }> {
+    const ruleStats: Record<string, Partial<RuleMetrics>> = rules.reduce(
+      (map, r) => {
+        map[r.id] = {};
+        return map;
+      },
+      {} as Record<string, Partial<RuleMetrics>>,
+    );
+
     const events = await Promise.all(
       rules.map(
         async (
@@ -318,6 +391,7 @@ class RangeSDK implements IRangeSDK {
               throw new Error('Missing handler for block based alert rules');
             }
 
+            const start = Date.now();
             const blockTimestamp = dayjs(block.timestamp);
             if (
               !(
@@ -347,7 +421,12 @@ class RangeSDK implements IRangeSDK {
                 },
                 `rule processing skipped as timestamp conditions fail`,
               );
-              return { errors: [], alertEventsCount: 0 };
+
+              delete ruleStats[rule.id];
+              return {
+                errors: [],
+                alertEventsCount: 0,
+              };
             }
 
             const ruleSubResults =
@@ -363,6 +442,13 @@ class RangeSDK implements IRangeSDK {
               addressesInvolved: subResult.addressesInvolved || [],
             }));
 
+            const execAt = Date.now();
+            ruleStats[rule.id].type = rule.ruleType;
+            ruleStats[rule.id].execMinTimeMS = execAt - start;
+            ruleStats[rule.id].execMaxTimeMS = execAt - start;
+            ruleStats[rule.id].execCount = 1;
+            ruleStats[rule.id].execTotalTimeMS = execAt - start;
+
             if (!ruleResults.length) {
               return { errors: [], alertEventsCount: 0 };
             }
@@ -375,12 +461,22 @@ class RangeSDK implements IRangeSDK {
               alerts: ruleResults,
             });
 
+            const alertCreatedAt = Date.now();
+            ruleStats[rule.id].alertEventMinTimeMS = alertCreatedAt - start;
+            ruleStats[rule.id].alertEventMaxTimeMS = alertCreatedAt - start;
+            ruleStats[rule.id].alertEventCount = 1;
+            ruleStats[rule.id].alertEventTotalTimeMS = alertCreatedAt - start;
+
             return { errors: [], alertEventsCount: ruleResults.length };
           } catch (error) {
+            logger.error(error);
+
             let err = String(error);
             if (error instanceof Error) {
               err = error.message + error.stack ? `\n${error.stack}` : '';
             }
+
+            delete ruleStats[rule.id];
 
             return {
               errors: [
@@ -401,6 +497,7 @@ class RangeSDK implements IRangeSDK {
       alertEventsCount: events.flat().reduce((alertEventsCount, obj) => {
         return obj.alertEventsCount + alertEventsCount;
       }, 0),
+      ruleStats: ruleStats as RuleGroupProcessingMetrics['individualRuleStats'],
     };
   }
 
@@ -559,6 +656,141 @@ class RangeSDK implements IRangeSDK {
       alertEventsCount: events.flat().reduce((alertEventsCount, obj) => {
         return obj.alertEventsCount + alertEventsCount;
       }, 0),
+    };
+  }
+
+  private setMetricStats(
+    ruleGroupId: string,
+    start: number,
+    initialStats: {
+      rulesFetchedAt: number;
+      blockFetchedAt: number;
+    },
+    ruleStats: Record<string, RuleMetrics>,
+  ) {
+    const { rulesFetchedAt, blockFetchedAt } = initialStats;
+    const end = Date.now();
+    const endToEnd = end - start;
+
+    const stats = {
+      fetchRulesCount: 1,
+      fetchRulesMinTimeMS: rulesFetchedAt - start,
+      fetchRulesMaxTimeMS: rulesFetchedAt - start,
+      fetchRulesTotalTimeMS: rulesFetchedAt - start,
+
+      fetchBlockCount: 1,
+      fetchBlockMinTimeMS: blockFetchedAt - start,
+      fetchBlockMaxTimeMS: blockFetchedAt - start,
+      fetchBlockTotalTimeMS: blockFetchedAt - start,
+
+      endToEndCount: 1,
+      endToEndMaxTimeMS: endToEnd,
+      endToEndMinTimeMS: endToEnd,
+      endToEndTotalTimeMS: endToEnd,
+
+      individualRuleStats: ruleStats,
+    };
+
+    const currentStats = this.metricsByRuleGroup.get(ruleGroupId);
+    if (!currentStats) {
+      this.metricsByRuleGroup.set(
+        ruleGroupId,
+        stats as RuleGroupProcessingMetrics,
+      );
+      return;
+    }
+
+    const newStats: RuleGroupProcessingMetrics = JSON.parse(
+      JSON.stringify(currentStats),
+    );
+    newStats.fetchRulesCount += stats.fetchRulesCount || 1;
+    if (newStats.fetchRulesMinTimeMS > (stats.fetchRulesMinTimeMS || 0)) {
+      newStats.fetchRulesMinTimeMS = stats.fetchRulesMinTimeMS || 0;
+    }
+    if (newStats.fetchRulesMaxTimeMS < (stats.fetchRulesMaxTimeMS || 0)) {
+      newStats.fetchRulesMaxTimeMS = stats.fetchRulesMaxTimeMS || 0;
+    }
+    newStats.fetchRulesTotalTimeMS += stats.fetchRulesTotalTimeMS || 0;
+
+    newStats.fetchBlockCount += stats.fetchBlockCount || 1;
+    if (
+      stats.fetchBlockMinTimeMS &&
+      newStats.fetchBlockMinTimeMS > stats.fetchBlockMinTimeMS
+    ) {
+      newStats.fetchBlockMinTimeMS = stats.fetchBlockMinTimeMS;
+    }
+    if (newStats.fetchBlockMaxTimeMS < (stats.fetchBlockMaxTimeMS || 0)) {
+      newStats.fetchBlockMaxTimeMS = stats.fetchBlockMaxTimeMS || 0;
+    }
+    newStats.fetchBlockTotalTimeMS += stats.fetchBlockTotalTimeMS || 0;
+
+    newStats.endToEndCount += stats.endToEndCount || 1;
+    if (
+      stats.endToEndMinTimeMS &&
+      newStats.endToEndMinTimeMS < stats.endToEndMinTimeMS
+    ) {
+      newStats.endToEndMinTimeMS = stats.endToEndMinTimeMS;
+    }
+    if (newStats.endToEndMaxTimeMS < (stats.endToEndMaxTimeMS || 0)) {
+      newStats.endToEndMaxTimeMS = stats.endToEndMaxTimeMS || 0;
+    }
+    newStats.endToEndTotalTimeMS += stats.endToEndTotalTimeMS || 0;
+
+    // handle individual rule stats
+    for (const ruleID in ruleStats) {
+      const existingRuleStats = newStats.individualRuleStats[ruleID];
+      if (!existingRuleStats) {
+        newStats.individualRuleStats[ruleID] = ruleStats[ruleID];
+        continue;
+      }
+
+      const newRuleStats: RuleMetrics = JSON.parse(
+        JSON.stringify(existingRuleStats),
+      );
+
+      newRuleStats.execCount += ruleStats[ruleID].execCount;
+      if (newRuleStats.execMinTimeMS > ruleStats[ruleID].execMinTimeMS) {
+        newRuleStats.execMinTimeMS = ruleStats[ruleID].execMinTimeMS;
+      }
+      if (newRuleStats.execMaxTimeMS < ruleStats[ruleID].execMaxTimeMS) {
+        newRuleStats.execMaxTimeMS = ruleStats[ruleID].execMaxTimeMS;
+      }
+      newRuleStats.execTotalTimeMS += ruleStats[ruleID].execTotalTimeMS;
+
+      if (ruleStats[ruleID].alertEventCount) {
+        newRuleStats.alertEventCount += ruleStats[ruleID].alertEventCount;
+        if (
+          newRuleStats.alertEventMinTimeMS >
+          ruleStats[ruleID].alertEventMinTimeMS
+        ) {
+          newRuleStats.alertEventMinTimeMS =
+            ruleStats[ruleID].alertEventMinTimeMS;
+        }
+        if (
+          newRuleStats.alertEventMaxTimeMS <
+          ruleStats[ruleID].alertEventMaxTimeMS
+        ) {
+          newRuleStats.alertEventMaxTimeMS =
+            ruleStats[ruleID].alertEventMaxTimeMS;
+        }
+        newRuleStats.alertEventTotalTimeMS +=
+          ruleStats[ruleID].alertEventTotalTimeMS;
+      }
+
+      newStats.individualRuleStats[ruleID] = newRuleStats;
+    }
+
+    this.metricsByRuleGroup.set(ruleGroupId, newStats);
+  }
+
+  getMetricStats() {
+    if (process.env['SDK_METRICS_ENABLED'] == 'true') {
+      return Object.fromEntries(this.metricsByRuleGroup);
+    }
+
+    return {
+      message:
+        'SDK Metrics are not enabled. To enable SDK in metrics mode, please pass env `SDK_METRICS_ENABLED` as true on initialisation',
     };
   }
 
