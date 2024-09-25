@@ -244,6 +244,7 @@ class RangeSDK implements IRangeSDK {
         ruleGroupId: taskPackage.ruleGroupId,
         runnerId: taskPackage.runnerId,
         alertEventsCount: 0,
+        alertRulesIds: [],
       });
       return;
     }
@@ -258,6 +259,7 @@ class RangeSDK implements IRangeSDK {
       ruleGroupId: taskPackage.ruleGroupId,
       runnerId: taskPackage.runnerId,
       alertEventsCount,
+      alertRulesIds: rules.map((r) => r.id),
       ...(errors?.length
         ? {
             errors,
