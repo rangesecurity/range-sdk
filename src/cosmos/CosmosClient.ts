@@ -56,6 +56,48 @@ export class CosmosClient {
     return JSON.parse(Buffer.from(res.data).toString('utf8'));
   }
 
+  async fetchAllContractStates(address: string) {
+    let key: any = [];
+
+    const client = await this.getCosmwasmRpcClient();
+
+    let models: any = [];
+    let parsedModels: any = [];
+
+    let iterationCount = 0;
+    while (iterationCount < 20) {
+      iterationCount++;
+      try {
+        const res = await client.cosmwasm.wasm.v1.allContractState({
+          address,
+          pagination: {
+            countTotal: false,
+            key,
+            limit: 100n,
+            offset: 0n,
+            reverse: false,
+          },
+        });
+        models = [...models, ...res.models];
+        parsedModels = [
+          ...parsedModels,
+          ...res.models.map(({ key, value }) => {
+            return {
+              key: Buffer.from(key).toString('utf8'),
+              value: JSON.parse(Buffer.from(value).toString('utf8')),
+            };
+          }),
+        ];
+
+        key = res.pagination?.nextKey;
+      } catch (error) {
+        break;
+      }
+    }
+
+    return parsedModels;
+  }
+
   async fetchLatestHeight() {
     const res = await axios.get(`${this.rpcEndpoint}/status`);
     return res.data?.result.sync_info.latest_block_height;
