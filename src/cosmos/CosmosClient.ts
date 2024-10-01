@@ -1,11 +1,5 @@
 import { cosmos, cosmwasm, ibc, osmosis } from 'osmojs';
 import axios from 'axios';
-import {
-  QueryBalanceResponse,
-  QuerySupplyOfResponse,
-} from 'osmojs/cosmos/bank/v1beta1/query';
-import { QueryValidatorResponse } from 'osmojs/cosmos/staking/v1beta1/query';
-import { QueryContractInfoResponse } from 'osmojs/cosmwasm/wasm/v1/query';
 
 export class CosmosClient {
   constructor(
@@ -17,7 +11,7 @@ export class CosmosClient {
     }
   }
 
-  async balance(address: string, denom: string): Promise<QueryBalanceResponse> {
+  async balance(address: string, denom: string) {
     const client = await this.getCosmosRpcClient();
     return client.cosmos.bank.v1beta1.balance({
       address,
@@ -25,21 +19,36 @@ export class CosmosClient {
     });
   }
 
-  async supply(denom: string): Promise<QuerySupplyOfResponse> {
+  async allBalances(address: string) {
+    const client = await this.getCosmosRpcClient();
+    const res = await client.cosmos.bank.v1beta1.allBalances({
+      address,
+      pagination: {
+        countTotal: false,
+        key: [] as any,
+        limit: 1000n,
+        offset: 0n,
+        reverse: false,
+      },
+    });
+    return res.balances;
+  }
+
+  async supply(denom: string) {
     const client = await this.getCosmosRpcClient();
     return client.cosmos.bank.v1beta1.supplyOf({
       denom,
     });
   }
 
-  async validator(validatorAddr: string): Promise<QueryValidatorResponse> {
+  async validator(validatorAddr: string) {
     const client = await this.getCosmosRpcClient();
     return client.cosmos.staking.v1beta1.validator({
       validatorAddr,
     });
   }
 
-  async contractInfo(address: string): Promise<QueryContractInfoResponse> {
+  async contractInfo(address: string) {
     const client = await this.getCosmwasmRpcClient();
     return client.cosmwasm.wasm.v1.contractInfo({
       address,
