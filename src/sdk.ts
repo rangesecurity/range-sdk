@@ -267,17 +267,21 @@ class RangeSDK implements IRangeSDK {
         : {}),
     });
 
-    if (
-      process.env['SDK_METRICS_ENABLED'] == 'true' &&
-      rulesFetchedAt &&
-      blockFetchedAt
-    ) {
-      this.setMetricStats(
-        taskPackage.ruleGroupId,
-        start,
-        { rulesFetchedAt, blockFetchedAt },
-        ruleStats,
-      );
+    try {
+      if (
+        process.env['SDK_METRICS_ENABLED'] == 'true' &&
+        rulesFetchedAt &&
+        blockFetchedAt
+      ) {
+        this.setMetricStats(
+          taskPackage.ruleGroupId,
+          start,
+          { rulesFetchedAt, blockFetchedAt },
+          ruleStats,
+        );
+      }
+    } catch (err) {
+      logger.error(`Error while setting metrics`, err);
     }
   }
 
