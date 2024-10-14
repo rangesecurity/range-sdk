@@ -21,6 +21,7 @@ import { fetchConfig } from './services/fetchConfig';
 import { getLogger } from './logger';
 import { constants } from './constants';
 import { tickTaskAck } from './services/tickTaskAck';
+import { IRangeMultiPhaseRule } from './types/IRangeMultiphaseRule';
 
 const logger = getLogger({ name: 'rangeSDK' });
 
@@ -87,6 +88,7 @@ class RangeSDK implements IRangeSDK {
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
   private tickRuleGroupTaskClient?: KafkaConsumerClient;
+  private dependencyRegistry: Map<IRangeMultiPhaseRule, IRangeAlertRule[]> = new Map();
 
   private metricsByRuleGroup: Map<string, RuleGroupProcessingMetrics> =
     new Map();
@@ -376,13 +378,23 @@ class RangeSDK implements IRangeSDK {
     alertEventsCount: number;
     ruleStats: RuleGroupProcessingMetrics['individualRuleStats'];
   }> {
-    const ruleStats: Record<string, Partial<RuleMetrics>> = rules.reduce(
+// Separate normal rules and multi-phase rules
+    const normalRules = rules.filter(
+      (rule) => !('dependencyRegistry' in rule),
+    );
+    const multiPhaseRules = rules.filter(
+      (rule) => 'dependencyRegistry' in rule,
+    ) as IRangeMultiPhaseRule[];
+
+    const ruleStats: Record<string, Partial<RuleMetrics>> = normalRules.reduce(
       (map, r) => {
         map[r.id] = {};
         return map;
       },
       {} as Record<string, Partial<RuleMetrics>>,
     );
+    
+    
 
     const events = await Promise.all(
       rules.map(
@@ -457,6 +469,10 @@ class RangeSDK implements IRangeSDK {
 
             if (!ruleResults.length) {
               return { errors: [], alertEventsCount: 0 };
+            }
+
+            if (this.dependencyRegistry.has(rule)) {
+              const dependentRules = this.dependencyRegistry.get(rule);
             }
 
             await createAlertEvents({
