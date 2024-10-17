@@ -252,6 +252,7 @@ class RangeSDK implements IRangeSDK {
 
     // Filter out rate limited rules
     const filteredRules: IRangeAlertRule[] = [];
+    const rateLimitedRuleIds: string[] = [];
     for (const rule of rules) {
       if (
         this.rateLimitedRules.has(rule.id) &&
@@ -268,6 +269,7 @@ class RangeSDK implements IRangeSDK {
           `rule processing skipped as it is rate limited.`,
         );
         // Skip the rule
+        rateLimitedRuleIds.push(rule.id);
         continue;
       }
       filteredRules.push(rule);
@@ -285,6 +287,7 @@ class RangeSDK implements IRangeSDK {
         runnerId: taskPackage.runnerId,
         alertEventsCount: 0,
         alertRulesIds: [],
+        rateLimitedAlertRuleIds: rateLimitedRuleIds,
       });
       return;
     }
@@ -300,6 +303,7 @@ class RangeSDK implements IRangeSDK {
       runnerId: taskPackage.runnerId,
       alertEventsCount,
       alertRulesIds: rules.map((r) => r.id),
+      rateLimitedAlertRuleIds: rateLimitedRuleIds,
       ...(errors?.length
         ? {
             errors,
