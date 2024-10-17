@@ -88,6 +88,7 @@ class RangeSDK implements IRangeSDK {
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
   private tickRuleGroupTaskClient?: KafkaConsumerClient;
 
+  private rateLimitedRules: Map<string, number> = new Map();
   private metricsByRuleGroup: Map<string, RuleGroupProcessingMetrics> =
     new Map();
 
@@ -249,6 +250,45 @@ class RangeSDK implements IRangeSDK {
       return;
     }
 
+    // Filter out rate limited rules
+    const filteredRules: IRangeAlertRule[] = [];
+    for (const rule of rules) {
+      if (
+        this.rateLimitedRules.has(rule.id) &&
+        dayjs
+          .unix(this.rateLimitedRules.get(rule.id) as number)
+          .isAfter(dayjs())
+      ) {
+        logger.info(
+          {
+            ruleID: rule.id,
+            currentTime: dayjs().unix(),
+            rateLimitedTill: this.rateLimitedRules.get(rule.id),
+          },
+          `rule processing skipped as it is rate limited.`,
+        );
+        // Skip the rule
+        continue;
+      }
+      filteredRules.push(rule);
+    }
+
+    if (!filteredRules.length) {
+      logger.warn(
+        { rules, rateLimitedRules: Object.fromEntries(this.rateLimitedRules) },
+        'Early task package ack due to rate limited for all rules',
+      );
+      await taskAck({
+        token: this.opts.token,
+        block: taskPackage.block,
+        ruleGroupId: taskPackage.ruleGroupId,
+        runnerId: taskPackage.runnerId,
+        alertEventsCount: 0,
+        alertRulesIds: [],
+      });
+      return;
+    }
+
     const { errors, alertEventsCount, ruleStats } = await this.processBlockTask(
       block,
       rules,
@@ -281,7 +321,7 @@ class RangeSDK implements IRangeSDK {
         );
       }
     } catch (err) {
-      logger.error(`Error while setting metrics`, err);
+      logger.error(err, `Error while setting metrics`);
     }
   }
 
@@ -388,7 +428,25 @@ class RangeSDK implements IRangeSDK {
       rules.map(
         async (
           rule,
-        ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> => {
+        ): Promise<{
+          errors: IRangeError[];
+          alertEventsCount: number;
+          rateLimitedStatus: {
+            ruleID: string;
+            isRateLimited: boolean;
+            retryAfterUnixSec: number;
+          };
+        }> => {
+          const rateLimitedStatus: {
+            ruleID: string;
+            isRateLimited: boolean;
+            retryAfterUnixSec: number;
+          } = {
+            ruleID: rule.id,
+            isRateLimited: false,
+            retryAfterUnixSec: 0,
+          };
+
           try {
             if (!this.initOpts) {
               throw new Error('SDK Init not called, onBlock missing');
@@ -432,6 +490,7 @@ class RangeSDK implements IRangeSDK {
               return {
                 errors: [],
                 alertEventsCount: 0,
+                rateLimitedStatus,
               };
             }
 
@@ -456,10 +515,10 @@ class RangeSDK implements IRangeSDK {
             ruleStats[rule.id].execTotalTimeMS = execAt - start;
 
             if (!ruleResults.length) {
-              return { errors: [], alertEventsCount: 0 };
+              return { errors: [], alertEventsCount: 0, rateLimitedStatus };
             }
 
-            await createAlertEvents({
+            const alertApiResp = await createAlertEvents({
               token: this.opts.token,
               workspaceId: rule.workspaceId || null,
               alertRuleId: rule.id,
@@ -473,7 +532,17 @@ class RangeSDK implements IRangeSDK {
             ruleStats[rule.id].alertEventCount = 1;
             ruleStats[rule.id].alertEventTotalTimeMS = alertCreatedAt - start;
 
-            return { errors: [], alertEventsCount: ruleResults.length };
+            if (!alertApiResp.success) {
+              rateLimitedStatus.isRateLimited = true;
+              rateLimitedStatus.retryAfterUnixSec =
+                alertApiResp.retryAfterUnixSec;
+            }
+
+            return {
+              errors: [],
+              alertEventsCount: ruleResults.length,
+              rateLimitedStatus,
+            };
           } catch (error) {
             logger.error(error);
 
@@ -492,11 +561,22 @@ class RangeSDK implements IRangeSDK {
                 },
               ],
               alertEventsCount: 0,
+              rateLimitedStatus,
             };
           }
         },
       ),
     );
+
+    // Set rate limit information
+    for (const event of events) {
+      if (event.rateLimitedStatus.isRateLimited) {
+        this.rateLimitedRules.set(
+          event.rateLimitedStatus.ruleID,
+          event.rateLimitedStatus.retryAfterUnixSec,
+        );
+      }
+    }
 
     return {
       errors: events.flat().flatMap((obj) => obj.errors),
@@ -743,7 +823,7 @@ class RangeSDK implements IRangeSDK {
     newStats.endToEndTotalTimeMS += stats.endToEndTotalTimeMS || 0;
 
     // handle individual rule stats
-    for (const ruleID in ruleStats) {
+    for (const ruleID of Object.keys(ruleStats)) {
       const existingRuleStats = newStats.individualRuleStats[ruleID];
       if (!existingRuleStats) {
         newStats.individualRuleStats[ruleID] = ruleStats[ruleID];

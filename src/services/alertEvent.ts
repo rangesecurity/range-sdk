@@ -8,10 +8,12 @@ export async function createAlertEvents(args: {
   ruleGroupId: string;
   alertRuleId: string;
   alerts: IRangeEvent[];
-}): Promise<{ success: boolean }> {
+}): Promise<{ success: true } | { success: false; retryAfterUnixSec: number }> {
   const { token, workspaceId, ruleGroupId, alertRuleId, alerts } = args;
 
-  const { data } = await axios.post<{ success: boolean }>(
+  const { data } = await axios.post<
+    { success: true } | { success: false; retryAfterUnixSec: number }
+  >(
     `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.CREATE_ALERT_EVENT_PATH}`,
     {
       workspaceId,
