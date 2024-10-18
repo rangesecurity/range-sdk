@@ -424,17 +424,35 @@ export interface Osmosis1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
-  data: {
-    admin?: string;
+export interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+    type: string;
+    data: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData;
+}
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractData {
     sender: string;
+    admin: string;
     codeId: string;
     label: string;
-    msg: Record<string | number | symbol, unknown>;
-  };
+    msg: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg;
+    funds: Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractFundsItem[];
 }
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg {
+    deposit_denom: string;
+    controller: string;
+    strategy_cap: string;
+    whitelisted_pools: number[];
+    fee_rate: string;
+    performance_fee_rate: string;
+    instant_withdraw_penalty: string;
+    penalty_duration: number;
+    treasury: string;
+    vault_type: string;
+}
+interface Osmosis1TrxMsgCosmwasmWasmV1MsgInstantiateContractFundsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for mgs type:: /cosmwasm.wasm.v1.MsgMigrateContract
 export interface Osmosis1TrxMsgCosmwasmWasmV1MsgMigrateContract
