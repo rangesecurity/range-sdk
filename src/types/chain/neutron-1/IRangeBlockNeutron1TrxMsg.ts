@@ -74,18 +74,24 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract2
-export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract2;
-  data: {
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2 {
+    type: string;
+    data: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2Data;
+}
+interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2Data {
     sender: string;
-    admin?: string;
+    admin: string;
     codeId: string;
     label: string;
     msg: string;
+    funds: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2FundsItem[];
     salt: string;
-  };
 }
+interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2FundsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgMigrateContract
 export interface Neutron1TrxMsgCosmwasmWasmV1MsgMigrateContract
