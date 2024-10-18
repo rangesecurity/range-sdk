@@ -177,18 +177,23 @@ export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgExec extends IRangeMessage {
 }
 
 // types for mgs type:: /cosmos.authz.v1beta1.MsgGrant
-export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant
-  extends IRangeMessage {
-  type: Osmosis1TrxMsgTypes.CosmosAuthzV1beta1MsgGrant;
-  data: {
+export interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrant {
+    type: string;
+    data: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantData {
     granter: string;
     grantee: string;
-    grant:
-      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization
-      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantSendAuthorization
-      | Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantStakeAuthorization;
-  };
+    grant: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
 }
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
+    authorization: Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+}
+interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
+    '@type': string;
+    msg: string;
+}
+
 
 interface Osmosis1TrxMsgCosmosAuthzV1beta1MsgGrantDataGrantGenericAuthorization {
   authorization: {
