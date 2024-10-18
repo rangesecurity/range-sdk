@@ -219,58 +219,64 @@ export interface Neutron1TrxMsgIbcCoreChannelV1MsgTimeout
 }
 
 // types for mgs type:: /ibc.core.client.v1.MsgCreateClient
-export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.IbcCoreClientV1MsgCreateClient;
-  data: {
-    clientState: {
-      '@type': string;
-      chainId: string;
-      trustLevel: {
-        numerator: string;
-        denominator: string;
-      };
-      trustingPeriod: string;
-      unbondingPeriod: string;
-      maxClockDrift: string;
-      frozenHeight?: {
-        revisionHeight?: string;
-        revisionNumber?: string;
-      };
-      latestHeight: {
-        revisionNumber: string;
-        revisionHeight: string;
-      };
-      proofSpecs: {
-        leafSpec: {
-          hash: string;
-          prehashValue: string;
-          length: string;
-          prefix: string;
-        };
-        innerSpec: {
-          childOrder: number[];
-          childSize: number;
-          minPrefixLength: number;
-          maxPrefixLength: number;
-          hash: string;
-        };
-      }[];
-      upgradePath: string[];
-      allowUpdateAfterExpiry: boolean;
-      allowUpdateAfterMisbehaviour: boolean;
-    };
-    consensusState: {
-      '@type': string;
-      timestamp: string;
-      root: {
-        hash: string;
-      };
-      nextValidatorsHash: string;
-    };
-    signer: string;
-  };
+export interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClient {
+    type: string;
+    data: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientData;
 }
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientData {
+    clientState: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientClientState;
+    consensusState: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+    signer: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
+    latestHeight: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
+    proofSpecs: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
+    upgradePath: string[];
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
+    leafSpec: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
+    innerSpec: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
+    hash: string;
+    prehashValue: string;
+    length: string;
+    prefix: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    hash: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
+    '@type': string;
+    timestamp: string;
+    root: Neutron1TrxMsgIbcCoreClientV1MsgCreateClientRoot;
+    nextValidatorsHash: string;
+}
+interface Neutron1TrxMsgIbcCoreClientV1MsgCreateClientRoot {
+    hash: string;
+}
+
 
 // types for mgs type:: ibc.core.client.v1.MsgUpdateClient
 export interface Neutron1TrxMsgIbcCoreClientV1MsgUpdateClient
