@@ -281,17 +281,27 @@ export interface CosmosHub4TrxMsgWithdrawValidatorCommission
 }
 
 // types for msg type:: /cosmos.feegrant.v1beta1.MsgGrantAllowance
-export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance
-  extends IRangeMessage {
-  type: CosmosHub4TrxMsgTypes.CosmosFeegrantV1beta1MsgGrantAllowance;
-  data: {
+export interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowance {
+    type: string;
+    data: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData;
+}
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceData {
     granter: string;
     grantee: string;
-    allowance:
-      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance
-      | CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataPeriodicAllowance;
-  };
+    allowance: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance;
 }
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance {
+    '@type': string;
+    allowance?: CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceAllowance;
+    allowedMessages?: string[];
+    spendLimit?: CosmosHub4TrxMsgCosmosFeegrantV1Beta1MsgGrantAllowanceSpendLimitItem[];
+    expiration?: string;
+}
+interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceSpendLimitItem {
+    denom: string;
+    amount: string;
+}
+
 
 interface CosmosHub4TrxMsgCosmosFeegrantV1beta1MsgGrantAllowanceDataBasicAllowance {
   '@type': '/cosmos.feegrant.v1beta1.BasicAllowance';
