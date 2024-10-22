@@ -7,4 +7,5 @@ export interface IRangeAlertRule {
   parameters: Record<string, unknown> | null;
   createdAt: Date;
   deletedAt?: Date | null;
+  severity?: string;
 }

@@ -509,6 +509,7 @@ class RangeSDK implements IRangeSDK {
               network: block.network,
               txHash: subResult.txHash || '',
               addressesInvolved: subResult.addressesInvolved || [],
+              severity: subResult.severity || rule.severity || 'medium',
             }));
 
             const execAt = Date.now();
