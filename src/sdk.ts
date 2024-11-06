@@ -15,7 +15,10 @@ import {
 } from './services/fetchAlertRules';
 import { errorTaskAck, taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
-import { KafkaConsumerClient } from './connections/KafkaConsumer';
+import {
+  KafkaConsumerClient,
+  QueueHealthStats,
+} from './connections/KafkaConsumer';
 import { IRangeConfig } from './types/IRangeConfig';
 import { fetchConfig } from './services/fetchConfig';
 import { getLogger } from './logger';
@@ -77,6 +80,12 @@ export interface RuleGroupProcessingMetrics {
   fetchBlockTotalTimeMS: number;
 
   individualRuleStats: Record<string, RuleMetrics>;
+}
+
+export interface RangeSDKHealthStats {
+  blockQueueHealth: QueueHealthStats;
+  errorQueueHealth: QueueHealthStats;
+  tickQueueHealth: QueueHealthStats;
 }
 
 class RangeSDK implements IRangeSDK {
@@ -882,6 +891,39 @@ class RangeSDK implements IRangeSDK {
     return {
       message:
         'SDK Metrics are not enabled. To enable SDK in metrics mode, please pass env `SDK_METRICS_ENABLED` as true on initialisation',
+    };
+  }
+
+  async getHealthStats(): Promise<RangeSDKHealthStats> {
+    if (
+      !this.blockRuleGroupTaskClient ||
+      !this.errorBlockRuleTaskClient ||
+      !this.tickRuleGroupTaskClient
+    ) {
+      return {
+        blockQueueHealth: {
+          health: 0,
+        },
+        errorQueueHealth: {
+          health: 0,
+        },
+        tickQueueHealth: {
+          health: 0,
+        },
+      };
+    }
+
+    const [blockQueueHealth, errorQueueHealth, tickQueueHealth] =
+      await Promise.all([
+        this.blockRuleGroupTaskClient.health(),
+        this.errorBlockRuleTaskClient.health(),
+        this.tickRuleGroupTaskClient.health(),
+      ]);
+
+    return {
+      blockQueueHealth,
+      errorQueueHealth,
+      tickQueueHealth,
     };
   }
 
