@@ -104,7 +104,9 @@ class RangeSDK implements IRangeSDK {
   private readonly ruleAvgExecTimeCutOffMS = 1000; // 1 sec
   private readonly ruleAvgExecTimeDebugAlertMS = 400; // 400 ms
   private readonly ruleQuarantineTimeMins = 15;
-  private execPausedRules: Map<string, number> = new Map();
+  private readonly ruleDebugAlertPauseTimeMins = 15;
+  private execPausedRules: Map<string, number> = new Map(); // key is rule id and value is exec paused till in unix
+  private debugAlertedRules: Map<string, number> = new Map(); // key is rule id and value is alerting paused till in unix
 
   private blockRulesMetricsByRuleGroup: Map<
     string,
@@ -397,14 +399,29 @@ class RangeSDK implements IRangeSDK {
             );
           }
 
-          // Check after the rule quarantine logic
-          if (avgExecTime >= this.ruleAvgExecTimeDebugAlertMS) {
+          if (
+            avgExecTime >= this.ruleAvgExecTimeDebugAlertMS &&
+            (!this.debugAlertedRules.has(ruleId) ||
+              (this.debugAlertedRules.has(ruleId) &&
+                now.isAfter(
+                  dayjs.unix(this.debugAlertedRules.get(ruleId) as number),
+                )))
+          ) {
+            this.debugAlertedRules.set(
+              ruleId,
+              now.add(this.ruleDebugAlertPauseTimeMins, 'minutes').unix(),
+            );
+
             debugAlerts.push({
               runnerId: taskPackage.runnerId,
               alert: {
                 msg: 'Rule avg execution exceeding than expected',
                 avgExecTime,
-                ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
+                debugAlertState: {
+                  ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
+                  alertCreatedAt: now,
+                  alertsPausedTill: this.debugAlertedRules.get(ruleId),
+                },
                 ruleQuarantineState: {
                   isQuarantined: this.execPausedRules.has(ruleId),
                   ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
