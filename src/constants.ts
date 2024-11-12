@@ -13,6 +13,7 @@ interface Constants {
       ruleId: string;
     }) => string;
     ACK_ERROR_TASK_PATH: string;
+    POST_DEBUG_ALERT_PATH: string;
   };
 
   BLOCK_CACHE: {
@@ -53,6 +54,7 @@ export const constants: Constants = {
       ruleId: string;
     }) => `/v1.0/rule-group/${args.ruleGroupId}/rule/${args.ruleId}`,
     ACK_ERROR_TASK_PATH: '/v1.0/rule-group/block/error/ack',
+    POST_DEBUG_ALERT_PATH: '/v1.0/range-sdk/debug-alert',
   },
 
   BLOCK_CACHE: {

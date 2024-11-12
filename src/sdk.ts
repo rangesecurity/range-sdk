@@ -15,12 +15,16 @@ import {
 } from './services/fetchAlertRules';
 import { errorTaskAck, taskAck } from './services/taskAck';
 import { createAlertEvents } from './services/alertEvent';
-import { KafkaConsumerClient } from './connections/KafkaConsumer';
+import {
+  KafkaConsumerClient,
+  QueueHealthStats,
+} from './connections/KafkaConsumer';
 import { IRangeConfig } from './types/IRangeConfig';
 import { fetchConfig } from './services/fetchConfig';
 import { getLogger } from './logger';
 import { constants } from './constants';
 import { tickTaskAck } from './services/tickTaskAck';
+import { DebugAlert, postDebugAlert } from './services/postDebugAlert';
 
 const logger = getLogger({ name: 'rangeSDK' });
 
@@ -60,7 +64,7 @@ export interface RuleMetrics {
   alertEventTotalTimeMS: number;
 }
 
-export interface RuleGroupProcessingMetrics {
+export interface BlockRuleGroupProcessingMetrics {
   endToEndCount: number;
   endToEndMinTimeMS: number;
   endToEndMaxTimeMS: number;
@@ -79,6 +83,12 @@ export interface RuleGroupProcessingMetrics {
   individualRuleStats: Record<string, RuleMetrics>;
 }
 
+export interface RangeSDKHealthStats {
+  blockQueueHealth: QueueHealthStats;
+  errorQueueHealth: QueueHealthStats;
+  tickQueueHealth: QueueHealthStats;
+}
+
 class RangeSDK implements IRangeSDK {
   private opts: RangeSDKOptions;
   private initOpts?: RangeSDKInitOptions;
@@ -89,8 +99,17 @@ class RangeSDK implements IRangeSDK {
   private tickRuleGroupTaskClient?: KafkaConsumerClient;
 
   private rateLimitedRules: Map<string, number> = new Map();
-  private metricsByRuleGroup: Map<string, RuleGroupProcessingMetrics> =
-    new Map();
+
+  private readonly rulePerExecTimeCutOffMS = 15000; // 15 sec
+  private readonly ruleAvgExecTimeCutOffMS = 1000; // 1 sec
+  private readonly ruleAvgExecTimeDebugAlertMS = 400; // 400 ms
+  private readonly ruleQuarantineTimeMins = 15;
+  private execPausedRules: Map<string, number> = new Map();
+
+  private blockRulesMetricsByRuleGroup: Map<
+    string,
+    BlockRuleGroupProcessingMetrics
+  > = new Map();
 
   constructor(opts: RangeSDKOptions) {
     this.opts = opts;
@@ -253,6 +272,7 @@ class RangeSDK implements IRangeSDK {
     // Filter out rate limited rules
     const filteredRules: IRangeAlertRule[] = [];
     const rateLimitedRuleIds: string[] = [];
+    const execPausedRuleIds: string[] = [];
     for (const rule of rules) {
       if (
         this.rateLimitedRules.has(rule.id) &&
@@ -275,10 +295,34 @@ class RangeSDK implements IRangeSDK {
       filteredRules.push(rule);
     }
 
+    // Filter out execution paused rules
+    for (let i = filteredRules.length - 1; i > -1; i -= 1) {
+      const rule = filteredRules[i];
+      if (
+        this.execPausedRules.has(rule.id) &&
+        dayjs.unix(this.execPausedRules.get(rule.id) as number).isAfter(dayjs())
+      ) {
+        logger.info(
+          {
+            ruleID: rule.id,
+            currentTime: dayjs().unix(),
+            execPausedTill: this.execPausedRules.get(rule.id),
+          },
+          `rule processing skipped as it's execution is paused.`,
+        );
+        // skip the rule
+        execPausedRuleIds.push(...filteredRules.splice(i, 1).map((r) => r.id));
+      }
+    }
+
     if (!filteredRules.length) {
       logger.warn(
-        { rules, rateLimitedRules: Object.fromEntries(this.rateLimitedRules) },
-        'Early task package ack due to rate limited for all rules',
+        {
+          rules,
+          rateLimitedRules: Object.fromEntries(this.rateLimitedRules),
+          execPausedRules: Array.from(this.execPausedRules),
+        },
+        'Early task package ack due to all rules getting filtered out by rate limiting or execution paused',
       );
       await taskAck({
         token: this.opts.token,
@@ -288,6 +332,7 @@ class RangeSDK implements IRangeSDK {
         alertEventsCount: 0,
         alertRulesIds: [],
         rateLimitedAlertRuleIds: rateLimitedRuleIds,
+        execPausedAlertRuleIds: execPausedRuleIds,
       });
       return;
     }
@@ -303,20 +348,17 @@ class RangeSDK implements IRangeSDK {
       runnerId: taskPackage.runnerId,
       alertEventsCount,
       alertRulesIds: rules.map((r) => r.id),
-      rateLimitedAlertRuleIds: rateLimitedRuleIds,
       ...(errors?.length
         ? {
             errors,
           }
         : {}),
+      rateLimitedAlertRuleIds: rateLimitedRuleIds,
+      execPausedAlertRuleIds: execPausedRuleIds,
     });
 
     try {
-      if (
-        process.env['SDK_METRICS_ENABLED'] == 'true' &&
-        rulesFetchedAt &&
-        blockFetchedAt
-      ) {
+      if (rulesFetchedAt && blockFetchedAt) {
         this.setMetricStats(
           taskPackage.ruleGroupId,
           start,
@@ -326,6 +368,76 @@ class RangeSDK implements IRangeSDK {
       }
     } catch (err) {
       logger.error(err, `Error while setting metrics`);
+    }
+
+    try {
+      // Check for rules to quarantine on their avg time exec
+      const debugAlerts: DebugAlert[] = [];
+      this.blockRulesMetricsByRuleGroup.forEach((ruleGroupStats) => {
+        for (const ruleId of Object.keys(ruleGroupStats.individualRuleStats)) {
+          const ruleStats = ruleGroupStats.individualRuleStats[ruleId];
+          const avgExecTime = Math.floor(
+            ruleStats.execTotalTimeMS / ruleStats.execCount,
+          );
+
+          const now = dayjs();
+          if (avgExecTime >= this.ruleAvgExecTimeCutOffMS) {
+            this.execPausedRules.set(
+              ruleId,
+              now.add(this.ruleQuarantineTimeMins, 'minutes').unix(),
+            );
+
+            logger.info(
+              {
+                ruleId,
+                ruleStats,
+                quarantinedTill: this.execPausedRules.get(ruleId),
+              },
+              'Rule quarantined due to avg execution time exceeding cutoff time',
+            );
+          }
+
+          // Check after the rule quarantine logic
+          if (avgExecTime >= this.ruleAvgExecTimeDebugAlertMS) {
+            debugAlerts.push({
+              runnerId: taskPackage.runnerId,
+              alert: {
+                msg: 'Rule avg execution exceeding than expected',
+                avgExecTime,
+                ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
+                ruleQuarantineState: {
+                  isQuarantined: this.execPausedRules.has(ruleId),
+                  ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
+                  ...(this.execPausedRules.has(ruleId)
+                    ? {
+                        quarantinedAt: now,
+                        quarantinedTill: this.execPausedRules.get(ruleId),
+                      }
+                    : {}),
+                },
+                stats: JSON.parse(JSON.stringify(ruleStats)),
+              },
+              blockNetwork: taskPackage.block.network,
+              blockHeight: taskPackage.block.height,
+              ruleGroupId: taskPackage.ruleGroupId,
+              ruleId,
+            });
+          }
+        }
+      });
+
+      // no await so that we can move on to next task, however errors are handles so it should not affect other processing
+      if (debugAlerts.length) {
+        postDebugAlert({
+          token: this.opts.token,
+          ping: true,
+          debugAlerts,
+        }).catch((err) => {
+          logger.error(err, 'error while posting debug alerts');
+        });
+      }
+    } catch (err) {
+      logger.error(err, 'error while rule avg exec checks');
     }
   }
 
@@ -418,7 +530,7 @@ class RangeSDK implements IRangeSDK {
   ): Promise<{
     errors: IRangeError[];
     alertEventsCount: number;
-    ruleStats: RuleGroupProcessingMetrics['individualRuleStats'];
+    ruleStats: BlockRuleGroupProcessingMetrics['individualRuleStats'];
   }> {
     const ruleStats: Record<string, Partial<RuleMetrics>> = rules.reduce(
       (map, r) => {
@@ -450,16 +562,10 @@ class RangeSDK implements IRangeSDK {
             isRateLimited: false,
             retryAfterUnixSec: 0,
           };
+          const start = Date.now();
+          let execAt: number | undefined = undefined;
 
           try {
-            if (!this.initOpts) {
-              throw new Error('SDK Init not called, onBlock missing');
-            }
-            if (!this.initOpts.onBlock) {
-              throw new Error('Missing handler for block based alert rules');
-            }
-
-            const start = Date.now();
             const blockTimestamp = dayjs(block.timestamp);
             if (
               !(
@@ -498,8 +604,7 @@ class RangeSDK implements IRangeSDK {
               };
             }
 
-            const ruleSubResults =
-              (await this.initOpts.onBlock.callback(block, rule)) || [];
+            const ruleSubResults = await this.execOnBlockPerRule(block, rule);
             const ruleResults = ruleSubResults.map((subResult) => ({
               ...subResult,
               workspaceId: rule.workspaceId || null,
@@ -512,7 +617,7 @@ class RangeSDK implements IRangeSDK {
               severity: subResult.severity || rule.severity || 'medium',
             }));
 
-            const execAt = Date.now();
+            execAt = Date.now();
             ruleStats[rule.id].type = rule.ruleType;
             ruleStats[rule.id].execMinTimeMS = execAt - start;
             ruleStats[rule.id].execMaxTimeMS = execAt - start;
@@ -520,7 +625,11 @@ class RangeSDK implements IRangeSDK {
             ruleStats[rule.id].execTotalTimeMS = execAt - start;
 
             if (!ruleResults.length) {
-              return { errors: [], alertEventsCount: 0, rateLimitedStatus };
+              return {
+                errors: [],
+                alertEventsCount: 0,
+                rateLimitedStatus,
+              };
             }
 
             const alertApiResp = await createAlertEvents({
@@ -556,7 +665,15 @@ class RangeSDK implements IRangeSDK {
               err = error.message + error.stack ? `\n${error.stack}` : '';
             }
 
-            delete ruleStats[rule.id];
+            // Set metrics so that timed out processes can be jailed
+            if (!execAt) {
+              execAt = Date.now();
+              ruleStats[rule.id].type = rule.ruleType;
+              ruleStats[rule.id].execMinTimeMS = execAt - start;
+              ruleStats[rule.id].execMaxTimeMS = execAt - start;
+              ruleStats[rule.id].execCount = 1;
+              ruleStats[rule.id].execTotalTimeMS = execAt - start;
+            }
 
             return {
               errors: [
@@ -588,8 +705,31 @@ class RangeSDK implements IRangeSDK {
       alertEventsCount: events.flat().reduce((alertEventsCount, obj) => {
         return obj.alertEventsCount + alertEventsCount;
       }, 0),
-      ruleStats: ruleStats as RuleGroupProcessingMetrics['individualRuleStats'],
+      ruleStats:
+        ruleStats as BlockRuleGroupProcessingMetrics['individualRuleStats'],
     };
+  }
+
+  private async execOnBlockPerRule(block: IRangeBlock, rule: IRangeAlertRule) {
+    if (!this.initOpts) {
+      throw new Error('SDK Init not called, onBlock missing');
+    }
+    if (!this.initOpts.onBlock) {
+      throw new Error('Missing handler for block based alert rules');
+    }
+
+    const ruleSubResults = await Promise.race([
+      this.initOpts.onBlock.callback(block, rule),
+      new Promise((_, rej) => {
+        setTimeout(() => {
+          rej(
+            new Error('onBlock execution terminated due to deadline timeout'),
+          );
+        }, this.rulePerExecTimeCutOffMS);
+      }),
+    ]);
+
+    return (ruleSubResults || []) as ISubEvent[];
   }
 
   private async initTickRuleGroupTaskQueue() {
@@ -683,7 +823,10 @@ class RangeSDK implements IRangeSDK {
   private async processTickTask(
     timestamp: string,
     rules: IRangeAlertRule[],
-  ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> {
+  ): Promise<{
+    errors: IRangeError[];
+    alertEventsCount: number;
+  }> {
     const events = await Promise.all(
       rules.map(
         async (
@@ -782,16 +925,16 @@ class RangeSDK implements IRangeSDK {
       individualRuleStats: ruleStats,
     };
 
-    const currentStats = this.metricsByRuleGroup.get(ruleGroupId);
+    const currentStats = this.blockRulesMetricsByRuleGroup.get(ruleGroupId);
     if (!currentStats) {
-      this.metricsByRuleGroup.set(
+      this.blockRulesMetricsByRuleGroup.set(
         ruleGroupId,
-        stats as RuleGroupProcessingMetrics,
+        stats as BlockRuleGroupProcessingMetrics,
       );
       return;
     }
 
-    const newStats: RuleGroupProcessingMetrics = JSON.parse(
+    const newStats: BlockRuleGroupProcessingMetrics = JSON.parse(
       JSON.stringify(currentStats),
     );
     newStats.fetchRulesCount += stats.fetchRulesCount || 1;
@@ -871,17 +1014,45 @@ class RangeSDK implements IRangeSDK {
       newStats.individualRuleStats[ruleID] = newRuleStats;
     }
 
-    this.metricsByRuleGroup.set(ruleGroupId, newStats);
+    this.blockRulesMetricsByRuleGroup.set(ruleGroupId, newStats);
   }
 
   getMetricStats() {
-    if (process.env['SDK_METRICS_ENABLED'] == 'true') {
-      return Object.fromEntries(this.metricsByRuleGroup);
+    return {
+      blockRulesMetrics: Object.fromEntries(this.blockRulesMetricsByRuleGroup),
+    };
+  }
+
+  async getHealthStats(): Promise<RangeSDKHealthStats> {
+    if (
+      !this.blockRuleGroupTaskClient ||
+      !this.errorBlockRuleTaskClient ||
+      !this.tickRuleGroupTaskClient
+    ) {
+      return {
+        blockQueueHealth: {
+          health: 0,
+        },
+        errorQueueHealth: {
+          health: 0,
+        },
+        tickQueueHealth: {
+          health: 0,
+        },
+      };
     }
 
+    const [blockQueueHealth, errorQueueHealth, tickQueueHealth] =
+      await Promise.all([
+        this.blockRuleGroupTaskClient.health(),
+        this.errorBlockRuleTaskClient.health(),
+        this.tickRuleGroupTaskClient.health(),
+      ]);
+
     return {
-      message:
-        'SDK Metrics are not enabled. To enable SDK in metrics mode, please pass env `SDK_METRICS_ENABLED` as true on initialisation',
+      blockQueueHealth,
+      errorQueueHealth,
+      tickQueueHealth,
     };
   }
 
