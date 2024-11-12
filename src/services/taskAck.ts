@@ -11,11 +11,12 @@ export async function taskAck(args: {
   runnerId: string;
   alertEventsCount: number;
   alertRulesIds: string[];
-  rateLimitedAlertRuleIds?: string[];
   errors?: {
     ruleId: string;
     error: string;
   }[];
+  rateLimitedAlertRuleIds?: string[];
+  execPausedAlertRuleIds?: string[];
 }): Promise<{ ackId: string }> {
   const {
     token,
@@ -26,6 +27,7 @@ export async function taskAck(args: {
     alertEventsCount,
     alertRulesIds,
     rateLimitedAlertRuleIds,
+    execPausedAlertRuleIds,
   } = args;
   const url = `${constants.MANAGER_SERVICE.DOMAIN}${constants.MANAGER_SERVICE.ACK_TASK_PATH}`;
 
@@ -37,8 +39,9 @@ export async function taskAck(args: {
       runnerId,
       alertEventsCount,
       alertRulesIds,
-      ...(rateLimitedAlertRuleIds?.length ? { rateLimitedAlertRuleIds } : {}),
       ...(errors?.length ? { errors } : {}),
+      ...(rateLimitedAlertRuleIds?.length ? { rateLimitedAlertRuleIds } : {}),
+      ...(execPausedAlertRuleIds?.length ? { execPausedAlertRuleIds } : {}),
     },
     {
       headers: {
