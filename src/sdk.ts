@@ -100,10 +100,14 @@ class RangeSDK implements IRangeSDK {
 
   private rateLimitedRules: Map<string, number> = new Map();
 
-  private readonly rulePerExecTimeCutOffMS = 15000; // 15 sec
-  private readonly ruleAvgExecTimeCutOffMS = 1000; // 1 sec
-  private readonly ruleAvgExecTimeDebugAlertMS = 400; // 400 ms
-  private readonly ruleQuarantineTimeMins = 15;
+  private readonly rulePerExecTimeCutOffMS =
+    constants.RULE_QUARANTINE.PER_EXEC_TIME_CUT_OFF_MS;
+  private readonly ruleAvgExecTimeCutOffMS =
+    constants.RULE_QUARANTINE.AVG_EXEC_TIME_CUT_OFF_MS;
+  private readonly ruleAvgExecTimeDebugAlertMS =
+    constants.RULE_QUARANTINE.AVG_EXEC_TIME_DEBUG_ALERT_MS;
+  private readonly ruleQuarantineTimeMins =
+    constants.RULE_QUARANTINE.QUARANTINE_TIME_MINS;
   private readonly ruleDebugAlertPauseTimeMins = 15;
   private execPausedRules: Map<string, number> = new Map(); // key is rule id and value is exec paused till in unix
   private debugAlertedRules: Map<string, number> = new Map(); // key is rule id and value is alerting paused till in unix
@@ -1037,6 +1041,9 @@ class RangeSDK implements IRangeSDK {
   getMetricStats() {
     return {
       blockRulesMetrics: Object.fromEntries(this.blockRulesMetricsByRuleGroup),
+      rateLimitedRules: Object.fromEntries(this.rateLimitedRules),
+      execPausedRules: Object.fromEntries(this.execPausedRules),
+      debugAlertedRules: Object.fromEntries(this.debugAlertedRules),
     };
   }
 
