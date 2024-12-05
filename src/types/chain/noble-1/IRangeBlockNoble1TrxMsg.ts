@@ -641,3 +641,27 @@ export interface Noble1TrxMsgIbcCoreClientV1MsgUpdateClient
     signer: string;
   };
 }
+
+
+
+export interface Noble1TrxMsgCosmosAuthzV1beta1MsgGrant {
+    type: string;
+    data: Noble1TrxMsgCosmosAuthzV1beta1MsgGrantData;
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgGrantData {
+    granter: string;
+    grantee: string;
+    grant: Noble1TrxMsgCosmosAuthzV1beta1MsgGrantGrant;
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgGrantGrant {
+    authorization: Noble1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization;
+    expiration: string;
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgGrantAuthorization {
+    '@type': string;
+    spendLimit: Noble1TrxMsgCosmosAuthzV1Beta1MsgGrantSpendLimitItem[];
+}
+interface Noble1TrxMsgCosmosAuthzV1beta1MsgGrantSpendLimitItem {
+    denom: string;
+    amount: string;
+}
