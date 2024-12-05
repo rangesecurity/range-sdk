@@ -61,17 +61,25 @@ export interface Neutron1TrxMsgCosmwasmWasmV1MsgExecuteContract
 }
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract
-export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract
-  extends IRangeMessage {
-  type: Neutron1TrxMsgTypes.CosmwasmWasmV1MsgInstantiateContract;
-  data: {
-    admin?: string;
-    label: string;
-    codeId: string;
-    sender: string;
-    msg: Record<string | number | symbol, unknown>;
-  };
+export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract {
+    type: string;
+    data: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractData;
 }
+interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractData {
+    sender: string;
+    admin: string;
+    codeId: string;
+    label: string;
+    msg: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg;
+    funds: Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractFundsItem[];
+}
+interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractMsg {
+}
+interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContractFundsItem {
+    denom: string;
+    amount: string;
+}
+
 
 // types for msg type:: /cosmwasm.wasm.v1.MsgInstantiateContract2
 export interface Neutron1TrxMsgCosmwasmWasmV1MsgInstantiateContract2
