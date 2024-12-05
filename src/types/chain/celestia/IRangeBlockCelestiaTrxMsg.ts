@@ -666,55 +666,69 @@ export interface CelestiaTrxMsgIbcCoreChannelV1MsgTimeout
 }
 
 // types for msg type: /ibc.core.client.v1.MsgCreateClient
-export interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClient
-  extends IRangeMessage {
-  type: CelestiaTrxMsgTypes.IbcCoreClientV1MsgCreateClient;
-  data: {
-    signer: string;
-    clientState: {
-      '@type': string;
-      chainId: string;
-      proofSpecs: {
-        leafSpec: {
-          hash: string;
-          length: string;
-          prefix: string;
-          prehashValue: string;
-        };
-        innerSpec: {
-          hash: string;
-          childSize: number;
-          childOrder: number[];
-          maxPrefixLength: number;
-          minPrefixLength: number;
-        };
-      }[];
-      trustLevel: {
-        numerator: string;
-        denominator: string;
-      };
-      upgradePath: string[];
-      frozenHeight: Record<string | number | symbol, unknown>;
-      latestHeight: {
-        revisionHeight: string;
-        revisionNumber: string;
-      };
-      maxClockDrift: string;
-      trustingPeriod: string;
-      unbondingPeriod: string;
-      allowUpdateAfterExpiry: boolean;
-      allowUpdateAfterMisbehaviour: boolean;
-    };
-    consensusState: {
-      root: {
-        hash: string;
-      };
-      '@type': string;
-      timestamp: string;
-      nextValidatorsHash: string;
-    };
-  };
+export interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClient {
+    type: string;
+    data: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientData;
 }
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientData {
+    clientState: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientClientState;
+    consensusState: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientConsensusState;
+    signer: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientClientState {
+    '@type': string;
+    chainId: string;
+    trustLevel: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientTrustLevel;
+    trustingPeriod: string;
+    unbondingPeriod: string;
+    maxClockDrift: string;
+    frozenHeight: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight;
+    latestHeight: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientLatestHeight;
+    proofSpecs: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem[];
+    upgradePath: string[];
+    allowUpdateAfterExpiry: boolean;
+    allowUpdateAfterMisbehaviour: boolean;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientTrustLevel {
+    numerator: string;
+    denominator: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientFrozenHeight {
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientLatestHeight {
+    revisionNumber: string;
+    revisionHeight: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientProofSpecsItem {
+    leafSpec: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientLeafSpec;
+    innerSpec: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientInnerSpec;
+    maxDepth: number;
+    prehashKeyBeforeComparison: boolean;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientLeafSpec {
+    hash: string;
+    prehashKey: string;
+    prehashValue: string;
+    prefix: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientInnerSpec {
+    childOrder: number[];
+    childSize: number;
+    minPrefixLength: number;
+    maxPrefixLength: number;
+    emptyChild: string;
+    hash: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientConsensusState {
+    '@type': string;
+    timestamp: string;
+    root: CelestiaTrxMsgIbcCoreClientV1MsgCreateClientRoot;
+    nextValidatorsHash: string;
+}
+interface CelestiaTrxMsgIbcCoreClientV1MsgCreateClientRoot {
+    hash: string;
+}
+
 
 // types for msg type: /ibc.core.client.v1.MsgUpdateClient
 export interface CelestiaTrxMsgIbcCoreClientV1MsgUpdateClient
