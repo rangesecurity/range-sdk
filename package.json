@@ -38,6 +38,7 @@
     "lru-cache": "^10.0.1",
     "osmojs": "^16.14.0",
     "pino": "^8.15.1",
+    "workerpool": "^9.2.0",
     "zod": "^3.21.4"
   },
   "repository": {

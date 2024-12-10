@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { Kafka } from 'kafkajs';
+import workerpool from 'workerpool';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, ISubEvent } from './types/IRangeEvent';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
@@ -90,6 +91,10 @@ export interface RangeSDKHealthStats {
 }
 
 class RangeSDK implements IRangeSDK {
+  private onBlockWorkerPool = workerpool.pool({
+    workerType: 'thread',
+    minWorkers: 3,
+  });
   private opts: RangeSDKOptions;
   private initOpts?: RangeSDKInitOptions;
   private config?: IRangeConfig;
@@ -739,16 +744,25 @@ class RangeSDK implements IRangeSDK {
       throw new Error('Missing handler for block based alert rules');
     }
 
-    const ruleSubResults = await Promise.race([
-      this.initOpts.onBlock.callback(block, rule),
-      new Promise((_, rej) => {
-        setTimeout(() => {
-          rej(
-            new Error('onBlock execution terminated due to deadline timeout'),
-          );
-        }, this.rulePerExecTimeCutOffMS);
-      }),
-    ]);
+    // console.log(`\n\nthis`);
+    // console.log(this);
+    // console.log(`\n\n`);
+
+    // use thread pool instead
+    const ruleSubResults = await this.onBlockWorkerPool
+      .exec(this.initOpts.onBlock.callback, [block, rule])
+      .timeout(this.rulePerExecTimeCutOffMS);
+
+    // const ruleSubResults = await Promise.race([
+    //   this.initOpts.onBlock.callback(block, rule),
+    //   new Promise((_, rej) => {
+    //     setTimeout(() => {
+    //       rej(
+    //         new Error('onBlock execution terminated due to deadline timeout'),
+    //       );
+    //     }, this.rulePerExecTimeCutOffMS);
+    //   }),
+    // ]);
 
     return (ruleSubResults || []) as ISubEvent[];
   }
@@ -1044,6 +1058,7 @@ class RangeSDK implements IRangeSDK {
       rateLimitedRules: Object.fromEntries(this.rateLimitedRules),
       execPausedRules: Object.fromEntries(this.execPausedRules),
       debugAlertedRules: Object.fromEntries(this.debugAlertedRules),
+      onBlockWorkerPoolStats: this.onBlockWorkerPool.stats(),
     };
   }
 
@@ -1085,6 +1100,7 @@ class RangeSDK implements IRangeSDK {
 
     await new Promise((res) =>
       setTimeout(async () => {
+        await this.onBlockWorkerPool.terminate();
         if (this.blockRuleGroupTaskClient) {
           await this.blockRuleGroupTaskClient.gracefulShutdown();
         }

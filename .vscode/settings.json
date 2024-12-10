@@ -16,7 +16,8 @@
     "Subaccount",
     "Unbonding",
     "Undelegate",
-    "Unjail"
+    "Unjail",
+    "workerpool"
   ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
