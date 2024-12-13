@@ -111,6 +111,8 @@ class RangeSDK implements IRangeSDK {
   private readonly ruleDebugAlertPauseTimeMins = 15;
   private execPausedRules: Map<string, number> = new Map(); // key is rule id and value is exec paused till in unix
   private debugAlertedRules: Map<string, number> = new Map(); // key is rule id and value is alerting paused till in unix
+  private ruleMetricsForQuarantine: Record<string, RuleMetrics> = {};
+  private ruleQuarantineAvgWindow = 15;
 
   private blockRulesMetricsByRuleGroup: Map<
     string,
@@ -372,6 +374,7 @@ class RangeSDK implements IRangeSDK {
           ruleStats,
         );
       }
+      this.setMetricStatsForRuleQuarantine(ruleStats);
     } catch (err) {
       logger.error(err, `Error while setting metrics`);
     }
@@ -379,73 +382,82 @@ class RangeSDK implements IRangeSDK {
     try {
       // Check for rules to quarantine on their avg time exec
       const debugAlerts: DebugAlert[] = [];
-      this.blockRulesMetricsByRuleGroup.forEach((ruleGroupStats) => {
-        for (const ruleId of Object.keys(ruleGroupStats.individualRuleStats)) {
-          const ruleStats = ruleGroupStats.individualRuleStats[ruleId];
-          const avgExecTime = Math.floor(
-            ruleStats.execTotalTimeMS / ruleStats.execCount,
+      for (const ruleId of Object.keys(this.ruleMetricsForQuarantine)) {
+        const ruleStats = this.ruleMetricsForQuarantine[ruleId];
+        const avgExecTime = Math.floor(
+          ruleStats.execTotalTimeMS / ruleStats.execCount,
+        );
+
+        const now = dayjs();
+        let ruleQuarantined = false;
+        if (avgExecTime >= this.ruleAvgExecTimeCutOffMS) {
+          this.execPausedRules.set(
+            ruleId,
+            now.add(this.ruleQuarantineTimeMins, 'minutes').unix(),
+          );
+          ruleQuarantined = true;
+
+          logger.info(
+            {
+              ruleId,
+              ruleStats,
+              quarantinedTill: this.execPausedRules.get(ruleId),
+            },
+            'Rule quarantined due to avg execution time exceeding cutoff time',
+          );
+        }
+
+        if (
+          avgExecTime >= this.ruleAvgExecTimeDebugAlertMS &&
+          (!this.debugAlertedRules.has(ruleId) ||
+            (this.debugAlertedRules.has(ruleId) &&
+              now.isAfter(
+                dayjs.unix(this.debugAlertedRules.get(ruleId) as number),
+              )))
+        ) {
+          this.debugAlertedRules.set(
+            ruleId,
+            now.add(this.ruleDebugAlertPauseTimeMins, 'minutes').unix(),
           );
 
-          const now = dayjs();
-          if (avgExecTime >= this.ruleAvgExecTimeCutOffMS) {
-            this.execPausedRules.set(
-              ruleId,
-              now.add(this.ruleQuarantineTimeMins, 'minutes').unix(),
-            );
-
-            logger.info(
-              {
-                ruleId,
-                ruleStats,
-                quarantinedTill: this.execPausedRules.get(ruleId),
+          debugAlerts.push({
+            runnerId: taskPackage.runnerId,
+            alert: {
+              msg: 'Rule avg execution exceeding than expected',
+              avgExecTime,
+              debugAlertState: {
+                ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
+                alertCreatedAt: now,
+                alertsPausedTill: this.debugAlertedRules.get(ruleId),
               },
-              'Rule quarantined due to avg execution time exceeding cutoff time',
-            );
-          }
-
-          if (
-            avgExecTime >= this.ruleAvgExecTimeDebugAlertMS &&
-            (!this.debugAlertedRules.has(ruleId) ||
-              (this.debugAlertedRules.has(ruleId) &&
-                now.isAfter(
-                  dayjs.unix(this.debugAlertedRules.get(ruleId) as number),
-                )))
-          ) {
-            this.debugAlertedRules.set(
-              ruleId,
-              now.add(this.ruleDebugAlertPauseTimeMins, 'minutes').unix(),
-            );
-
-            debugAlerts.push({
-              runnerId: taskPackage.runnerId,
-              alert: {
-                msg: 'Rule avg execution exceeding than expected',
-                avgExecTime,
-                debugAlertState: {
-                  ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
-                  alertCreatedAt: now,
-                  alertsPausedTill: this.debugAlertedRules.get(ruleId),
-                },
-                ruleQuarantineState: {
-                  isQuarantined: this.execPausedRules.has(ruleId),
-                  ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
-                  ...(this.execPausedRules.has(ruleId)
-                    ? {
-                        quarantinedAt: now,
-                        quarantinedTill: this.execPausedRules.get(ruleId),
-                      }
-                    : {}),
-                },
-                stats: JSON.parse(JSON.stringify(ruleStats)),
+              ruleQuarantineState: {
+                isQuarantined: this.execPausedRules.has(ruleId),
+                ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
+                ...(this.execPausedRules.has(ruleId)
+                  ? {
+                      quarantinedAt: now,
+                      quarantinedTill: this.execPausedRules.get(ruleId),
+                    }
+                  : {}),
               },
-              blockNetwork: taskPackage.block.network,
-              blockHeight: taskPackage.block.height,
-              ruleGroupId: taskPackage.ruleGroupId,
-              ruleId,
-            });
-          }
+              stats: JSON.parse(JSON.stringify(ruleStats)),
+            },
+            blockNetwork: taskPackage.block.network,
+            blockHeight: taskPackage.block.height,
+            ruleGroupId: taskPackage.ruleGroupId,
+            ruleId,
+          });
         }
-      });
+
+        // Reset the stats so that it's a fresh start after jailing period
+        if (ruleQuarantined) {
+          delete this.ruleMetricsForQuarantine[ruleId];
+        }
+        // Window average check
+        else if (ruleStats.execCount >= this.ruleQuarantineAvgWindow) {
+          delete this.ruleMetricsForQuarantine[ruleId];
+        }
+      }
 
       // no await so that we can move on to next task, however errors are handles so it should not affect other processing
       if (debugAlerts.length) {
@@ -1036,6 +1048,63 @@ class RangeSDK implements IRangeSDK {
     }
 
     this.blockRulesMetricsByRuleGroup.set(ruleGroupId, newStats);
+  }
+
+  private setMetricStatsForRuleQuarantine(
+    ruleStats: Record<string, RuleMetrics>,
+  ) {
+    if (!Object.keys(this.ruleMetricsForQuarantine).length) {
+      this.ruleMetricsForQuarantine = JSON.parse(JSON.stringify(ruleStats));
+      return;
+    }
+
+    const newStats: Record<string, RuleMetrics> = JSON.parse(
+      JSON.stringify(this.ruleMetricsForQuarantine),
+    );
+    for (const ruleID of Object.keys(ruleStats)) {
+      const existingRuleStats = newStats[ruleID];
+      if (!existingRuleStats) {
+        newStats[ruleID] = ruleStats[ruleID];
+        continue;
+      }
+
+      const newRuleStats: RuleMetrics = JSON.parse(
+        JSON.stringify(existingRuleStats),
+      );
+
+      newRuleStats.execCount += ruleStats[ruleID].execCount;
+      if (newRuleStats.execMinTimeMS > ruleStats[ruleID].execMinTimeMS) {
+        newRuleStats.execMinTimeMS = ruleStats[ruleID].execMinTimeMS;
+      }
+      if (newRuleStats.execMaxTimeMS < ruleStats[ruleID].execMaxTimeMS) {
+        newRuleStats.execMaxTimeMS = ruleStats[ruleID].execMaxTimeMS;
+      }
+      newRuleStats.execTotalTimeMS += ruleStats[ruleID].execTotalTimeMS;
+
+      if (ruleStats[ruleID].alertEventCount) {
+        newRuleStats.alertEventCount += ruleStats[ruleID].alertEventCount;
+        if (
+          newRuleStats.alertEventMinTimeMS >
+          ruleStats[ruleID].alertEventMinTimeMS
+        ) {
+          newRuleStats.alertEventMinTimeMS =
+            ruleStats[ruleID].alertEventMinTimeMS;
+        }
+        if (
+          newRuleStats.alertEventMaxTimeMS <
+          ruleStats[ruleID].alertEventMaxTimeMS
+        ) {
+          newRuleStats.alertEventMaxTimeMS =
+            ruleStats[ruleID].alertEventMaxTimeMS;
+        }
+        newRuleStats.alertEventTotalTimeMS +=
+          ruleStats[ruleID].alertEventTotalTimeMS;
+      }
+
+      newStats[ruleID] = newRuleStats;
+    }
+
+    this.ruleMetricsForQuarantine = newStats;
   }
 
   getMetricStats() {
