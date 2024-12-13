@@ -346,31 +346,33 @@ export interface Stride1TrxMsgIbcCoreChannelV1MsgRecvPacket
 }
 
 // types for mgs type:: /ibc.core.channel.v1.MsgTimeout
-export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout extends IRangeMessage {
-  type: Stride1TrxMsgTypes.IbcCoreChannelV1MsgTimeout;
-  data: {
-    packet: {
-      sequence: string;
-      sourcePort: string;
-      sourceChannel: string;
-      destinationPort: string;
-      destinationChannel: string;
-      data: string;
-      timeoutHeight?: {
-        revisionNumber?: string;
-        revisionHeight?: string;
-      };
-      timeoutTimestamp?: string;
-    };
+export interface Stride1TrxMsgIbcCoreChannelV1MsgTimeout {
+    type: string;
+    data: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData;
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutData {
+    packet: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket;
     proofUnreceived: string;
-    proofHeight: {
-      revisionNumber: string;
-      revisionHeight: string;
-    };
+    proofHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight;
     nextSequenceRecv: string;
     signer: string;
-  };
 }
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutPacket {
+    sequence: string;
+    sourcePort: string;
+    sourceChannel: string;
+    destinationPort: string;
+    destinationChannel: string;
+    data: string;
+    timeoutHeight: Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight;
+    timeoutTimestamp: string;
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutTimeoutHeight {
+}
+interface Stride1TrxMsgIbcCoreChannelV1MsgTimeoutProofHeight {
+    revisionHeight: string;
+}
+
 
 // types for mgs type:: /stride.claim.MsgClaimFreeAmount
 export interface Stride1TrxMsgStrideClaimMsgClaimFreeAmount
