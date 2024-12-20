@@ -58,7 +58,7 @@ class TestRangeSDK implements IRangeSDK {
       );
     }
 
-    return this.initOpts.onBlock.callback(block, rule);
+    return this.initOpts.onBlock.callback[rule.ruleType](block, rule);
   }
 
   async assertRuleWithBlock(block: IRangeBlock, rule: IRangeAlertRule) {
@@ -68,7 +68,7 @@ class TestRangeSDK implements IRangeSDK {
       );
     }
 
-    return this.initOpts.onBlock.callback(block, rule);
+    return this.initOpts.onBlock.callback[rule.ruleType](block, rule);
   }
 
   async assertRuleWithTick(timestamp: string, rule: IRangeAlertRule) {

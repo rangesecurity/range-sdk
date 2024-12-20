@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { Kafka } from 'kafkajs';
 import workerpool from 'workerpool';
+// import { serialize, deserialize } from 'v8';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, ISubEvent } from './types/IRangeEvent';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
@@ -26,11 +27,18 @@ import { getLogger } from './logger';
 import { constants } from './constants';
 import { tickTaskAck } from './services/tickTaskAck';
 import { DebugAlert, postDebugAlert } from './services/postDebugAlert';
+import { initOnBlockWorkerMethods } from './workers/initWorker';
+// import { initOnBlockWorkerMethods } from './workers/initWorker';
 
 const logger = getLogger({ name: 'rangeSDK' });
 
+export type onBlockCallbackFunc = (
+  block: IRangeBlock,
+  rule: IRangeAlertRule,
+) => Promise<ISubEvent[]>;
+
 export interface OnBlock {
-  callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
+  callback: Record<string, onBlockCallbackFunc>;
 }
 
 export interface OnTick {
@@ -91,13 +99,17 @@ export interface RangeSDKHealthStats {
 }
 
 class RangeSDK implements IRangeSDK {
-  private onBlockWorkerPool = workerpool.pool({
-    workerType: 'thread',
-    minWorkers: 3,
-  });
+  private onBlockWorkerPool?: workerpool.Pool;
+  // = workerpool.pool({
+  //   workerType: 'thread',
+  //   minWorkers: 3,
+  // });
+
   private opts: RangeSDKOptions;
   private initOpts?: RangeSDKInitOptions;
   private config?: IRangeConfig;
+
+  // private wrappedOnBlockCallbacks?: Record<string, onBlockCallbackFunc>;
 
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
@@ -130,11 +142,55 @@ class RangeSDK implements IRangeSDK {
     );
   }
 
+  // private wrapOnBlockCallbacksWithDeserialiser(func: onBlockCallbackFunc) {
+  //   return async (blockBuffer: SharedArrayBuffer, rule: IRangeAlertRule) => {
+  //     const uint8Array = new Uint8Array(blockBuffer);
+  //     const block: IRangeBlock = deserialize(uint8Array);
+
+  //     // const decoder = new TextDecoder();
+  //     // const jsonStringFromUint8Array = decoder.decode(blockBuffer);
+  //     // const block = JSON.parse(jsonStringFromUint8Array);
+
+  //     return func(block, rule);
+  //   };
+  // }
+
+  private async registerOnBlockCallbacks(initOpts: RangeSDKInitOptions) {
+    if (!initOpts.onBlock) {
+      throw new Error(''); // todo: add correct error message
+    }
+
+    // const wrappedOnBlockCallbacks = Object.fromEntries(
+    //   Object.entries(initOpts.onBlock.callback).map(([key, value]) => [
+    //     key,
+    //     this.wrapOnBlockCallbacksWithDeserialiser(value),
+    //   ]),
+    // );
+    // this.wrappedOnBlockCallbacks = initOpts.onBlock.callback;
+
+    await initOnBlockWorkerMethods(initOpts.onBlock.callback);
+    // await this.onBlockWorkerPool.exec(
+    //   (onBlockCallbacks) => {
+    //     workerpool.worker(onBlockCallbacks);
+    //   },
+    //   [wrappedOnBlockCallbacks],
+    // );
+    // workerpool.worker(wrappedOnBlockCallbacks);
+  }
+
   async init(initOpts: RangeSDKInitOptions): Promise<void> {
     if (!initOpts.onBlock && !initOpts.onTick) {
       throw new Error(
         'At least one of the callbacks (onBlock or onTick) are required to initialise the sdk',
       );
+    }
+
+    // Dynamically register all the onBlock callbacks to the worker pool
+    if (
+      initOpts.onBlock &&
+      Object.keys(initOpts.onBlock?.callback).length > 0
+    ) {
+      await this.registerOnBlockCallbacks(initOpts);
     }
 
     /**
@@ -195,17 +251,12 @@ class RangeSDK implements IRangeSDK {
       Object.prototype.hasOwnProperty.call(this.initOpts, 'onBlock') ===
         false ||
       this.initOpts.onBlock === undefined ||
-      this.initOpts.onBlock === null
+      this.initOpts.onBlock === null ||
+      this.initOpts.onBlock.callback === undefined ||
+      Object.keys(this.initOpts.onBlock.callback).length === 0
     ) {
       logger.warn({ message: 'Missing handler for block based alert rules' });
-      this.initOpts.onBlock = {
-        callback: async (block, rule) => {
-          logger.error({
-            message: `Missing handler for block based alert rules. Block: network: ${block.network}, height: ${block.height}, Rule: type: ${rule.ruleType}, id: ${rule.id}`,
-          });
-          return [];
-        },
-      };
+      throw new Error('Missing handler for block based alert rules');
     }
 
     const kafkaTopic = this.config.kafkaTopics.blockRuleGroupTasks;
@@ -566,6 +617,17 @@ class RangeSDK implements IRangeSDK {
       {} as Record<string, Partial<RuleMetrics>>,
     );
 
+    const blockString = JSON.stringify(block);
+    const encoder = new TextEncoder();
+    const blockSerialised = encoder.encode(blockString); // Uint8Array
+
+    // const blockSerialised = serialize(block);
+    const blockSharedArrayBuffer = new SharedArrayBuffer(
+      blockSerialised.byteLength,
+    );
+    const blockUint8Array = new Uint8Array(blockSharedArrayBuffer);
+    blockUint8Array.set(blockSerialised);
+
     const events = await Promise.all(
       rules.map(
         async (
@@ -630,7 +692,11 @@ class RangeSDK implements IRangeSDK {
               };
             }
 
-            const ruleSubResults = await this.execOnBlockPerRule(block, rule);
+            const ruleSubResults = await this.execOnBlockPerRule(
+              block,
+              //blockSharedArrayBuffer,
+              rule,
+            );
             const ruleResults = ruleSubResults.map((subResult) => ({
               ...subResult,
               workspaceId: rule.workspaceId || null,
@@ -736,7 +802,13 @@ class RangeSDK implements IRangeSDK {
     };
   }
 
-  private async execOnBlockPerRule(block: IRangeBlock, rule: IRangeAlertRule) {
+  private async execOnBlockPerRule(
+    block: IRangeBlock,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //_blockSharedArrayBuffer: SharedArrayBuffer,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    rule: IRangeAlertRule,
+  ): Promise<ISubEvent[]> {
     if (!this.initOpts) {
       throw new Error('SDK Init not called, onBlock missing');
     }
@@ -744,27 +816,28 @@ class RangeSDK implements IRangeSDK {
       throw new Error('Missing handler for block based alert rules');
     }
 
-    // console.log(`\n\nthis`);
-    // console.log(this);
-    // console.log(`\n\n`);
+    const ruleSubResults = (await Promise.race([
+      this.initOpts.onBlock.callback[rule.ruleType](block, rule),
+      new Promise((_, rej) => {
+        setTimeout(() => {
+          rej(
+            new Error('onBlock execution terminated due to deadline timeout'),
+          );
+        }, this.rulePerExecTimeCutOffMS);
+      }),
+    ])) as ISubEvent[];
 
-    // use thread pool instead
-    const ruleSubResults = await this.onBlockWorkerPool
-      .exec(this.initOpts.onBlock.callback, [block, rule])
-      .timeout(this.rulePerExecTimeCutOffMS);
+    return ruleSubResults;
 
-    // const ruleSubResults = await Promise.race([
-    //   this.initOpts.onBlock.callback(block, rule),
-    //   new Promise((_, rej) => {
-    //     setTimeout(() => {
-    //       rej(
-    //         new Error('onBlock execution terminated due to deadline timeout'),
-    //       );
-    //     }, this.rulePerExecTimeCutOffMS);
-    //   }),
-    // ]);
+    // // use thread pool instead
+    // const ruleSubResults = await this.onBlockWorkerPool
+    //   .exec(this.wrappedOnBlockCallbacks[rule.ruleType], [
+    //     blockSharedArrayBuffer,
+    //     rule,
+    //   ])
+    //   .timeout(this.rulePerExecTimeCutOffMS);
 
-    return (ruleSubResults || []) as ISubEvent[];
+    // return (ruleSubResults || []) as ISubEvent[];
   }
 
   private async initTickRuleGroupTaskQueue() {
@@ -1058,7 +1131,7 @@ class RangeSDK implements IRangeSDK {
       rateLimitedRules: Object.fromEntries(this.rateLimitedRules),
       execPausedRules: Object.fromEntries(this.execPausedRules),
       debugAlertedRules: Object.fromEntries(this.debugAlertedRules),
-      onBlockWorkerPoolStats: this.onBlockWorkerPool.stats(),
+      // onBlockWorkerPoolStats: this.onBlockWorkerPool.stats(),
     };
   }
 
@@ -1100,7 +1173,7 @@ class RangeSDK implements IRangeSDK {
 
     await new Promise((res) =>
       setTimeout(async () => {
-        await this.onBlockWorkerPool.terminate();
+        // await this.onBlockWorkerPool.terminate();
         if (this.blockRuleGroupTaskClient) {
           await this.blockRuleGroupTaskClient.gracefulShutdown();
         }
