@@ -1,0 +1,157 @@
+namespace Solana;
+
+table InstructionErrorArrayObjFlatBuffer {
+  Custom: int;
+  // Assuming nested array is flattened into a table for simplicity
+}
+
+table ErrInstructionErrorFlatBuffer {
+  InstructionError: [InstructionErrorArrayObjFlatBuffer] (required);
+}
+
+// Status structure
+table StatusFlatBuffer {
+  Ok: bool; // Null fields are assumed to be absent if not true
+  Err: ErrInstructionErrorFlatBuffer; // Optional by default
+}
+
+// Return data structure
+table ReturnDataFlatBuffer {
+  data: [string];
+  programId: string;
+}
+
+// UI Token Amount
+table UITokenAmountFlatBuffer {
+  amount: string;
+  decimals: int;
+  uiAmount: float; // Optional
+  uiAmountString: string;
+}
+
+// Token balances structure
+table TokenBalanceFlatBuffer {
+  mint: string;
+  owner: string;
+  programId: string;
+  accountIndex: int;
+  uiTokenAmount: UITokenAmountFlatBuffer (required);
+}
+
+// Parsed info details
+table ParsedInfoDetailsFlatBuffer {
+  amount: string;
+  source: string;
+  authority: string; // Optional
+  destination: string; // Optional
+  owner: string; // Optional
+  delegate: string; // Optional
+}
+
+// Parsed info structure
+table ParsedInfoFlatBuffer {
+  info: ParsedInfoDetailsFlatBuffer (required);
+  type: string;
+}
+
+// Parsed instruction type
+table ParsedInstructionFlatBuffer {
+  parsed: ParsedInfoFlatBuffer (required);
+  program: string;
+  programId: string;
+  stackHeight: int;
+}
+
+// Data instruction type
+table DataInstructionFlatBuffer {
+  data: string;
+  accounts: [string];
+  programId: string;
+  stackHeight: int;
+}
+
+// Instruction structure (union for different instruction types)
+union InstructionFlatBuffer { ParsedInstructionFlatBuffer, DataInstructionFlatBuffer }
+
+// Inner instructions structure
+table InnerInstructionFlatBuffer {
+  index: int;
+  instructions: [InstructionFlatBuffer] (required);
+}
+
+// Meta data for Solana transaction
+table SolanaTrxMetaFlatBuffer {
+  err: ErrInstructionErrorFlatBuffer; // Optional
+  fee: int;
+  status: StatusFlatBuffer (required);
+  rewards: string; // Assuming unknown maps to string
+  returnData: ReturnDataFlatBuffer; // Optional
+  logMessages: [string];
+  preBalances: [int];
+  postBalances: [int];
+  preTokenBalances: [TokenBalanceFlatBuffer] (required);
+  innerInstructions: [InnerInstructionFlatBuffer] (required);
+  postTokenBalances: [TokenBalanceFlatBuffer] (required);
+  computeUnitsConsumed: int;
+}
+
+// Account key structure
+table AccountKeyFlatBuffer {
+  pubkey: string;
+  signer: bool;
+  source: string;
+  writable: bool;
+}
+
+// Message structure
+table MessageFlatBuffer {
+  accountKeys: [AccountKeyFlatBuffer] (required);
+  instructions: [InstructionFlatBuffer] (required);
+}
+
+// Transaction structure
+table SolanaTrxTrxFlatBuffer {
+  message: MessageFlatBuffer (required);
+  signatures: [string];
+}
+
+// Solana transaction structure
+table SolanaTrxFlatBuffer {
+  meta: SolanaTrxMetaFlatBuffer; // (required);
+  transaction: SolanaTrxTrxFlatBuffer; // (required);
+}
+
+// Enum for networks
+enum NetworkEnumFlatBuffer : byte {
+  Solana,
+}
+
+// BlockEvent structure
+table BlockEventAttributeFlatBuffer {
+  key: string;
+  value: string;
+}
+
+table BlockEventFlatBuffer {
+  type: string;
+  attributes: [BlockEventAttributeFlatBuffer] (required);
+}
+
+// BlockEvents structure
+table BlockEventsFlatBuffer {
+  end_block: [BlockEventFlatBuffer] (required);
+  begin_block: [BlockEventFlatBuffer] (required);
+}
+
+// SolanaBlock extends BlockBase
+table SolanaBlockFlatBuffer {
+  hash: string;
+  height: string;
+  transactions: [SolanaTrxFlatBuffer]; // (required); // Using the existing SolanaTrx definition
+  network: NetworkEnumFlatBuffer = Solana; // Restricted to Solana
+  timestamp: string;
+  block_data: string;
+  block_events: BlockEventsFlatBuffer;
+}
+
+root_type SolanaBlockFlatBuffer;
