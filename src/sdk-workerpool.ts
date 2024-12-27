@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
 import { Kafka } from 'kafkajs';
+import workerpool from 'workerpool';
+// import { serialize, deserialize } from 'v8';
 import { IRangeBlock } from './types/chain/IRangeBlock';
 import { IRangeError, ISubEvent } from './types/IRangeEvent';
 import { IRangeAlertRule } from './types/IRangeAlertRule';
@@ -25,11 +27,18 @@ import { getLogger } from './logger';
 import { constants } from './constants';
 import { tickTaskAck } from './services/tickTaskAck';
 import { DebugAlert, postDebugAlert } from './services/postDebugAlert';
+import { initOnBlockWorkerMethods } from './workers/initWorker';
+// import { initOnBlockWorkerMethods } from './workers/initWorker';
 
 const logger = getLogger({ name: 'rangeSDK' });
 
+export type onBlockCallbackFunc = (
+  block: IRangeBlock,
+  rule: IRangeAlertRule,
+) => Promise<ISubEvent[]>;
+
 export interface OnBlock {
-  callback: (block: IRangeBlock, rule: IRangeAlertRule) => Promise<ISubEvent[]>;
+  callback: Record<string, onBlockCallbackFunc>;
 }
 
 export interface OnTick {
@@ -90,9 +99,17 @@ export interface RangeSDKHealthStats {
 }
 
 class RangeSDK implements IRangeSDK {
+  private onBlockWorkerPool?: workerpool.Pool;
+  // = workerpool.pool({
+  //   workerType: 'thread',
+  //   minWorkers: 3,
+  // });
+
   private opts: RangeSDKOptions;
   private initOpts?: RangeSDKInitOptions;
   private config?: IRangeConfig;
+
+  // private wrappedOnBlockCallbacks?: Record<string, onBlockCallbackFunc>;
 
   private blockRuleGroupTaskClient?: KafkaConsumerClient;
   private errorBlockRuleTaskClient?: KafkaConsumerClient;
@@ -111,8 +128,6 @@ class RangeSDK implements IRangeSDK {
   private readonly ruleDebugAlertPauseTimeMins = 15;
   private execPausedRules: Map<string, number> = new Map(); // key is rule id and value is exec paused till in unix
   private debugAlertedRules: Map<string, number> = new Map(); // key is rule id and value is alerting paused till in unix
-  private ruleMetricsForQuarantine: Record<string, RuleMetrics> = {};
-  private ruleQuarantineAvgWindow = 15;
 
   private blockRulesMetricsByRuleGroup: Map<
     string,
@@ -127,11 +142,55 @@ class RangeSDK implements IRangeSDK {
     );
   }
 
+  // private wrapOnBlockCallbacksWithDeserialiser(func: onBlockCallbackFunc) {
+  //   return async (blockBuffer: SharedArrayBuffer, rule: IRangeAlertRule) => {
+  //     const uint8Array = new Uint8Array(blockBuffer);
+  //     const block: IRangeBlock = deserialize(uint8Array);
+
+  //     // const decoder = new TextDecoder();
+  //     // const jsonStringFromUint8Array = decoder.decode(blockBuffer);
+  //     // const block = JSON.parse(jsonStringFromUint8Array);
+
+  //     return func(block, rule);
+  //   };
+  // }
+
+  private async registerOnBlockCallbacks(initOpts: RangeSDKInitOptions) {
+    if (!initOpts.onBlock) {
+      throw new Error(''); // todo: add correct error message
+    }
+
+    // const wrappedOnBlockCallbacks = Object.fromEntries(
+    //   Object.entries(initOpts.onBlock.callback).map(([key, value]) => [
+    //     key,
+    //     this.wrapOnBlockCallbacksWithDeserialiser(value),
+    //   ]),
+    // );
+    // this.wrappedOnBlockCallbacks = initOpts.onBlock.callback;
+
+    await initOnBlockWorkerMethods(initOpts.onBlock.callback);
+    // await this.onBlockWorkerPool.exec(
+    //   (onBlockCallbacks) => {
+    //     workerpool.worker(onBlockCallbacks);
+    //   },
+    //   [wrappedOnBlockCallbacks],
+    // );
+    // workerpool.worker(wrappedOnBlockCallbacks);
+  }
+
   async init(initOpts: RangeSDKInitOptions): Promise<void> {
     if (!initOpts.onBlock && !initOpts.onTick) {
       throw new Error(
         'At least one of the callbacks (onBlock or onTick) are required to initialise the sdk',
       );
+    }
+
+    // Dynamically register all the onBlock callbacks to the worker pool
+    if (
+      initOpts.onBlock &&
+      Object.keys(initOpts.onBlock?.callback).length > 0
+    ) {
+      await this.registerOnBlockCallbacks(initOpts);
     }
 
     /**
@@ -192,17 +251,12 @@ class RangeSDK implements IRangeSDK {
       Object.prototype.hasOwnProperty.call(this.initOpts, 'onBlock') ===
         false ||
       this.initOpts.onBlock === undefined ||
-      this.initOpts.onBlock === null
+      this.initOpts.onBlock === null ||
+      this.initOpts.onBlock.callback === undefined ||
+      Object.keys(this.initOpts.onBlock.callback).length === 0
     ) {
       logger.warn({ message: 'Missing handler for block based alert rules' });
-      this.initOpts.onBlock = {
-        callback: async (block, rule) => {
-          logger.error({
-            message: `Missing handler for block based alert rules. Block: network: ${block.network}, height: ${block.height}, Rule: type: ${rule.ruleType}, id: ${rule.id}`,
-          });
-          return [];
-        },
-      };
+      throw new Error('Missing handler for block based alert rules');
     }
 
     const kafkaTopic = this.config.kafkaTopics.blockRuleGroupTasks;
@@ -374,7 +428,6 @@ class RangeSDK implements IRangeSDK {
           ruleStats,
         );
       }
-      this.setMetricStatsForRuleQuarantine(ruleStats);
     } catch (err) {
       logger.error(err, `Error while setting metrics`);
     }
@@ -382,82 +435,73 @@ class RangeSDK implements IRangeSDK {
     try {
       // Check for rules to quarantine on their avg time exec
       const debugAlerts: DebugAlert[] = [];
-      for (const ruleId of Object.keys(this.ruleMetricsForQuarantine)) {
-        const ruleStats = this.ruleMetricsForQuarantine[ruleId];
-        const avgExecTime = Math.floor(
-          ruleStats.execTotalTimeMS / ruleStats.execCount,
-        );
-
-        const now = dayjs();
-        let ruleQuarantined = false;
-        if (avgExecTime >= this.ruleAvgExecTimeCutOffMS) {
-          this.execPausedRules.set(
-            ruleId,
-            now.add(this.ruleQuarantineTimeMins, 'minutes').unix(),
+      this.blockRulesMetricsByRuleGroup.forEach((ruleGroupStats) => {
+        for (const ruleId of Object.keys(ruleGroupStats.individualRuleStats)) {
+          const ruleStats = ruleGroupStats.individualRuleStats[ruleId];
+          const avgExecTime = Math.floor(
+            ruleStats.execTotalTimeMS / ruleStats.execCount,
           );
-          ruleQuarantined = true;
 
-          logger.info(
-            {
+          const now = dayjs();
+          if (avgExecTime >= this.ruleAvgExecTimeCutOffMS) {
+            this.execPausedRules.set(
               ruleId,
-              ruleStats,
-              quarantinedTill: this.execPausedRules.get(ruleId),
-            },
-            'Rule quarantined due to avg execution time exceeding cutoff time',
-          );
-        }
+              now.add(this.ruleQuarantineTimeMins, 'minutes').unix(),
+            );
 
-        if (
-          avgExecTime >= this.ruleAvgExecTimeDebugAlertMS &&
-          (!this.debugAlertedRules.has(ruleId) ||
-            (this.debugAlertedRules.has(ruleId) &&
-              now.isAfter(
-                dayjs.unix(this.debugAlertedRules.get(ruleId) as number),
-              )))
-        ) {
-          this.debugAlertedRules.set(
-            ruleId,
-            now.add(this.ruleDebugAlertPauseTimeMins, 'minutes').unix(),
-          );
-
-          debugAlerts.push({
-            runnerId: taskPackage.runnerId,
-            alert: {
-              msg: 'Rule avg execution exceeding than expected',
-              avgExecTime,
-              debugAlertState: {
-                ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
-                alertCreatedAt: now,
-                alertsPausedTill: this.debugAlertedRules.get(ruleId),
+            logger.info(
+              {
+                ruleId,
+                ruleStats,
+                quarantinedTill: this.execPausedRules.get(ruleId),
               },
-              ruleQuarantineState: {
-                isQuarantined: this.execPausedRules.has(ruleId),
-                ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
-                ...(this.execPausedRules.has(ruleId)
-                  ? {
-                      quarantinedAt: now,
-                      quarantinedTill: this.execPausedRules.get(ruleId),
-                    }
-                  : {}),
-              },
-              stats: JSON.parse(JSON.stringify(ruleStats)),
-            },
-            blockNetwork: taskPackage.block.network,
-            blockHeight: taskPackage.block.height,
-            ruleGroupId: taskPackage.ruleGroupId,
-            ruleId,
-          });
-        }
+              'Rule quarantined due to avg execution time exceeding cutoff time',
+            );
+          }
 
-        // Reset the stats so that it's a fresh start after jailing period
-        if (ruleQuarantined) {
-          delete this.ruleMetricsForQuarantine[ruleId];
+          if (
+            avgExecTime >= this.ruleAvgExecTimeDebugAlertMS &&
+            (!this.debugAlertedRules.has(ruleId) ||
+              (this.debugAlertedRules.has(ruleId) &&
+                now.isAfter(
+                  dayjs.unix(this.debugAlertedRules.get(ruleId) as number),
+                )))
+          ) {
+            this.debugAlertedRules.set(
+              ruleId,
+              now.add(this.ruleDebugAlertPauseTimeMins, 'minutes').unix(),
+            );
+
+            debugAlerts.push({
+              runnerId: taskPackage.runnerId,
+              alert: {
+                msg: 'Rule avg execution exceeding than expected',
+                avgExecTime,
+                debugAlertState: {
+                  ruleAvgExecTimeDebugAlertMS: this.ruleAvgExecTimeDebugAlertMS,
+                  alertCreatedAt: now,
+                  alertsPausedTill: this.debugAlertedRules.get(ruleId),
+                },
+                ruleQuarantineState: {
+                  isQuarantined: this.execPausedRules.has(ruleId),
+                  ruleAvgExecTimeCutOffMS: this.ruleAvgExecTimeCutOffMS,
+                  ...(this.execPausedRules.has(ruleId)
+                    ? {
+                        quarantinedAt: now,
+                        quarantinedTill: this.execPausedRules.get(ruleId),
+                      }
+                    : {}),
+                },
+                stats: JSON.parse(JSON.stringify(ruleStats)),
+              },
+              blockNetwork: taskPackage.block.network,
+              blockHeight: taskPackage.block.height,
+              ruleGroupId: taskPackage.ruleGroupId,
+              ruleId,
+            });
+          }
         }
-        // Window average check
-        else if (ruleStats.execCount >= this.ruleQuarantineAvgWindow) {
-          delete this.ruleMetricsForQuarantine[ruleId];
-        }
-      }
+      });
 
       // no await so that we can move on to next task, however errors are handles so it should not affect other processing
       if (debugAlerts.length) {
@@ -573,6 +617,17 @@ class RangeSDK implements IRangeSDK {
       {} as Record<string, Partial<RuleMetrics>>,
     );
 
+    const blockString = JSON.stringify(block);
+    const encoder = new TextEncoder();
+    const blockSerialised = encoder.encode(blockString); // Uint8Array
+
+    // const blockSerialised = serialize(block);
+    const blockSharedArrayBuffer = new SharedArrayBuffer(
+      blockSerialised.byteLength,
+    );
+    const blockUint8Array = new Uint8Array(blockSharedArrayBuffer);
+    blockUint8Array.set(blockSerialised);
+
     const events = await Promise.all(
       rules.map(
         async (
@@ -637,7 +692,11 @@ class RangeSDK implements IRangeSDK {
               };
             }
 
-            const ruleSubResults = await this.execOnBlockPerRule(block, rule);
+            const ruleSubResults = await this.execOnBlockPerRule(
+              block,
+              //blockSharedArrayBuffer,
+              rule,
+            );
             const ruleResults = ruleSubResults.map((subResult) => ({
               ...subResult,
               workspaceId: rule.workspaceId || null,
@@ -743,7 +802,13 @@ class RangeSDK implements IRangeSDK {
     };
   }
 
-  private async execOnBlockPerRule(block: IRangeBlock, rule: IRangeAlertRule) {
+  private async execOnBlockPerRule(
+    block: IRangeBlock,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //_blockSharedArrayBuffer: SharedArrayBuffer,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    rule: IRangeAlertRule,
+  ): Promise<ISubEvent[]> {
     if (!this.initOpts) {
       throw new Error('SDK Init not called, onBlock missing');
     }
@@ -751,8 +816,8 @@ class RangeSDK implements IRangeSDK {
       throw new Error('Missing handler for block based alert rules');
     }
 
-    const ruleSubResults = await Promise.race([
-      this.initOpts.onBlock.callback(block, rule),
+    const ruleSubResults = (await Promise.race([
+      this.initOpts.onBlock.callback[rule.ruleType](block, rule),
       new Promise((_, rej) => {
         setTimeout(() => {
           rej(
@@ -760,9 +825,19 @@ class RangeSDK implements IRangeSDK {
           );
         }, this.rulePerExecTimeCutOffMS);
       }),
-    ]);
+    ])) as ISubEvent[];
 
-    return (ruleSubResults || []) as ISubEvent[];
+    return ruleSubResults;
+
+    // // use thread pool instead
+    // const ruleSubResults = await this.onBlockWorkerPool
+    //   .exec(this.wrappedOnBlockCallbacks[rule.ruleType], [
+    //     blockSharedArrayBuffer,
+    //     rule,
+    //   ])
+    //   .timeout(this.rulePerExecTimeCutOffMS);
+
+    // return (ruleSubResults || []) as ISubEvent[];
   }
 
   private async initTickRuleGroupTaskQueue() {
@@ -1050,69 +1125,13 @@ class RangeSDK implements IRangeSDK {
     this.blockRulesMetricsByRuleGroup.set(ruleGroupId, newStats);
   }
 
-  private setMetricStatsForRuleQuarantine(
-    ruleStats: Record<string, RuleMetrics>,
-  ) {
-    if (!Object.keys(this.ruleMetricsForQuarantine).length) {
-      this.ruleMetricsForQuarantine = JSON.parse(JSON.stringify(ruleStats));
-      return;
-    }
-
-    const newStats: Record<string, RuleMetrics> = JSON.parse(
-      JSON.stringify(this.ruleMetricsForQuarantine),
-    );
-    for (const ruleID of Object.keys(ruleStats)) {
-      const existingRuleStats = newStats[ruleID];
-      if (!existingRuleStats) {
-        newStats[ruleID] = ruleStats[ruleID];
-        continue;
-      }
-
-      const newRuleStats: RuleMetrics = JSON.parse(
-        JSON.stringify(existingRuleStats),
-      );
-
-      newRuleStats.execCount += ruleStats[ruleID].execCount;
-      if (newRuleStats.execMinTimeMS > ruleStats[ruleID].execMinTimeMS) {
-        newRuleStats.execMinTimeMS = ruleStats[ruleID].execMinTimeMS;
-      }
-      if (newRuleStats.execMaxTimeMS < ruleStats[ruleID].execMaxTimeMS) {
-        newRuleStats.execMaxTimeMS = ruleStats[ruleID].execMaxTimeMS;
-      }
-      newRuleStats.execTotalTimeMS += ruleStats[ruleID].execTotalTimeMS;
-
-      if (ruleStats[ruleID].alertEventCount) {
-        newRuleStats.alertEventCount += ruleStats[ruleID].alertEventCount;
-        if (
-          newRuleStats.alertEventMinTimeMS >
-          ruleStats[ruleID].alertEventMinTimeMS
-        ) {
-          newRuleStats.alertEventMinTimeMS =
-            ruleStats[ruleID].alertEventMinTimeMS;
-        }
-        if (
-          newRuleStats.alertEventMaxTimeMS <
-          ruleStats[ruleID].alertEventMaxTimeMS
-        ) {
-          newRuleStats.alertEventMaxTimeMS =
-            ruleStats[ruleID].alertEventMaxTimeMS;
-        }
-        newRuleStats.alertEventTotalTimeMS +=
-          ruleStats[ruleID].alertEventTotalTimeMS;
-      }
-
-      newStats[ruleID] = newRuleStats;
-    }
-
-    this.ruleMetricsForQuarantine = newStats;
-  }
-
   getMetricStats() {
     return {
       blockRulesMetrics: Object.fromEntries(this.blockRulesMetricsByRuleGroup),
       rateLimitedRules: Object.fromEntries(this.rateLimitedRules),
       execPausedRules: Object.fromEntries(this.execPausedRules),
       debugAlertedRules: Object.fromEntries(this.debugAlertedRules),
+      // onBlockWorkerPoolStats: this.onBlockWorkerPool.stats(),
     };
   }
 
@@ -1154,6 +1173,7 @@ class RangeSDK implements IRangeSDK {
 
     await new Promise((res) =>
       setTimeout(async () => {
+        // await this.onBlockWorkerPool.terminate();
         if (this.blockRuleGroupTaskClient) {
           await this.blockRuleGroupTaskClient.gracefulShutdown();
         }
