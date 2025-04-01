@@ -883,6 +883,7 @@ class RangeSDK implements IRangeSDK {
               network: rule.network,
               txHash: subResult.txHash || '',
               addressesInvolved: subResult.addressesInvolved || [],
+              severity: subResult.severity || rule.severity || 'medium',
             }));
 
             if (!ruleResults.length) {
