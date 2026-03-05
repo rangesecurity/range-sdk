@@ -1,6 +1,8 @@
 # Range SDK
 
-[Range SDK](https://www.npmjs.com/package/@range-security/range-sdk) is a powerful Typescript library that simplifies the development of security rules and anomaly detectors for Cosmos blockchains. With the Range SDK, developers can easily extend the security of their protocols, monitoring in real-time the validity of invariants, risk scenarios, phishing attacks, spam, and much more.
+[Range SDK](https://www.npmjs.com/package/@range-security/range-sdk) is a powerful TypeScript library that simplifies the development of risk, compliance and security rules across multiple blockchain networks. It enables developers to build monitoring and detection logic for a wide range of ecosystems, including Solana, Stellar, EVM-based chains, Cosmos networks, and others.
+
+With the Range SDK, teams can easily extend the security of their protocols by monitoring blockchain activity in real time, detecting issues such as anomalies, invariant violations, risk scenarios, phishing attacks, spam, and other suspicious behaviors.
 
 ## Table of Contents
 
