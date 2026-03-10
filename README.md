@@ -1,148 +1,104 @@
 # Range SDK
 
-[Range SDK](https://www.npmjs.com/package/@range-security/range-sdk) is a powerful TypeScript library that simplifies the development of risk, compliance and security rules across multiple blockchain networks. It enables developers to build monitoring and detection logic for a wide range of ecosystems, including Solana, Stellar, EVM-based chains, Cosmos networks, and others.
+Build real-time security rules and anomaly detectors for any blockchain.
 
-With the Range SDK, teams can easily extend the security of their protocols by monitoring blockchain activity in real time, detecting issues such as anomalies, invariant violations, risk scenarios, phishing attacks, spam, and other suspicious behaviors.
+Range SDK is a TypeScript framework for writing alert rules that run against live blockchain data. Define rules with decorators, process blocks or time-based ticks, and emit events — the SDK handles multi-threaded execution, Redis streaming, and rule lifecycle management.
 
 ## Table of Contents
 
-- [Range SDK](#range-sdk)
-  - [Table of Contents](#table-of-contents)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Features](#features)
-  - [Documentation](#documentation)
-  - [How To Contribute](#how-to-contribute)
-  - [Reporting bugs](#reporting-bugs)
-  - [License](#license)
-  - [Credits](#credits)
+- [Highlights](#highlights)
+- [Quick Start](#quick-start)
+- [Rule Anatomy](#rule-anatomy)
+- [Requirements](#requirements)
+- [Supported Networks](#supported-networks)
+- [How To Contribute](#how-to-contribute)
+- [Reporting Bugs](#reporting-bugs)
+- [License](#license)
+- [Credits](#credits)
 
-## Installation
+## Highlights
+
+- **Decorator-based rules** — Define rules with `@Rule()`, typed parameters, and clean async callbacks. No boilerplate.
+- **Two trigger modes** — `BlockProcessor` runs on every new block. `TickProcessor` runs on a time interval. Use whichever fits your use case.
+- **Multi-chain** — One SDK for Solana, Ethereum, Arbitrum, BNB Chain, Polygon, Osmosis, Cosmos Hub, Noble, dYdX, ZigChain, and [more](https://app.range.org).
+
+### Built-in Services
+
+- **Real-Time Block Streaming** — Consume live blocks as they're produced. Your alert logic runs on every new block across any supported chain.
+- **Multi-Chain RPC** — Connect to EVM, Cosmos, and Solana through a single unified interface. No need to manage RPC endpoints yourself.
+- **Risk Scoring & Address Labels** — Look up wallet labels and get risk scores for any address. Know if a counterparty is sanctioned or suspicious before it's too late.
+- **Solana Tx Simulation** — Simulate Solana transactions before they execute. See expected state changes and human-readable summaries.
+
+## Quick Start
 
 ```bash
 yarn add @range-security/range-sdk
 ```
 
-## Usage
+See the [`example/`](./example) directory for a complete working project with two sample rules:
+- **`large-transfer`** — alerts when a SOL transfer exceeds a threshold
+- **`tx-surge`** — alerts when a block's transaction count spikes above the rolling average
 
-Here's a basic example to get you started:
+## Rule Anatomy
 
-```typescript
-// Range Implementation of `new-contract-code-stored` alert rule
-import {
-  RangeSDK,
-  OnBlock,
-  IRangeBlock,
-  IRangeAlertRule,
-  ISubEvent,
-} from '@range-security/range-sdk';
+Every rule is a class decorated with `@Rule()`:
 
-// Define your OnBlock handler
-const myOnBlock: OnBlock = {
-  callback: async (
-    block: IRangeBlock,
-    rule: IRangeAlertRule,
-  ): Promise<ISubEvent[]> => {
-    const allMessages = block.transactions.flatMap((tx) => tx.messages);
-    const targetMessages = allMessages.filter((m) => {
-      return m.type === 'cosmwasm.wasm.v1.MsgStoreCode';
-    });
+| Field | Description |
+|-------|-------------|
+| `type` | Unique identifier for this rule type (kebab-case) |
+| `label` | Human-readable name shown in the Range App |
+| `description` | What the rule does |
+| `networks` | Array of network IDs this rule runs on (e.g. `['osmosis-1', 'eth']`) |
+| `parameters` | Configurable inputs for the rule |
+| `tags` | Categories for filtering (`security`, `governance`, `dex`, `stablecoin`, etc.) |
+| `severity` | Alert level: `info`, `low`, `medium`, `high`, `critical` |
 
-    const results = targetMessages.map((m) => ({
-      details: {
-        message: `New CW contract code stored by ${m.value.sender}`,
-      },
-      txHash: m.hash,
-      addressesInvolved: m.addresses,
-    }));
+The callback receives:
 
-    return results;
-  },
-};
+- **BlockProcessor**: `{ block, rule }` — the decoded block data and the rule instance with its parameters. Blocks are typed per chain: `IEVMBlock`, `ISolanaBlock`, `ICosmosBlock`.
+- **TickProcessor**: `{ timestamp, rule }` — the current tick timestamp and the rule instance
 
-(async () => {
-  // Defining the RangeSDK instance
-  const range = new RangeSDK({
-    token: env.RANGE_TOKEN,
-  });
+Both return `ISubEvent[]` — an array of events to emit (or empty array for no alert).
 
-  // Running the RangeSDK instance
-  await range.init({
-    onBlock: myOnBlock,
-  });
-})();
-```
+### Event Shape
 
-```typescript
-// Range Implementation of `rpc-status` alert rule
-import {
-  RangeSDK,
-  OnTick,
-  IRangeAlertRule,
-  ISubEvent,
-} from '@range-security/range-sdk';
+Each event in the returned array has these fields:
 
-// Define your OnTick handler
-const myOnTick: OnTick = {
-  callback: async (
-    timestamp: string,
-    rule: IRangeAlertRule,
-  ): Promise<ISubEvent[]> => {
-    const parameters = rule.parameters;
+| Field | Required | Description |
+|-------|----------|-------------|
+| `caption` | Yes | Short summary of the alert |
+| `details` | Yes | Object with a `message` string and optional extra fields |
+| `txHash` | No | Transaction hash related to the alert |
+| `addressesInvolved` | No | Array of addresses relevant to the alert |
+| `severity` | No | Override the rule-level severity for this specific event |
 
-    // note: if p.ticker is set as 10, the rule will run on each 10 minutes
-    if (dayjs(timestamp).get('minute') % p.ticker !== 0) {
-      return [];
-    }
+## Requirements
 
-    try {
-      await axios.get(`https://rpc.osmosis.zone/status`);
-      return [];
-    } catch (error) {
-      return [
-        {
-          details: {
-            message: `Osmosis public RPC is down: ${JSON.stringify(error).slice(0, 100)}...`,
-          },
-          txHash: '',
-          addressesInvolved: [],
-          caption: 'Osmosis public RPC down',
-        },
-      ];
-    }
-  },
-};
+- Node.js >= 18
+- TypeScript >= 5.x
 
-(async () => {
-  // Defining the RangeSDK instance
-  const range = new RangeSDK({
-    token: env.RANGE_TOKEN,
-  });
+## Supported Networks
 
-  // Running the RangeSDK instance
-  await range.init({
-    onTick: myOnTick,
-  });
-})();
-```
+| Network | Network ID |
+|---------|------------|
+| Solana | `solana` |
+| Ethereum | `eth` |
+| Arbitrum | `arb1` |
+| BNB Chain | `bnb` |
+| Polygon | `pol` |
+| Osmosis | `osmosis-1` |
+| Cosmos Hub | `cosmoshub-4` |
+| Noble | `noble-1` |
+| dYdX | `dydx-mainnet-1` |
+| Stride | `stride-1` |
+| Celestia | `celestia` |
+| Neutron | `neutron-1` |
+| Dymension | `dymension_1100-1` |
+| Agoric | `agoric-3` |
+| Provenance | `pio-mainnet-1` |
+| Mantra | `mantra-1` |
 
-For more examples and use-cases, see the open-source rule repositories of several Cosmos chains:
-
-- [Osmosis Range Rules](https://github.com/rangesecurity/osmosis-range-rules)
-- [Cosmos Hub Range Rules](https://github.com/rangesecurity/cosmos-range-rules)
-
-## Features
-
-- Simple and intuitive API
-- Advanced security rule building in Typescript
-- Easy integration testing with real block data
-- Powerful anomaly detection examples
-- Integration with most Cosmos chains
-- Extensive documentation
-
-## Documentation
-
-Complete documentation can be found at our official documentation site.
+More networks are being added regularly. See all supported networks on the [Range App](https://app.range.org).
 
 ## How To Contribute
 
@@ -154,22 +110,28 @@ We welcome contributions from the community! To get started:
 ```bash
 git clone https://github.com/your-username/range-sdk.git
 cd range-sdk
-npm install
+yarn install
 ```
 
 3. Make your changes, add tests, and ensure tests pass.
 4. Commit your changes and push to your fork.
 5. Create a pull request with a detailed explanation of your changes.
 
-Before contributing, please read our [CONTRIBUTING.md](link).
+Before contributing, please read our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
-## Reporting bugs
+## Reporting Bugs
 
-If you encounter any bugs or issues, please [open an issue on GitHub](link). When reporting a bug, please provide as much context as possible, including error messages, logs, and steps to reproduce the bug.
+If you encounter any bugs or issues, please [open an issue on GitHub](https://github.com/rangesecurity/range-sdk/issues). When reporting a bug, please provide as much context as possible, including error messages, logs, and steps to reproduce the bug.
+
+## Links
+
+- [Range App](https://app.range.org)
+- [Documentation](https://docs.range.org)
+- [Get in Touch](https://range.org/get-in-touch)
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](link) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ## Credits
 

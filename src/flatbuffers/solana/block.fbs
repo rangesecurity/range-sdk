@@ -1,0 +1,89 @@
+// block.fbs - FlatBuffers schema for Solana blockchain block data
+namespace Block;
+
+table UiTokenAmount {
+    amount: string;
+    decimals: uint32;
+    uiAmount: double;
+    uiAmountString: string;
+}
+
+table TokenBalance {
+    accountIndex: uint32;
+    mint: string;
+    owner: string;
+    programId: string;
+    uiTokenAmount: UiTokenAmount;
+}
+
+table Instruction {
+    parsed: string;  // Store parsed data as JSON string
+    programId: string;
+    program: string;
+    accounts: [string];
+    data: string;
+    stackHeight: int32;
+}
+
+table InnerInstruction {
+    index: uint32;
+    instructions: [Instruction];
+}
+
+table AccountKey {
+    pubkey: string;
+    signer: bool;
+    source: string;
+    writable: bool;
+}
+
+table Message {
+    accountKeys: [AccountKey];
+    instructions: [Instruction];
+}
+
+table Transaction {
+    message: Message;
+    signatures: [string];
+}
+
+table TransactionMeta {
+    computeUnitsConsumed: uint64;
+    err: string;
+    fee: uint64;
+    innerInstructions: [InnerInstruction];
+    logMessages: [string];
+    preBalances: [uint64];
+    postBalances: [uint64];
+    preTokenBalances: [TokenBalance];
+    postTokenBalances: [TokenBalance];
+}
+
+table SolanaTransaction {
+    transaction: Transaction;
+    meta: TransactionMeta;
+}
+
+table SanctionedEntity {
+    entity: string;
+}
+
+table BlockData {
+    slot: string;
+    parent_slot: string;
+    previous_blockhash: string;
+    malicious_addresses: [string];
+    sanctioned_addresses: [string];
+    blacklisted_addresses: [string];
+}
+
+table SolanaBlock {
+    hash: string;
+    height: string;
+    network: string;
+    timestamp: string;
+    block_data: BlockData;
+    transactions: [SolanaTransaction];
+}
+
+root_type SolanaBlock; 

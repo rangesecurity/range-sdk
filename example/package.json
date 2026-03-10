@@ -1,0 +1,20 @@
+{
+  "name": "range-sdk-example",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/start.ts",
+    "start": "node dist/start.js"
+  },
+  "dependencies": {
+    "@range-security/range-sdk": "latest",
+    "dotenv": "^17.0.0",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.0"
+  }
+}
