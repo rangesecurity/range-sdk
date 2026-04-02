@@ -695,7 +695,8 @@ class RangeSDK implements IRangeSDK {
 
             let err = String(error);
             if (error instanceof Error) {
-              err = error.message + error.stack ? `\n${error.stack}` : '';
+              err =
+                error.message + (error.stack ? `\n${error.stack}` : '');
             }
 
             // Set metrics so that timed out processes can be jailed
@@ -867,7 +868,7 @@ class RangeSDK implements IRangeSDK {
         ): Promise<{ errors: IRangeError[]; alertEventsCount: number }> => {
           try {
             if (!this.initOpts) {
-              throw new Error('SDK Init not called, onBlock missing');
+              throw new Error('SDK Init not called, onTick missing');
             }
             if (!this.initOpts.onTick) {
               throw new Error('Missing handler for tick based alert rules');
@@ -902,7 +903,8 @@ class RangeSDK implements IRangeSDK {
           } catch (error) {
             let err = String(error);
             if (error instanceof Error) {
-              err = error.message + error.stack ? `\n${error.stack}` : '';
+              err =
+                error.message + (error.stack ? `\n${error.stack}` : '');
             }
 
             return {

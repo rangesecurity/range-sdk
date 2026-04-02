@@ -61,12 +61,11 @@ const myOnBlock: OnBlock = {
 };
 
 (async () => {
-  // Defining the RangeSDK instance
+  // token: use your env (e.g. process.env.RANGE_TOKEN in Node)
   const range = new RangeSDK({
-    token: env.RANGE_TOKEN,
+    token: process.env.RANGE_TOKEN!,
   });
 
-  // Running the RangeSDK instance
   await range.init({
     onBlock: myOnBlock,
   });
@@ -75,6 +74,8 @@ const myOnBlock: OnBlock = {
 
 ```typescript
 // Range Implementation of `rpc-status` alert rule
+import axios from 'axios';
+import dayjs from 'dayjs';
 import {
   RangeSDK,
   OnTick,
@@ -88,10 +89,11 @@ const myOnTick: OnTick = {
     timestamp: string,
     rule: IRangeAlertRule,
   ): Promise<ISubEvent[]> => {
-    const parameters = rule.parameters;
+    const parameters = rule.parameters ?? {};
+    const tickMinutes = Number(parameters.ticker ?? 10);
 
-    // note: if p.ticker is set as 10, the rule will run on each 10 minutes
-    if (dayjs(timestamp).get('minute') % p.ticker !== 0) {
+    // note: if ticker is 10, only runs when the clock minute is divisible by 10
+    if (dayjs(timestamp).minute() % tickMinutes !== 0) {
       return [];
     }
 
@@ -114,12 +116,10 @@ const myOnTick: OnTick = {
 };
 
 (async () => {
-  // Defining the RangeSDK instance
   const range = new RangeSDK({
-    token: env.RANGE_TOKEN,
+    token: process.env.RANGE_TOKEN!,
   });
 
-  // Running the RangeSDK instance
   await range.init({
     onTick: myOnTick,
   });
@@ -161,15 +161,15 @@ npm install
 4. Commit your changes and push to your fork.
 5. Create a pull request with a detailed explanation of your changes.
 
-Before contributing, please read our [CONTRIBUTING.md](link).
+Before contributing, please read our [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Reporting bugs
 
-If you encounter any bugs or issues, please [open an issue on GitHub](link). When reporting a bug, please provide as much context as possible, including error messages, logs, and steps to reproduce the bug.
+If you encounter any bugs or issues, please [open an issue on GitHub](https://github.com/rangesecurity/range-sdk/issues). When reporting a bug, please provide as much context as possible, including error messages, logs, and steps to reproduce the bug.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](link) file for details.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ## Credits
 
